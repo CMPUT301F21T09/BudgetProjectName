@@ -25,7 +25,6 @@ public class CreateHabitEvent extends AppCompatActivity {
         Intent intent = getIntent();
         int habitID = intent.getIntExtra("HABIT_ID", -1);
 
-        // System.out.println("habitID" + Integer.toString(habitID));
         // TODO: query habitID in Firestore and populate this field with corresponding habitName
         habitEventName = (TextView) findViewById(R.id.habiteventName);
         location = (EditText) findViewById(R.id.location);
@@ -33,6 +32,6 @@ public class CreateHabitEvent extends AppCompatActivity {
         date = (DatePicker) findViewById(R.id.datePicker);
         image = (ImageView) findViewById(R.id.image);
 
-        // TODO: add onclick event
+        // TODO: add onclick event to save as HabitEvent object
     }
 }

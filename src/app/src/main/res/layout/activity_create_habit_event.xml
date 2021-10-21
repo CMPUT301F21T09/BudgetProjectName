@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView13"
+            android:id="@+id/AddHabitEventTitle"
             android:layout_width="match_parent"
             android:layout_height="63dp"
             android:gravity="center"
@@ -25,7 +25,7 @@
             android:textSize="28sp" />
 
         <TextView
-            android:id="@+id/textView15"
+            android:id="@+id/habiteventName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -33,7 +33,7 @@
             android:textSize="24sp" />
 
         <TextView
-            android:id="@+id/textView16"
+            android:id="@+id/locationLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="16sp"
@@ -43,7 +43,7 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/LocationID"
+            android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16sp"
@@ -55,7 +55,7 @@
             android:text="Location" />
 
         <TextView
-            android:id="@+id/textView17"
+            android:id="@+id/descriptionLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="16sp"
@@ -65,7 +65,7 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/editTextTextPersonName10"
+            android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16sp"
@@ -73,10 +73,10 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:minHeight="48dp"
-            android:text="Name" />
+            android:text="Description" />
 
         <TextView
-            android:id="@+id/textView18"
+            android:id="@+id/dateLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="16sp"
@@ -86,6 +86,7 @@
             android:textSize="20sp" />
 
         <DatePicker
+            android:id="@+id/datePicker"
             android:layout_width="373dp"
             android:layout_height="191dp"
             android:layout_marginLeft="16sp"
@@ -96,7 +97,7 @@
             android:startYear="1900"></DatePicker>
 
         <TextView
-            android:id="@+id/textView19"
+            android:id="@+id/imageLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="16sp"
@@ -105,7 +106,7 @@
             android:textSize="20sp" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16sp"
@@ -113,6 +114,13 @@
             android:src="@drawable/ic_launcher_background"
             app:layout_constraintStart_toStartOf="parent"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent"></LinearLayout>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

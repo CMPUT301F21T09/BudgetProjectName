@@ -2,6 +2,7 @@ package com.cmput301f21t09.budgetprojectname;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -21,9 +22,11 @@ public class CreateHabitEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_habit_event);
 
-        // TODO: get ID from Intent (from HabitListActivity)
+        Intent intent = getIntent();
+        int habitID = intent.getIntExtra("HABIT_ID", -1);
 
-        // TODO: query ID in Firestore, populate this field with habitName
+        // System.out.println("habitID" + Integer.toString(habitID));
+        // TODO: query habitID in Firestore and populate this field with corresponding habitName
         habitEventName = (TextView) findViewById(R.id.habiteventName);
         location = (EditText) findViewById(R.id.location);
         description = (EditText) findViewById(R.id.description);

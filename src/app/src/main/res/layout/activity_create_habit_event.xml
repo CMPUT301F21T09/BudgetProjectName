@@ -19,40 +19,57 @@
         <TextView
             android:id="@+id/textView13"
             android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:text="Add Habit" />
+            android:layout_height="63dp"
+            android:gravity="center"
+            android:text="Add Habit Event"
+            android:textSize="28sp" />
 
         <TextView
             android:id="@+id/textView15"
             android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:text="Habit Name" />
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Habit Name"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/textView16"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Location" />
+            android:paddingLeft="16sp"
+            android:paddingTop="10sp"
+            android:paddingRight="16sp"
+            android:text="Location"
+            android:textSize="20sp" />
 
         <EditText
             android:id="@+id/LocationID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16sp"
+            android:layout_marginRight="16sp"
             android:ems="10"
             android:inputType="textPersonName"
             android:minHeight="48dp"
+            android:paddingRight="16sp"
             android:text="Location" />
 
         <TextView
             android:id="@+id/textView17"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Description" />
+            android:paddingLeft="16sp"
+            android:paddingTop="10sp"
+            android:paddingRight="16sp"
+            android:text="Description"
+            android:textSize="20sp" />
 
         <EditText
             android:id="@+id/editTextTextPersonName10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16sp"
+            android:layout_marginRight="16sp"
             android:ems="10"
             android:inputType="textPersonName"
             android:minHeight="48dp"
@@ -62,13 +79,19 @@
             android:id="@+id/textView18"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date of Event" />
+            android:paddingLeft="16sp"
+            android:paddingTop="10sp"
+            android:paddingRight="16sp"
+            android:text="Date of Event"
+            android:textSize="20sp" />
 
         <DatePicker
-            android:layout_width="383dp"
+            android:layout_width="373dp"
             android:layout_height="191dp"
-            android:datePickerMode="spinner"
+            android:layout_marginLeft="16sp"
+            android:layout_marginRight="16sp"
             android:calendarViewShown="false"
+            android:datePickerMode="spinner"
             android:endYear="2100"
             android:startYear="1900"></DatePicker>
 
@@ -76,14 +99,17 @@
             android:id="@+id/textView19"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Image" />
+            android:paddingLeft="16sp"
+            android:paddingRight="16sp"
+            android:text="Image"
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="348dp"
-            android:layout_height="191dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16sp"
+            android:layout_marginRight="16sp"
             android:src="@drawable/ic_launcher_background"
             app:layout_constraintStart_toStartOf="parent"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />

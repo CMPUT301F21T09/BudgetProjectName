@@ -16,13 +16,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/AddHabitEventTitle"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="63dp"
-            android:gravity="center"
-            android:text="Add Habit Event"
-            android:textSize="28sp" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/AddHabitEventTitle"
+                android:layout_width="344dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="24dp"
+                android:text="Add Habit Event"
+                android:textSize="28sp" />
+
+            <Button
+                android:id="@+id/checkBtn"
+                android:layout_width="52dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:text="check"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/habiteventName"

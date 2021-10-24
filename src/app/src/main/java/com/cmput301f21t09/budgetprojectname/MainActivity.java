@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO: move button into habitlist activity
+        // TODO: move button into habitlist activity and pass habitID to intent
         final Button habitEventBtn = findViewById(R.id.createhabiteventBtn);
         habitEventBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

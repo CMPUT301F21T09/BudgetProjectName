@@ -16,9 +16,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // 4 main fragments for bottom navigation UI
-        MainFragment mainFragment = new MainFragment();
-        AddFragment addFragment = new AddFragment();
+        MainFragment habitFragment = new MainFragment();
         SearchFragment searchFragment = new SearchFragment();
+        AddFragment addFragment = new AddFragment();
+        FollowingFragment followingFragment = new FollowingFragment();
         ProfileFragment profileFragment = new ProfileFragment();
 
         // Fragment switch
@@ -26,13 +27,16 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.main:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, mainFragment).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, habitFragment).commit();
+                    return true;
+                case R.id.search:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, searchFragment).commit();
                     return true;
                 case R.id.add:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment, addFragment).commit();
                     return true;
-                case R.id.search:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, searchFragment).commit();
+                case R.id.following:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, followingFragment).commit();
                     return true;
                 case R.id.profile:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment, profileFragment).commit();

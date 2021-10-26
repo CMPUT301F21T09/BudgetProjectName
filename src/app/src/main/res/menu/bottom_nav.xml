@@ -6,15 +6,20 @@
         android:icon="@drawable/ic_baseline_home_24"
         android:title="Home" />
     <item
+        android:id="@+id/search"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="Search" />
+    <item
         android:id="@+id/add"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_add_circle_outline_24"
         android:title="Add" />
     <item
-        android:id="@+id/search"
+        android:id="@+id/following"
         android:enabled="true"
-        android:icon="@drawable/ic_baseline_search_24"
-        android:title="Search" />
+        android:icon="@drawable/ic_baseline_people_alt_24"
+        android:title="Following" />
     <item
         android:id="@+id/profile"
         android:enabled="true"

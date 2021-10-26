@@ -29,6 +29,7 @@ public class ViewHabitDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_habit_screen);
 
+        // The specific habitID is fetched from the previous activity
         Intent intent = getIntent();
         int habitID = intent.getIntExtra("HABIT_ID", -1);
 
@@ -63,13 +64,11 @@ public class ViewHabitDetails extends AppCompatActivity {
         fridayIcon.setAlpha(0.1F);
         saturdayIcon.setAlpha(0.1F);
 
-        // Todo: Change the habit date to actual data from Firestore using habitID
+        // Todo: Change the habit date to the actual date from Firestore using habitID
         habitDate.setText(new SimpleDateFormat("MM/dd/yyyy").format(new Date()));
 
-        /**
-         * The code below deals with the past habit events. The HabitEventCustomList is used
-         * to arrange and output the details
-         */
+        // The code below deals with the past habit events. The HabitEventCustomList is used
+        // to arrange and output the details
         // Todo: Change the past habit events' data below to actual data from Firestore
         String[] names = {"Wash dishes", "Wash dishes", "Wash dishes"};
         String[] locations = {"", "", ""};

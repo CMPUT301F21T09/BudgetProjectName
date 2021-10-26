@@ -15,11 +15,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //4 main fragments for bottom navigation UI
         MainFragment mainFragment = new MainFragment();
         AddFragment addFragment = new AddFragment();
         SearchFragment searchFragment = new SearchFragment();
         ProfileFragment profileFragment = new ProfileFragment();
 
+        //Fragment switch
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {

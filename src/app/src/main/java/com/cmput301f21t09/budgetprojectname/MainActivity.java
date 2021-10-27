@@ -18,10 +18,14 @@ public class MainActivity extends AppCompatActivity {
         final Button habitEventBtn = findViewById(R.id.createhabiteventBtn);
         habitEventBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), CreateHabitEvent.class);
-                final String HABIT_ID= "HABIT_ID";
+                Intent intent = new Intent(getApplicationContext(), CreateEditHabitEvent.class);
+                // TODO: use actual habitid
+                final String HABIT_ID = "HABIT_ID";
+                // Modes are: "createHabitEventMode" OR "editHabitEventMode"
+                final String MODE = "MODE";
                 int habitid = 1;
                 intent.putExtra(HABIT_ID, habitid);
+                intent.putExtra(MODE, R.string.editHabitEventMode);
                 startActivity(intent);
             }
         });

@@ -15,7 +15,7 @@ public class HabitEventModel {
     private Date date;
     private Image image;
 
-    HabitEventModel(String name, String location, Date date, String description, Image image){
+    HabitEventModel(String name, String location, Date date, String description, Image image) {
         this.name = name;
         this.location = location;
         this.description = description;
@@ -23,14 +23,14 @@ public class HabitEventModel {
         this.image = image;
     }
 
-    HabitEventModel(String name, String location, Date date, String description){
+    HabitEventModel(String name, String location, Date date, String description) {
         this.name = name;
         this.location = location;
         this.description = description;
         this.date = date;
     }
 
-    HabitEventModel(String name, String location, Date date, Image image){
+    HabitEventModel(String name, String location, Date date, Image image) {
         this.name = name;
         this.location = location;
         this.date = date;

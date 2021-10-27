@@ -13,27 +13,32 @@ import android.widget.TextView;
 
 import java.util.Date;
 
-public class CreateHabitEvent extends AppCompatActivity {
+public class CreateEditHabitEvent extends AppCompatActivity {
 
+    private TextView screenTitle;
     private TextView habitEventName;
     private EditText location;
     private EditText description;
-    private DatePicker datePicker;
     private ImageView image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_habit_event);
+        setContentView(R.layout.activity_create_edit_habit_event);
 
         Intent intent = getIntent();
         int habitID = intent.getIntExtra("HABIT_ID", -1);
+        int mode = intent.getIntExtra("MODE", R.string.createHabitEventMode);
+        String modeStr = getString(mode);
+
+        // update title according to mode selected: "add" or "edit"
+        screenTitle = (TextView) findViewById(R.id.CreateEditHabitEventTitle);
+        screenTitle.setText(modeStr);
 
         // TODO: query habitID in Firestore and populate this field with corresponding habitName
         habitEventName = (TextView) findViewById(R.id.habiteventName);
         location = (EditText) findViewById(R.id.location);
         description = (EditText) findViewById(R.id.description);
-        datePicker = (DatePicker) findViewById(R.id.datePicker);
         image = (ImageView) findViewById(R.id.image);
 
         final Button checkBtn = findViewById(R.id.checkBtn);
@@ -42,14 +47,10 @@ public class CreateHabitEvent extends AppCompatActivity {
                 String nameStr = habitEventName.getText().toString();
                 String locationStr = location.getText().toString();
                 String descriptionStr = description.getText().toString();
-                int day = datePicker.getDayOfMonth();
-                int month = datePicker.getMonth();
-                int year =  datePicker.getYear();
-                Date date = new Date(year,month,day);
 
-                HabitEventModel habitEvent= new
-                        HabitEventModel(nameStr, locationStr, date, descriptionStr);
-                // TODO: save habitEvent in Firestore DB
+                HabitEventModel habitEvent = new
+                        HabitEventModel(nameStr, locationStr, new Date(), descriptionStr);
+                // TODO: save HabitEvent in Firestore DB
             }
         });
     }

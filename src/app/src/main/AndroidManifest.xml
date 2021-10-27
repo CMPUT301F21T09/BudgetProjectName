@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BudgetProjectName">
         <activity
-            android:name=".CreateHabitEvent"
+            android:name=".CreateEditHabitEvent"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

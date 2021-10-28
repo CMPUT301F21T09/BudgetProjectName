@@ -6,14 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Date;
 
-public class CreateEditHabitEvent extends AppCompatActivity {
+public class DefineHabitEventActivity extends AppCompatActivity {
 
     private TextView screenTitle;
     private TextView habitEventName;
@@ -24,12 +23,18 @@ public class CreateEditHabitEvent extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_edit_habit_event);
+        setContentView(R.layout.activity_define_habit_event);
 
         Intent intent = getIntent();
-        int habitID = intent.getIntExtra("HABIT_ID", -1);
-        int mode = intent.getIntExtra("MODE", R.string.createHabitEventMode);
-        String modeStr = getString(mode);
+        int habitEventID = intent.getIntExtra("HABIT_EVENT_ID", -1);
+
+        String modeStr;
+        // if intent not have habit event ID, then create a new habit event
+        if (habitEventID == -1) {
+            modeStr = getString(R.string.createHabitEventMode);
+        } else {
+            modeStr = getString(R.string.editHabitEventMode);
+        }
 
         // update title according to mode selected: "add" or "edit"
         screenTitle = (TextView) findViewById(R.id.CreateEditHabitEventTitle);

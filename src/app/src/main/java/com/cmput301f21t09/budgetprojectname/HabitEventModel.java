@@ -9,6 +9,7 @@ import android.widget.TextView;
 import java.util.Date;
 
 public class HabitEventModel {
+    private String ID; // TODO: change type depending on Firebase ID type
     private String name;
     private String location; // TODO: change to Location once this is implemented
     private String description;
@@ -16,6 +17,7 @@ public class HabitEventModel {
     private Image image;
 
     HabitEventModel(String name, String location, Date date, String description, Image image) {
+        this.ID = "s1w9kwequ290"; // placeholder ID
         this.name = name;
         this.location = location;
         this.description = description;

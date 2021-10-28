@@ -14,7 +14,7 @@ public class HabitModel {
         this.title = title;
         this.reason = reason;
         this.startDate = startDate;
-        //TODO: Generate ID
+        //TODO: Get ID from Firestore
     }
 
     String getTitle() {

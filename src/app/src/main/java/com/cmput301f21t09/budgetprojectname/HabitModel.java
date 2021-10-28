@@ -14,6 +14,7 @@ public class HabitModel {
         this.title = title;
         this.reason = reason;
         this.startDate = startDate;
+        //TODO: Generate ID
     }
 
     String getTitle() {
@@ -30,5 +31,9 @@ public class HabitModel {
 
     Date getStartDate() {
         return this.startDate;
+    }
+
+    String getID() {
+        return this.ID;
     }
 }

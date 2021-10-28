@@ -1,59 +1,34 @@
 package com.cmput301f21t09.budgetprojectname;
 import java.util.Date;
 
+//TODO: Add Frequency
 public class HabitModel {
-    private String name;
-    private String description;
+    private String title;
+    private String ID;
+    private String reason;
     private int streak;
-    private String[] frequency;
     private Date startDate;
-    private Date lastCompleted = null;
+    private Date lastCompleted;
 
-    HabitModel(String name, String description, String[] frequency, Date startDate) {
-        this.name = name;
-        this.description = description;
-        this.frequency = frequency;
+    HabitModel(String title, String reason, Date startDate) {
+        this.title = title;
+        this.reason = reason;
         this.startDate = startDate;
     }
 
-    String getName() {
-        return this.name;
+    String getTitle() {
+        return this.title;
     }
 
-    String getDescription() {
-        return this.description;
+    String getReason() {
+        return this.reason;
     }
 
     int getStreak() {
         return this.streak;
     }
 
-    String[] getFrequency() {
-        return this.frequency;
-    }
-
     Date getStartDate() {
         return this.startDate;
-    }
-
-    void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    void setName(String name) {
-        this.name = name;
-    }
-
-    void setDescription(String description) {
-        this.description = description;
-    }
-
-    void setFrequency(String[] frequency) {
-        this.frequency = frequency;
-    }
-
-    void setCompleted() {
-        this.streak += 1;
-        this.lastCompleted = new Date();
     }
 }

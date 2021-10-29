@@ -4,6 +4,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EXAMPLE ACTIVITY FOR TESTING" />
+
+    <Button
+        android:id="@+id/createhabiteventBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Habit Event" />
+
     <Button
         android:id="@+id/example_view_habit_event_detail"
         android:layout_width="wrap_content"

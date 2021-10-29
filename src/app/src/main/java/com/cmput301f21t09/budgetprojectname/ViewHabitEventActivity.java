@@ -1,5 +1,6 @@
 package com.cmput301f21t09.budgetprojectname;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -22,19 +23,20 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         TextView habitEventDescription = findViewById(R.id.view_habit_event_habit_event_description);
         TextView habitEventDate = findViewById(R.id.view_habit_event_habit_event_date);
         // TODO: Set Proper Name of Habit, Location of Habit Event to the TextViews
-//        habitTitle.setText();
-//        habitEventLocation.setText();
-//        habitEventDescription.setText();
-//        habitEventDate.setText();
+        // habitTitle.setText();
+        // habitEventLocation.setText();
+        // habitEventDescription.setText();
+        // habitEventDate.setText();
 
         ImageButton editHabitEvent = findViewById(R.id.view_habit_event_habit_event_edit_button);
         editHabitEvent.setOnClickListener(v -> {
-            // TODO: Open Create/Edit Habit Event View for Targeted Habit Event
+            // TODO: Pass Targeted Habit Event Info to the Intent
+            startActivity(new Intent(this, DefineHabitEventActivity.class));
         });
 
         ImageView imageHabitEvent = findViewById(R.id.image);
         // TODO: Set Proper Image of Habit Event to the ImageView
-//        imageHabitEvent.setImageBitmap();
+        // imageHabitEvent.setImageBitmap();
 
 
         Button deleteHabitEvent = findViewById(R.id.view_habit_event_habit_event_delete_button);

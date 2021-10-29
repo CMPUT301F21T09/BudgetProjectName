@@ -18,10 +18,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ViewHabitEventActivity"
+            android:name=".DefineHabitEventActivity"
             android:exported="false" />
         <activity
-            android:name=".DefineHabitEventActivity"
+            android:name=".ViewHabitEventActivity"
             android:exported="false" />
     </application>
 

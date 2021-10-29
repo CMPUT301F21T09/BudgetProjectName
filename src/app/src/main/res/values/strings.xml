@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BudgetProjectName</string>
+    <string name="viewHabitDetails">"View Habit Details"</string>
 </resources>

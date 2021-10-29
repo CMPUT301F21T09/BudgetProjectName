@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,10 +40,9 @@ public class HabitEventCustomList extends ArrayAdapter<HabitEventModel> {
         habitDate.setText(df.format(new Date()));
 
         // Todo: Change the icons' opacity according to the actual habit events' data from Firestore
-        locationIcon.setImageResource(R.drawable.ic_map_marker);
-        descriptionIcon.setImageResource(R.drawable.ic_comment);
-        descriptionIcon.setAlpha(0.1F);
-        ImageIcon.setImageResource(R.drawable.ic_image);
+        locationIcon.setImageResource(R.drawable.ic_map_marker_positive);
+        descriptionIcon.setImageResource(R.drawable.ic_comment_negative);
+        ImageIcon.setImageResource(R.drawable.ic_image_positive);
 
         return view;
     }

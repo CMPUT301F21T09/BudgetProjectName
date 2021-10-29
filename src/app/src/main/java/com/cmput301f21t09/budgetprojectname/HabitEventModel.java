@@ -8,16 +8,16 @@ import android.widget.TextView;
 
 import java.util.Date;
 
-// Copied from Justine's PR
-
 public class HabitEventModel {
-    private String name;
-    private String location; // TODO: change to Location once this is implemented
-    private String description;
-    private Date date;
-    private Image image;
+    private final String ID; // TODO: change type depending on Firebase ID type
+    private final String name;
+    private final String location; // TODO: change to Location once this is implemented
+    private final String description;
+    private final Date date;
+    private final Image image;
 
     HabitEventModel(String name, String location, Date date, String description, Image image) {
+        this.ID = "s1w9kwequ290"; // placeholder ID
         this.name = name;
         this.location = location;
         this.description = description;
@@ -26,16 +26,21 @@ public class HabitEventModel {
     }
 
     HabitEventModel(String name, String location, Date date, String description) {
+        this.ID = "s1w9kwequ290"; // placeholder ID
         this.name = name;
         this.location = location;
         this.description = description;
         this.date = date;
+        image = null;
     }
 
     HabitEventModel(String name, String location, Date date, Image image) {
+        this.ID = "s1w9kwequ290"; // placeholder ID
         this.name = name;
         this.location = location;
         this.date = date;
         this.image = image;
+        this.description = null;
     }
+
 }

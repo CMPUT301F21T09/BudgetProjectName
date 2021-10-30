@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BudgetProjectName</string>
+    <string name="createHabitEventMode">Add Habit Event</string>
+    <string name="editHabitEventMode">Edit Habit Event</string>
 </resources>

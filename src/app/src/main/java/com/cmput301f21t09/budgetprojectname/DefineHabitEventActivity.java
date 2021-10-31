@@ -59,5 +59,11 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 // TODO: save HabitEvent in Firestore DB
             }
         });
+
+        //Let User Add/Change their habit event image as click ImageView area
+        image.setOnClickListener(v -> {
+            // TODO: Let User Choose Image from Gallery or Take a Photo
+        });
+
     }
 }

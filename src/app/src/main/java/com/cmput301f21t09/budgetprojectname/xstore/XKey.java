@@ -77,6 +77,7 @@ public abstract class XKey<T> {
         if (onRequest()) {
             XRequest<T> newRequest = new XRequest<T>(this);
             openRequests.add(newRequest);
+            return newRequest;
         }
         return null;
     }

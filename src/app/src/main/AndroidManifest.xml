@@ -13,12 +13,6 @@
             android:exported="true"
             android:label="@string/viewHabitActivity"/>
         <activity
-            android:name=".ExampleActivity"
-            android:exported="true" />
-        <activity
-            android:name=".DefineHabitEventActivity"
-            android:exported="true" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -26,6 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".DefineHabitEventActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ViewHabitEventActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

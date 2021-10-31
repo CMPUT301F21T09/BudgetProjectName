@@ -37,7 +37,7 @@ public class ExampleActivity extends AppCompatActivity {
         final Button habitBtn = findViewById(R.id.viewHabitDetailsBtn);
         habitBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ViewHabitDetails.class);
+                Intent intent = new Intent(getApplicationContext(), ViewHabitActivity.class);
                 final String HABIT_ID = "HABIT_ID";
                 int habitID = 1;
                 intent.putExtra(HABIT_ID, habitID);

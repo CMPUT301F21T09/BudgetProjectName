@@ -9,9 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BudgetProjectName">
-        <activity android:name=".ViewHabitDetails"
+        <activity android:name=".ViewHabitActivity"
             android:exported="true"
-            android:label="@string/viewHabitDetails"/>
+            android:label="@string/viewHabitActivity"/>
         <activity
             android:name=".ExampleActivity"
             android:exported="true" />

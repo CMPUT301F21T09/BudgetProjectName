@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ViewHabitDetails extends AppCompatActivity {
+public class ViewHabitActivity extends AppCompatActivity {
     private TextView habitName;
     private ListView habitEventList;
     ArrayAdapter<HabitEventModel> habitEventAdapter;

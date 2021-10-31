@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,7 +15,7 @@ import java.util.Date;
 
 public class DefineHabitEventActivity extends AppCompatActivity {
 
-    private TextView screenTitle;
+    private TextView toolbarTitle;
     private TextView habitEventName;
     private EditText location;
     private EditText description;
@@ -37,17 +38,17 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         }
 
         // update title according to mode selected: "add" or "edit"
-        screenTitle = (TextView) findViewById(R.id.CreateEditHabitEventTitle);
-        screenTitle.setText(modeStr);
+        //  toolbarTitle = findViewById(R.id.toolbar_title);
+        //  toolbarTitle.setText(modeStr);
 
         // TODO: query habitID in Firestore and populate this field with corresponding habitName
-        habitEventName = (TextView) findViewById(R.id.habiteventName);
+        habitEventName = (TextView) findViewById(R.id.habitName);
         location = (EditText) findViewById(R.id.location);
         description = (EditText) findViewById(R.id.description);
         image = (ImageView) findViewById(R.id.image);
 
-        final Button checkBtn = findViewById(R.id.checkBtn);
-        checkBtn.setOnClickListener(new View.OnClickListener() {
+        ImageButton doneBtn = findViewById(R.id.done);
+        doneBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String nameStr = habitEventName.getText().toString();
                 String locationStr = location.getText().toString();

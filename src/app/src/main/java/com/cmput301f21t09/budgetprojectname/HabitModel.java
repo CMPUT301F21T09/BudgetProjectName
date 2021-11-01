@@ -8,13 +8,15 @@ public class HabitModel {
     final private String reason;
     final private int streak;
     final private Date startDate;
-    private Date lastCompleted;
+    final private Date lastCompleted;
 
-    HabitModel(String title, String reason, Date startDate) {
+    HabitModel(String ID, String title, String reason, Date startDate, Date lastCompleted, int streak) {
         this.title = title;
         this.reason = reason;
         this.startDate = startDate;
-        //TODO: Get ID from Firestore
+        this.ID = ID;
+        this.lastCompleted = lastCompleted;
+        this.streak = streak;
     }
 
     String getTitle() {

@@ -1,14 +1,21 @@
 package com.cmput301f21t09.budgetprojectname;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
 
@@ -19,6 +26,8 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     private EditText location;
     private EditText description;
     private ImageView image;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static final String TAG = "DefineHabitEventActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +62,33 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 String locationStr = location.getText().toString();
                 String descriptionStr = description.getText().toString();
 
-                HabitEventModel habitEvent = new
-                        HabitEventModel(nameStr, locationStr, new Date(), descriptionStr);
+                HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(), descriptionStr);
                 // TODO: save HabitEvent in Firestore DB
+                storeNewHabitEvent(habitEvent);
+
             }
         });
     }
+
+    private void storeNewHabitEvent(HabitEventModel habitEvent){
+        System.out.println("store new habit");
+        db.collection("habit_events")
+                .add(habitEvent)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        String docID = documentReference.getId();
+                        Log.d(TAG, "DocumentSnapshot added with ID: " + docID);
+                        System.out.println(docID);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("error!" + e);
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
+    }
+    // TODO: create method to update existing HabitEvent using docID
 }

@@ -33,7 +33,7 @@ public class ExampleActivity extends AppCompatActivity {
                 final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
                 // Omit habitEventID and intent line if creating a new habit event
                 int habitEventID = 1;
-                intent.putExtra(HABIT_EVENT_ID, habitEventID);
+                // intent.putExtra(HABIT_EVENT_ID, habitEventID);
                 startActivity(intent);
             }
         });

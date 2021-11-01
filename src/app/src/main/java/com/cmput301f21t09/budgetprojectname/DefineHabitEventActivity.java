@@ -41,9 +41,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
-        // if intent not have habit event ID, then create a new habit event
         boolean isNewHabitEvent = (habitEventID == null);
-        System.out.println("isnewhabitevent " + isNewHabitEvent);
         String modeStr;
 
         if (isNewHabitEvent) {
@@ -58,7 +56,6 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         screenTitle = (TextView) findViewById(R.id.CreateEditHabitEventTitle);
         screenTitle.setText(modeStr);
 
-        // TODO: query habitID in Firestore and populate this field with corresponding habitName
         habitEventName = (TextView) findViewById(R.id.habiteventName);
         location = (EditText) findViewById(R.id.location);
         description = (EditText) findViewById(R.id.description);
@@ -67,12 +64,10 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         final Button checkBtn = findViewById(R.id.checkBtn);
         checkBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String nameStr = habitEventName.getText().toString();
                 String locationStr = location.getText().toString();
                 String descriptionStr = description.getText().toString();
-
                 HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(), descriptionStr);
-                // TODO: save HabitEvent in Firestore DB
+
                 if (isNewHabitEvent) {
                     storeNewHabitEvent(habitEvent);
                 } else {
@@ -83,6 +78,11 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Stores newly created habitEvent document in the habit_events collection
+     *
+     * @param habitEvent habitEvent to be added
+     */
     private void storeNewHabitEvent(HabitEventModel habitEvent) {
         System.out.println("store new habit");
         db.collection("habit_events")
@@ -103,15 +103,39 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Stores modified habitEvent document in the habit_events collection
+     *
+     * @param habitEventID       ID of habitEvent to be updated
+     * @param modifiedHabitEvent habitEvent to be updated
+     */
     private void storeEditedHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
         DocumentReference habitEventRef = db.collection("habit_events")
                 .document(habitEventID);
         habitEventRef.update("description", modifiedHabitEvent.getDescription(),
                 "location", modifiedHabitEvent.getLocation(),
-                "image", modifiedHabitEvent.getImage());
+                "image", modifiedHabitEvent.getImage())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+
     }
 
-    private void setHabitEventFields(String habitEventID){
+    /**
+     * Sets the fields with existing values from Firestore
+     *
+     * @param habitEventID ID of habitEvent to be retrieved
+     */
+    private void setHabitEventFields(String habitEventID) {
         DocumentReference docRef = db.collection("habit_events").document(habitEventID);
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -121,6 +145,9 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        // TODO: Possible refactoring where document retrieval is
+                        //  separate from setting fields
+
                         // set fields in view
                         location.setText(document.getString("location"));
                         description.setText(document.getString("description"));

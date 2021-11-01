@@ -38,4 +38,8 @@ public class HabitModel {
     String getID() {
         return this.ID;
     }
+
+    Date getLastCompleted() {
+        return this.lastCompleted;
+    }
 }

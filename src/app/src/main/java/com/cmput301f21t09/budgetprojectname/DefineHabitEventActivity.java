@@ -1,5 +1,7 @@
 package com.cmput301f21t09.budgetprojectname;
 
+import static com.google.android.gms.common.util.CollectionUtils.mapOf;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -35,11 +37,13 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_define_habit_event);
 
         Intent intent = getIntent();
-        int habitEventID = intent.getIntExtra("HABIT_EVENT_ID", -1);
-
-        String modeStr;
+        String habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
         // if intent not have habit event ID, then create a new habit event
-        if (habitEventID == -1) {
+        boolean isNewHabitEvent = (habitEventID == null);
+        System.out.println("isnewhabitevent " + isNewHabitEvent);
+        String modeStr;
+
+        if (isNewHabitEvent) {
             modeStr = getString(R.string.createHabitEventMode);
         } else {
             modeStr = getString(R.string.editHabitEventMode);
@@ -64,13 +68,16 @@ public class DefineHabitEventActivity extends AppCompatActivity {
 
                 HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(), descriptionStr);
                 // TODO: save HabitEvent in Firestore DB
-                storeNewHabitEvent(habitEvent);
-
+                if (isNewHabitEvent) {
+                    storeNewHabitEvent(habitEvent);
+                } else {
+                    storeEditedHabitEvent(habitEventID, habitEvent);
+                }
             }
         });
     }
 
-    private void storeNewHabitEvent(HabitEventModel habitEvent){
+    private void storeNewHabitEvent(HabitEventModel habitEvent) {
         System.out.println("store new habit");
         db.collection("habit_events")
                 .add(habitEvent)
@@ -90,5 +97,12 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                     }
                 });
     }
-    // TODO: create method to update existing HabitEvent using docID
+
+    private void storeEditedHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
+        DocumentReference habitEventRef = db.collection("habit_events")
+                .document(habitEventID);
+        habitEventRef.update("description", modifiedHabitEvent.getDescription(),
+                "location", modifiedHabitEvent.getLocation(),
+                "image", modifiedHabitEvent.getImage());
+    }
 }

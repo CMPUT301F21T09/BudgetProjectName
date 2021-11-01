@@ -14,9 +14,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
@@ -47,6 +50,8 @@ public class DefineHabitEventActivity extends AppCompatActivity {
             modeStr = getString(R.string.createHabitEventMode);
         } else {
             modeStr = getString(R.string.editHabitEventMode);
+            // sets existing habitEvent fields
+            setHabitEventFields(habitEventID);
         }
 
         // update title according to mode selected: "add" or "edit"
@@ -72,6 +77,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                     storeNewHabitEvent(habitEvent);
                 } else {
                     storeEditedHabitEvent(habitEventID, habitEvent);
+                    setHabitEventFields(habitEventID);
                 }
             }
         });
@@ -92,7 +98,6 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        System.out.println("error!" + e);
                         Log.w(TAG, "Error adding document", e);
                     }
                 });
@@ -104,5 +109,30 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         habitEventRef.update("description", modifiedHabitEvent.getDescription(),
                 "location", modifiedHabitEvent.getLocation(),
                 "image", modifiedHabitEvent.getImage());
+    }
+
+    private void setHabitEventFields(String habitEventID){
+        DocumentReference docRef = db.collection("habit_events").document(habitEventID);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        // set fields in view
+                        location.setText(document.getString("location"));
+                        description.setText(document.getString("description"));
+                        // TODO: set image
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 }

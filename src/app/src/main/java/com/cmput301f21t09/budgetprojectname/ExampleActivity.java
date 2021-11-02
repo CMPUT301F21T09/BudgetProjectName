@@ -31,7 +31,7 @@ public class ExampleActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), DefineHabitEventActivity.class);
                 // TODO: use actual habit event ID
                 final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
-                String habitEventID = "v5BYLwHC2W4wGHkjff9K"; // example habit event I created
+                String habitEventID = "OIrJQ32PmTPCiufwKsPF"; // example habit event I created
                 intent.putExtra(HABIT_EVENT_ID, habitEventID);
                 startActivity(intent);
             }

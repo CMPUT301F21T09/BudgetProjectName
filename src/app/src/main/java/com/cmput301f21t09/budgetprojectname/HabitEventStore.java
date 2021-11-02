@@ -32,11 +32,11 @@ public class HabitEventStore {
     }
 
     /**
-     * Stores newly created habitEvent document in the habit_events collection
+     * Creates habitEvent document in the habit_events collection
      *
      * @param habitEvent habitEvent to be added
      */
-    public void storeNewHabitEvent(HabitEventModel habitEvent) {
+    public void createHabitEvent(HabitEventModel habitEvent) {
         System.out.println("store new habit");
         db.collection("habit_events")
                 .add(habitEvent)
@@ -57,15 +57,15 @@ public class HabitEventStore {
     }
 
     /**
-     * Stores modified habitEvent document in the habit_events collection
+     * Updates habitEvent document in the habit_events collection
      *
      * @param habitEventID       ID of habitEvent to be updated
      * @param modifiedHabitEvent habitEvent to be updated
      */
-    public void storeEditedHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
+    public void updateHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
         DocumentReference habitEventRef = db.collection("habit_events")
                 .document(habitEventID);
-        habitEventRef.update("comment", modifiedHabitEvent.getDescription(),
+        habitEventRef.update("comment", modifiedHabitEvent.getComment(),
                 "location", modifiedHabitEvent.getLocation(),
                 "image", modifiedHabitEvent.getImage())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -82,41 +82,6 @@ public class HabitEventStore {
                 });
 
     }
-
-
-    /**
-     * Retrieves habitEvent from Firestore
-     *
-     * @param habitEventID ID of habitEvent to be retrieved
-     */
-    /**
-    public HabitEventModel getHabitEvent(String habitEventID) {
-        DocumentReference docRef = db.collection("habit_events").document(habitEventID);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                        // This onComplete function is async so passing document to this
-                        // helper function ensures it has been completed
-                        // parseSnapshot(document); // do stuff with snapshot
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
-        return retrievedHabitEventModel;
-    }
-
-    private void parseSnapshot(DocumentSnapshot document){
-        // convert document to Plain Old Java Object (POJO)
-        retrievedHabitEventModel = document.toObject(HabitEventModel.class);
-        System.out.println("here: " + retrievedHabitEventModel.getLocation());
-    }
-    **/
+    // TODO: add read scenario
+    // TODO: add delete scenario
 }

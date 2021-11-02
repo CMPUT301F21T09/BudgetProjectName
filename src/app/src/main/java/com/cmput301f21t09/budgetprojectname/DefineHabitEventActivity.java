@@ -41,7 +41,6 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_define_habit_event);
 
-
         Intent intent = getIntent();
         String habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
         boolean isNewHabitEvent = (habitEventID == null);
@@ -73,9 +72,9 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(), descriptionStr);
 
                 if (isNewHabitEvent) {
-                    habitEventStore.storeNewHabitEvent(habitEvent);
+                    habitEventStore.createHabitEvent(habitEvent);
                 } else {
-                    habitEventStore.storeEditedHabitEvent(habitEventID, habitEvent);
+                    habitEventStore.updateHabitEvent(habitEventID, habitEvent);
                 }
             }
         });

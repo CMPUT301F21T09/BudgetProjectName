@@ -12,22 +12,22 @@ import java.util.Date;
 public class HabitEventModel{
     private final String ID; // TODO: change type depending on Firebase ID type
     private final String location; // TODO: change to Location once this is implemented
-    private final String description;
+    private final String comment;
     private final Date date;
     private final Image image;
 
-    HabitEventModel(String location, Date date, String description, Image image) {
+    HabitEventModel(String location, Date date, String comment, Image image) {
         this.ID = "s1w9kwequ290"; // placeholder ID
         this.location = location;
-        this.description = description;
+        this.comment = comment;
         this.date = date;
         this.image = image;
     }
 
-    HabitEventModel(String location, Date date, String description) {
+    HabitEventModel(String location, Date date, String comment) {
         this.ID = "s1w9kwequ290"; // placeholder ID
         this.location = location;
-        this.description = description;
+        this.comment = comment;
         this.date = date;
         image = null;
     }
@@ -37,13 +37,13 @@ public class HabitEventModel{
         this.location = location;
         this.date = date;
         this.image = image;
-        this.description = null;
+        this.comment = null;
     }
 
     HabitEventModel(){
         this.ID = null;
         this.location = null;
-        this.description = null;
+        this.comment = null;
         this.date = null;
         this.image = null;
     }
@@ -56,8 +56,8 @@ public class HabitEventModel{
         return location;
     }
 
-    public String getDescription(){
-        return description;
+    public String getComment(){
+        return comment;
     }
 
     public Date getDate(){

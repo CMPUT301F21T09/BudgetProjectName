@@ -40,6 +40,14 @@ public class HabitEventModel{
         this.description = null;
     }
 
+    HabitEventModel(){
+        this.ID = null;
+        this.location = null;
+        this.description = null;
+        this.date = null;
+        this.image = null;
+    }
+
     public String getID(){
         return ID;
     }

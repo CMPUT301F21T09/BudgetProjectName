@@ -32,13 +32,15 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     private EditText location;
     private EditText description;
     private ImageView image;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private static final String TAG = "DefineHabitEventActivity";
+//    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+//    private static final String TAG = "DefineHabitEventActivity";
+    private HabitEventStore habitEventStore = HabitEventStore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_define_habit_event);
+
 
         Intent intent = getIntent();
         String habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
@@ -50,12 +52,12 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         } else {
             modeStr = getString(R.string.editHabitEventMode);
             // sets existing habitEvent fields
-            setHabitEventFields(habitEventID);
+            setHabitEventViewFields(habitEventID);
         }
 
         // update title according to mode selected: "add" or "edit"
-        //  toolbarTitle = findViewById(R.id.toolbar_title);
-        //  toolbarTitle.setText(modeStr);
+        toolbarTitle = findViewById(R.id.toolbar_title);
+        toolbarTitle.setText(modeStr);
 
         habitEventName = (TextView) findViewById(R.id.habitName);
 
@@ -71,103 +73,27 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(), descriptionStr);
 
                 if (isNewHabitEvent) {
-                    storeNewHabitEvent(habitEvent);
+                    habitEventStore.storeNewHabitEvent(habitEvent);
                 } else {
-                    storeEditedHabitEvent(habitEventID, habitEvent);
-                    setHabitEventFields(habitEventID);
+                    habitEventStore.storeEditedHabitEvent(habitEventID, habitEvent);
+                    // show updated fields in view
+                    setHabitEventViewFields(habitEventID);
                 }
             }
         });
-    }
-
-    /**
-     * Stores newly created habitEvent document in the habit_events collection
-     *
-     * @param habitEvent habitEvent to be added
-     */
-    private void storeNewHabitEvent(HabitEventModel habitEvent) {
-        System.out.println("store new habit");
-        db.collection("habit_events")
-                .add(habitEvent)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        String docID = documentReference.getId();
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + docID);
-                        System.out.println(docID);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
-    }
-
-    /**
-     * Stores modified habitEvent document in the habit_events collection
-     *
-     * @param habitEventID       ID of habitEvent to be updated
-     * @param modifiedHabitEvent habitEvent to be updated
-     */
-    private void storeEditedHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
-        DocumentReference habitEventRef = db.collection("habit_events")
-                .document(habitEventID);
-        habitEventRef.update("description", modifiedHabitEvent.getDescription(),
-                "location", modifiedHabitEvent.getLocation(),
-                "image", modifiedHabitEvent.getImage())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully updated!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error updating document", e);
-                    }
-                });
-
-    }
-
-    /**
-     * Sets the fields with existing values from Firestore
-     *
-     * @param habitEventID ID of habitEvent to be retrieved
-     */
-    private void setHabitEventFields(String habitEventID) {
-        DocumentReference docRef = db.collection("habit_events").document(habitEventID);
-
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                        // TODO: Possible refactoring where document retrieval is
-                        //  separate from setting fields
-
-                        // set fields in view
-                        location.setText(document.getString("location"));
-                        description.setText(document.getString("description"));
-                        // TODO: set image
-
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
-
-        //Let User Add/Change their habit event image as click ImageView area
+        // Let User Add/Change their habit event image as click ImageView area
         image.setOnClickListener(v -> {
             // TODO: Let User Choose Image from Gallery or Take a Photo
         });
-
     }
+
+    private void setHabitEventViewFields(String habitEventID){
+        HabitEventModel heModel = habitEventStore.getHabitEvent(habitEventID);
+        System.out.println("helocation "+ heModel.getLocation());
+         // set fields in view
+//                        location.setText(document.getString("location"));
+//                        description.setText(document.getString("description"));
+        // TODO: set image
+    }
+
 }

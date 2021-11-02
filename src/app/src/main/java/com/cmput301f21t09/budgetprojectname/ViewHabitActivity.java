@@ -1,7 +1,6 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,10 +13,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.w3c.dom.Text;
-
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,9 +72,9 @@ public class ViewHabitActivity extends AppCompatActivity {
         // The code below deals with the past habit events. The HabitEventCustomList is used
         // to arrange and output the details
         // Todo: Change the past habit events' data below to actual data from Firestore using HabitID and HabitEventID
-        String[] locations = {"", "", "", "", "", ""};
-        Date[] dates = {new Date(), new Date(), new Date(), new Date(), new Date(), new Date()};
-        String[] descriptions = {"", "", "", "", "", ""};
+        String[] locations = {"", "", "", "", "", "", "", "", "", "", "", ""};
+        Date[] dates = {new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date()};
+        String[] descriptions = {"", "", "", "", "", "", "", "", "", "", "", ""};
 
         habitEventList = findViewById(R.id.past_habit_event_list);
         habitEventDataList = new ArrayList<>();

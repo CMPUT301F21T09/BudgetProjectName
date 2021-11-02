@@ -12,6 +12,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * Represents a habitEventStore that interfaces with FirestoreDB to
+ * create, read, update, and delete HabitEvents.
+ *
+ */
 public class HabitEventStore {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "HabitEventStore";
@@ -60,7 +65,7 @@ public class HabitEventStore {
     public void storeEditedHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
         DocumentReference habitEventRef = db.collection("habit_events")
                 .document(habitEventID);
-        habitEventRef.update("description", modifiedHabitEvent.getDescription(),
+        habitEventRef.update("comment", modifiedHabitEvent.getDescription(),
                 "location", modifiedHabitEvent.getLocation(),
                 "image", modifiedHabitEvent.getImage())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -80,10 +85,11 @@ public class HabitEventStore {
 
 
     /**
-     * Sets the fields with existing values from Firestore
+     * Retrieves habitEvent from Firestore
      *
      * @param habitEventID ID of habitEvent to be retrieved
      */
+    /**
     public HabitEventModel getHabitEvent(String habitEventID) {
         DocumentReference docRef = db.collection("habit_events").document(habitEventID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -94,8 +100,8 @@ public class HabitEventStore {
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         // This onComplete function is async so passing document to this
-                        // helper function indicates it has been completed
-                        parseSnapshot(document);
+                        // helper function ensures it has been completed
+                        // parseSnapshot(document); // do stuff with snapshot
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -112,5 +118,5 @@ public class HabitEventStore {
         retrievedHabitEventModel = document.toObject(HabitEventModel.class);
         System.out.println("here: " + retrievedHabitEventModel.getLocation());
     }
-
+    **/
 }

@@ -80,7 +80,6 @@ public class ViewHabitActivity extends AppCompatActivity {
         // The code below deals with the past habit events. The HabitEventCustomList is used
         // to arrange and output the details
         // Todo: Change the past habit events' data below to actual data from Firestore using HabitID and HabitEventID
-        String[] names = {"Wash dishes", "Wash dishes", "Wash dishes", "Wash dishes", "Wash dishes", "Wash dishes"};
         String[] locations = {"", "", "", "", "", ""};
         Date[] dates = {new Date(), new Date(), new Date(), new Date(), new Date(), new Date()};
         String[] descriptions = {"", "", "", "", "", ""};
@@ -88,8 +87,8 @@ public class ViewHabitActivity extends AppCompatActivity {
         habitEventList = findViewById(R.id.past_habit_event_list);
         habitEventDataList = new ArrayList<>();
 
-        for (int i = 0; i < names.length; i++) {
-            habitEventDataList.add(new HabitEventModel(names[i], locations[i], dates[i], descriptions[i]));
+        for (int i = 0; i < locations.length; i++) {
+            habitEventDataList.add(new HabitEventModel(locations[i], dates[i], descriptions[i]));
         }
 
         habitEventAdapter = new HabitEventCustomList(this, habitEventDataList);

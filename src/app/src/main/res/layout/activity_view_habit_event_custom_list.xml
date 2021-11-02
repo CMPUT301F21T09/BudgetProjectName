@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="15dp"
+    android:textSize="40sp"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="172dp"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Date"
+        android:textSize="18sp"></TextView>
+
+    <ImageView
+        android:id="@+id/image_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:padding="5dp" />
+
+    <ImageView
+        android:id="@+id/comment_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_toLeftOf="@id/image_icon"
+        android:padding="5dp" />
+
+    <ImageView
+        android:id="@+id/location_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_toLeftOf="@id/comment_icon"
+        android:padding="5dp" />
+</RelativeLayout>
+

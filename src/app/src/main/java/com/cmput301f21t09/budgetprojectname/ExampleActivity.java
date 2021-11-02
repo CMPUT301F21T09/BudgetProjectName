@@ -20,9 +20,13 @@ public class ExampleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_example);
 
         Button viewHabitEventDetail = findViewById(R.id.example_view_habit_event_detail);
-        viewHabitEventDetail.setOnClickListener(v -> {
-            startActivity(new Intent(this, ViewHabitEventActivity.class));
-        });
+        viewHabitEventDetail.setOnClickListener(v -> startActivity(new Intent(this, ViewHabitEventActivity.class)));
+
+        Button userLogin = findViewById(R.id.user_login);
+        userLogin.setOnClickListener(v -> startActivity(new Intent(this, UserLoginActivity.class)));
+
+        Button userRegister = findViewById(R.id.user_register);
+        userRegister.setOnClickListener(v -> startActivity(new Intent(this, UserRegisterActivity.class)));
 
         // TODO: move button into habitlist activity and pass habitID to intent
         final Button habitEventBtn = findViewById(R.id.createhabiteventBtn);

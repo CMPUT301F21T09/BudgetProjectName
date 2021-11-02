@@ -69,7 +69,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 String commentStr = comment.getText().toString();
                 // error checking/handling for adding optional comment of up to 20 chars
                 if(commentStr.length() > 20 ){
-                    comment.setError("Comment field can't be more than 20 chars.");
+                    comment.setError(getString(R.string.errorHabitEventComment));
                     comment.requestFocus();
                     Toast.makeText(getApplicationContext(), "ERROR: could not save habit event",
                             Toast.LENGTH_SHORT).show();

@@ -32,7 +32,7 @@ public class ExampleActivity extends AppCompatActivity {
                 // TODO: use actual habit event ID
                 final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
                 String habitEventID = "v5BYLwHC2W4wGHkjff9K"; // example habit event I created
-                intent.putExtra(HABIT_EVENT_ID, habitEventID);
+                // intent.putExtra(HABIT_EVENT_ID, habitEventID);
                 startActivity(intent);
             }
         });

@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -66,13 +67,21 @@ public class DefineHabitEventActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String locationStr = location.getText().toString();
                 String commentStr = comment.getText().toString();
-                HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(), commentStr);
-
-                if (isNewHabitEvent) {
-                    storeNewHabitEvent(habitEvent);
-                } else {
-                    storeEditedHabitEvent(habitEventID, habitEvent);
-                    setHabitEventFields(habitEventID);
+                // error checking/handling for adding optional comment of up to 20 chars
+                if(commentStr.length() > 20 ){
+                    comment.setError("Comment field can't be more than 20 chars.");
+                    comment.requestFocus();
+                    Toast.makeText(getApplicationContext(), "ERROR: could not save habit event",
+                            Toast.LENGTH_SHORT).show();
+                } else{
+                    HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(),
+                            commentStr);
+                    if (isNewHabitEvent) {
+                        storeNewHabitEvent(habitEvent);
+                    } else {
+                        storeEditedHabitEvent(habitEventID, habitEvent);
+                        setHabitEventFields(habitEventID);
+                    }
                 }
             }
         });

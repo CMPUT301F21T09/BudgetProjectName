@@ -34,7 +34,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_habit_screen);
 
         // Display the back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // The specific habitID is fetched from the previous activity
         Intent intent = getIntent();

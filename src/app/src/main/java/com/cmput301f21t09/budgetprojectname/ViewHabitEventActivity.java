@@ -49,9 +49,9 @@ public class ViewHabitEventActivity extends AppCompatActivity {
 
         Button deleteHabitEventBtn = findViewById(R.id.view_habit_event_habit_event_delete_button);
         deleteHabitEventBtn.setOnClickListener(v -> {
-            // TODO: Delete Targeted Habit Event
-            deleteHabitEvent("AhDMiDRXIxD3hxop997V");
-
+            // TODO: Get habitEventID from the habit detail screen (passed in Intent)
+            deleteHabitEvent("ET8RjgfzLexTHZeSY7rg");
+            startActivity(new Intent(this, ViewHabitActivity.class));
         });
     }
 

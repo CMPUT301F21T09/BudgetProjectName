@@ -64,13 +64,16 @@
 
         <EditText
             android:id="@+id/first_name_edittext"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
             android:autofillHints="name"
             android:background="@null"
             android:inputType="textPersonName"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@id/first_name_edittext_background"
+            app:layout_constraintEnd_toEndOf="@+id/first_name_edittext_background"
             app:layout_constraintStart_toStartOf="@id/first_name_edittext_background"
             app:layout_constraintTop_toTopOf="@id/first_name_edittext_background" />
 
@@ -101,13 +104,16 @@
 
         <EditText
             android:id="@+id/last_name_edittext"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
             android:autofillHints="name"
             android:background="@null"
             android:inputType="textPersonName"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@id/last_name_edittext_background"
+            app:layout_constraintEnd_toEndOf="@+id/last_name_edittext_background"
             app:layout_constraintStart_toStartOf="@id/last_name_edittext_background"
             app:layout_constraintTop_toTopOf="@id/last_name_edittext_background" />
 
@@ -149,15 +155,18 @@
 
         <EditText
             android:id="@+id/username_edittext"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
             android:autofillHints="name"
             android:background="@null"
             android:inputType="textPersonName"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@id/first_name_edittext_background"
-            app:layout_constraintStart_toStartOf="@id/first_name_edittext_background"
-            app:layout_constraintTop_toTopOf="@id/first_name_edittext_background" />
+            app:layout_constraintBottom_toBottomOf="@+id/username_edittext_background"
+            app:layout_constraintEnd_toEndOf="@+id/username_edittext_background"
+            app:layout_constraintStart_toStartOf="@+id/username_edittext_background"
+            app:layout_constraintTop_toTopOf="@+id/username_edittext_background" />
 
         <TextView
             android:id="@+id/password_label"
@@ -186,15 +195,18 @@
 
         <EditText
             android:id="@+id/password_edittext"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
             android:autofillHints="password"
             android:background="@null"
             android:inputType="textPassword"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@id/last_name_edittext_background"
-            app:layout_constraintStart_toStartOf="@id/last_name_edittext_background"
-            app:layout_constraintTop_toTopOf="@id/last_name_edittext_background" />
+            app:layout_constraintBottom_toBottomOf="@+id/password_edittext_background"
+            app:layout_constraintEnd_toEndOf="@+id/password_edittext_background"
+            app:layout_constraintStart_toStartOf="@+id/password_edittext_background"
+            app:layout_constraintTop_toTopOf="@+id/password_edittext_background" />
 
         <Button
             android:id="@+id/back_button"

@@ -29,7 +29,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     private TextView screenTitle;
     private TextView habitEventName;
     private EditText location;
-    private EditText description;
+    private EditText comment;
     private ImageView image;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "DefineHabitEventActivity";
@@ -58,15 +58,15 @@ public class DefineHabitEventActivity extends AppCompatActivity {
 
         habitEventName = (TextView) findViewById(R.id.habiteventName);
         location = (EditText) findViewById(R.id.location);
-        description = (EditText) findViewById(R.id.description);
+        comment = (EditText) findViewById(R.id.comment);
         image = (ImageView) findViewById(R.id.image);
 
         final Button checkBtn = findViewById(R.id.checkBtn);
         checkBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String locationStr = location.getText().toString();
-                String descriptionStr = description.getText().toString();
-                HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(), descriptionStr);
+                String commentStr = comment.getText().toString();
+                HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(), commentStr);
 
                 if (isNewHabitEvent) {
                     storeNewHabitEvent(habitEvent);
@@ -112,7 +112,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     private void storeEditedHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
         DocumentReference habitEventRef = db.collection("habit_events")
                 .document(habitEventID);
-        habitEventRef.update("description", modifiedHabitEvent.getDescription(),
+        habitEventRef.update("comment", modifiedHabitEvent.getComment(),
                 "location", modifiedHabitEvent.getLocation(),
                 "image", modifiedHabitEvent.getImage())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -150,7 +150,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
 
                         // set fields in view
                         location.setText(document.getString("location"));
-                        description.setText(document.getString("description"));
+                        comment.setText(document.getString("comment"));
                         // TODO: set image
 
                     } else {

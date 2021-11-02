@@ -70,20 +70,21 @@
             android:inputType="textPersonName"
             android:minHeight="48dp"
             android:paddingRight="16sp"
-            android:text="Location" />
+            android:text=""
+            android:hint="Location"/>
 
         <TextView
-            android:id="@+id/descriptionLabel"
+            android:id="@+id/commentLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="16sp"
             android:paddingTop="10sp"
             android:paddingRight="16sp"
-            android:text="Description"
+            android:text="Comment"
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/description"
+            android:id="@+id/comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16sp"
@@ -91,7 +92,8 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:minHeight="48dp"
-            android:text="Description" />
+            android:text=""
+            android:hint="Comment"/>
 
         <TextView
             android:id="@+id/dateLabel"

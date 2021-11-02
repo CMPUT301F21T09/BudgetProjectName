@@ -9,20 +9,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BudgetProjectName">
+        <activity android:name=".ViewHabitActivity"
+            android:exported="true"
+            android:label="@string/viewHabitActivity"/>
         <activity
             android:name=".ExampleActivity"
-            android:exported="true" />
-        <activity
-            android:name=".DefineHabitEventActivity"
-            android:exported="true" />
-        <activity
-            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".DefineHabitEventActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ViewHabitEventActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

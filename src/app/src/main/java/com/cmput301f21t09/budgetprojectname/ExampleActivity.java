@@ -35,9 +35,20 @@ public class ExampleActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), DefineHabitEventActivity.class);
                 // TODO: use actual habit event ID
                 final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
-                // Omit habitEventID and intent line if creating a new habit event
-                int habitEventID = 1;
+                String habitEventID = "v5BYLwHC2W4wGHkjff9K"; // example habit event I created
                 intent.putExtra(HABIT_EVENT_ID, habitEventID);
+                startActivity(intent);
+            }
+        });
+
+        // TODO: Move this function to relate to each habit that a user has and pass habitID to intent
+        final Button habitBtn = findViewById(R.id.viewHabitDetailsBtn);
+        habitBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ViewHabitActivity.class);
+                final String HABIT_ID = "HABIT_ID";
+                int habitID = 1;
+                intent.putExtra(HABIT_ID, habitID);
                 startActivity(intent);
             }
         });

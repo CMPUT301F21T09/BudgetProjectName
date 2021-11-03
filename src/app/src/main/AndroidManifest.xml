@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cmput301f21t09.budgetprojectname">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -13,8 +12,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BudgetProjectName">
         <activity
+            android:name=".ViewHabitActivity"
+            android:exported="true"
+            android:label="@string/viewHabitActivity" />
+        <activity
+            android:name=".UserRegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserLoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".DefineHabitEventActivity"
-            android:exported="true" />
+            android:exported="false" />
+        <activity
+            android:name=".ViewHabitEventActivity"
+            android:exported="false" />
         <activity
             android:name=".ExampleActivity"
             android:exported="true">
@@ -34,6 +46,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
     </application>
+
     <queries>
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
@@ -43,4 +56,5 @@
             <data android:mimeType="image/*" />
         </intent>
     </queries>
+
 </manifest>

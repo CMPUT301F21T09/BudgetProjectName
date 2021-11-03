@@ -1,13 +1,17 @@
 package com.cmput301f21t09.budgetprojectname;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -16,10 +20,21 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,11 +44,15 @@ import java.util.Date;
 public class DefineHabitEventActivity extends AppCompatActivity {
 
     private TextView toolbarTitle;
-    private TextView habitEventName;
+    private TextView habitName;
     private EditText location;
     private EditText description;
     private ImageView image;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static final String TAG = "DefineHabitEventActivity";
 
+    private ActivityResultLauncher<Intent> GalleryResultLauncher;
+    private ActivityResultLauncher<Intent> CameraResultLauncher;
     String mPhotoPath;
 
     @Override
@@ -42,22 +61,24 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_define_habit_event);
 
         Intent intent = getIntent();
-        int habitEventID = intent.getIntExtra("HABIT_EVENT_ID", -1);
-
+        String habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
+        boolean isNewHabitEvent = (habitEventID == null);
         String modeStr;
-        // if intent not have habit event ID, then create a new habit event
-        if (habitEventID == -1) {
+
+        if (isNewHabitEvent) {
             modeStr = getString(R.string.createHabitEventMode);
         } else {
             modeStr = getString(R.string.editHabitEventMode);
+            // sets existing habitEvent fields
+            setHabitEventFields(habitEventID);
         }
 
         // update title according to mode selected: "add" or "edit"
-        //  toolbarTitle = findViewById(R.id.toolbar_title);
-        //  toolbarTitle.setText(modeStr);
+        toolbarTitle = findViewById(R.id.toolbar_title);
+        toolbarTitle.setText(modeStr);
 
-        // TODO: query habitID in Firestore and populate this field with corresponding habitName
-        habitEventName = findViewById(R.id.habitName);
+        habitName = findViewById(R.id.habitName);
+
         location = findViewById(R.id.location);
         description = findViewById(R.id.description);
         image = findViewById(R.id.image);
@@ -65,18 +86,21 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         ImageButton doneBtn = findViewById(R.id.done);
         doneBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String nameStr = habitEventName.getText().toString();
                 String locationStr = location.getText().toString();
                 String descriptionStr = description.getText().toString();
+                HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(), descriptionStr);
 
-                HabitEventModel habitEvent = new
-                        HabitEventModel(nameStr, locationStr, new Date(), descriptionStr);
-                // TODO: save HabitEvent in Firestore DB
+                if (isNewHabitEvent) {
+                    storeNewHabitEvent(habitEvent);
+                } else {
+                    storeEditedHabitEvent(habitEventID, habitEvent);
+                    setHabitEventFields(habitEventID);
+                }
             }
         });
 
         //Get Image from Launcher
-        ActivityResultLauncher<Intent> GalleryResultLauncher = registerForActivityResult(
+        GalleryResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
@@ -91,7 +115,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 });
 
         //Get Image from Camera
-        ActivityResultLauncher<Intent> CameraResultLauncher = registerForActivityResult(
+        CameraResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
@@ -117,36 +141,143 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                             GalleryResultLauncher.launch(galleryIntent);
                         }
                     } else if (which == 1) {
-                        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                            // Create the File where the photo should go
-                            File photoFile = null;
-                            try {
-                                photoFile = createImageFile();
-                            } catch (IOException ex) {
-                                // Error occurred while creating the File
-                            }
-                            // Continue only if the File created successfully
-                            if (photoFile != null) {
-                                Uri photoURI = FileProvider.getUriForFile(this,
-                                        "com.cmput301f21t09.budgetprojectname.provider",
-                                        photoFile);
-                                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                                CameraResultLauncher.launch(cameraIntent);
-                            }
+                        // Check if Corresponding Permissions are granted
+                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                            requestPermissions(new String[]{Manifest.permission.CAMERA}, 0);
                         }
                     }
                 }).show());
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                // Create the File where the photo should go
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    // Error occurred while creating the File
+                }
+                // Continue only if the File created successfully
+                if (photoFile != null) {
+                    Uri photoURI = FileProvider.getUriForFile(this,
+                            "com.cmput301f21t09.budgetprojectname.provider",
+                            photoFile);
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    CameraResultLauncher.launch(cameraIntent);
+                }
+            }
+
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+                Snackbar.make(getWindow().getDecorView().getRootView(), "This Action Requires Camera Permission", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("Grant Permission", v1 -> {
+                            requestPermissions(new String[]{Manifest.permission.CAMERA}, 0);
+                        }).show();
+            } else {
+                Snackbar.make(getWindow().getDecorView().getRootView(), "This Action Requires Camera Permission. Press OK to Go to the Settings", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("OK", v1 -> {
+                            Uri uri = Uri.fromParts("package", getPackageName(), null);
+                            startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(uri));
+                        }).show();
+            }
+        }
+    }
+
     private File createImageFile() throws IOException {
-        // Create an image file name
-        String imageFileName = "temp";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        File image = File.createTempFile("temp", ".jpg", storageDir);
 
         mPhotoPath = image.getAbsolutePath();
         return image;
     }
 
+    /**
+     * Stores newly created habitEvent document in the habit_events collection
+     *
+     * @param habitEvent habitEvent to be added
+     */
+    private void storeNewHabitEvent(HabitEventModel habitEvent) {
+        System.out.println("store new habit");
+        db.collection("habit_events")
+                .add(habitEvent)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        String docID = documentReference.getId();
+                        Log.d(TAG, "DocumentSnapshot added with ID: " + docID);
+                        System.out.println(docID);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
+    }
+
+    /**
+     * Stores modified habitEvent document in the habit_events collection
+     *
+     * @param habitEventID       ID of habitEvent to be updated
+     * @param modifiedHabitEvent habitEvent to be updated
+     */
+    private void storeEditedHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
+        DocumentReference habitEventRef = db.collection("habit_events")
+                .document(habitEventID);
+        habitEventRef.update("description", modifiedHabitEvent.getDescription(),
+                "location", modifiedHabitEvent.getLocation(),
+                "image", modifiedHabitEvent.getImage())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+    }
+
+    /**
+     * Sets the fields with existing values from Firestore
+     *
+     * @param habitEventID ID of habitEvent to be retrieved
+     */
+    private void setHabitEventFields(String habitEventID) {
+        DocumentReference docRef = db.collection("habit_events").document(habitEventID);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        // TODO: Possible refactoring where document retrieval is
+                        //  separate from setting fields
+
+                        // set fields in view
+                        location.setText(document.getString("location"));
+                        description.setText(document.getString("description"));
+                        // TODO: set image
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
 }

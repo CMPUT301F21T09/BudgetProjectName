@@ -1,14 +1,11 @@
 package com.cmput301f21t09.budgetprojectname;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * This is an activity to be used for testing.
@@ -22,9 +19,12 @@ public class ExampleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_example);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-        }
+        Button viewHabitEventDetail = findViewById(R.id.example_view_habit_event_detail);
+        viewHabitEventDetail.setOnClickListener(v -> startActivity(new Intent(this, ViewHabitEventActivity.class)));
+
+        Button userLogin = findViewById(R.id.user_login);
+        userLogin.setOnClickListener(v -> startActivity(new Intent(this, UserLoginActivity.class)));
+
 
         // TODO: move button into habitlist activity and pass habitID to intent
         final Button habitEventBtn = findViewById(R.id.createhabiteventBtn);
@@ -33,35 +33,22 @@ public class ExampleActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), DefineHabitEventActivity.class);
                 // TODO: use actual habit event ID
                 final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
-                // Omit habitEventID and intent line if creating a new habit event
-                int habitEventID = 1;
+                String habitEventID = "v5BYLwHC2W4wGHkjff9K"; // example habit event I created
                 intent.putExtra(HABIT_EVENT_ID, habitEventID);
                 startActivity(intent);
             }
         });
-    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 1:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission is granted. Continue the action or workflow
-                    // in your app.
-                } else {
-                    // Explain to the user that the feature is unavailable because
-                    // the features requires a permission that the user has denied.
-                    // At the same time, respect the user's decision. Don't link to
-                    // system settings in an effort to convince the user to change
-                    // their decision.
-                }
-                return;
-        }
-        // Other 'case' lines to check for other
-        // permissions this app might request.
+        // TODO: Move this function to relate to each habit that a user has and pass habitID to intent
+        final Button habitBtn = findViewById(R.id.viewHabitDetailsBtn);
+        habitBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ViewHabitActivity.class);
+                final String HABIT_ID = "HABIT_ID";
+                int habitID = 1;
+                intent.putExtra(HABIT_ID, habitID);
+                startActivity(intent);
+            }
+        });
     }
 }

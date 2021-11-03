@@ -40,11 +40,19 @@ public class HabitEventModel{
         this.comment = null;
     }
 
+    HabitEventModel(Date date) {
+        this.ID = "s1w9kwequ290"; // placeholder ID
+        this.location = null;
+        this.date = date;
+        this.image = null;
+        this.comment = null;
+    }
+
     HabitEventModel(){
         this.ID = null;
         this.location = null;
         this.comment = null;
-        this.date = null;
+        this.date = new Date();
         this.image = null;
     }
 

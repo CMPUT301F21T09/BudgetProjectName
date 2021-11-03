@@ -18,17 +18,26 @@ import com.google.firebase.firestore.FirebaseFirestore;
  *
  */
 public class HabitEventStore {
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore dbStore = FirebaseFirestore.getInstance();
     private static final String TAG = "HabitEventStore";
     public HabitEventModel retrievedHabitEventModel;
 
-    // Apply Singleton Design Pattern
-    private static HabitEventStore habitEventStore = new HabitEventStore();
 
-    private HabitEventStore(){}
+//    // Apply Singleton Design Pattern
+//    private static HabitEventStore habitEventStore = new HabitEventStore();
+//
+public HabitEventStore(){}
+//
+//    public static HabitEventStore getInstance(){
+//        return habitEventStore;
+//    }
 
-    public static HabitEventStore getInstance(){
-        return habitEventStore;
+    public interface HabitEventCallback{
+        void onCallback(HabitEventModel habitEvent);
+    }
+
+    public interface HabitEventIDCallback{
+        void onCallback(String habitEventID);
     }
 
     /**
@@ -36,9 +45,10 @@ public class HabitEventStore {
      *
      * @param habitEvent habitEvent to be added
      */
-    public void createHabitEvent(HabitEventModel habitEvent) {
+    public void createHabitEvent(HabitEventModel habitEvent, HabitEventIDCallback idCallback) {
+        // db = FirebaseFirestore.getInstance();
         System.out.println("store new habit");
-        db.collection("habit_events")
+        dbStore.collection("habit_events")
                 .add(habitEvent)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -46,6 +56,7 @@ public class HabitEventStore {
                         String docID = documentReference.getId();
                         Log.d(TAG, "DocumentSnapshot added with ID: " + docID);
                         System.out.println(docID);
+                        idCallback.onCallback(docID);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -63,7 +74,8 @@ public class HabitEventStore {
      * @param modifiedHabitEvent habitEvent to be updated
      */
     public void updateHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
-        DocumentReference habitEventRef = db.collection("habit_events")
+        //db = FirebaseFirestore.getInstance();
+        DocumentReference habitEventRef = dbStore.collection("habit_events")
                 .document(habitEventID);
         habitEventRef.update("comment", modifiedHabitEvent.getComment(),
                 "location", modifiedHabitEvent.getLocation(),
@@ -80,8 +92,14 @@ public class HabitEventStore {
                         Log.w(TAG, "Error updating document", e);
                     }
                 });
-
     }
+    // updateLoc()
+    /**
+     * new HEModel(oldHE stuff, new loc)
+     * cachedModel = heModel
+     * notifyListeners()
+     * commit()
+     */
     // TODO: add read scenario
     // TODO: add delete scenario
 }

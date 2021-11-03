@@ -34,7 +34,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     private ImageView image;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "DefineHabitEventActivity";
-    private HabitEventStore habitEventStore = HabitEventStore.getInstance();
+    private HabitEventStore habitEventStore = new HabitEventStore();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,12 +70,23 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 String locationStr = location.getText().toString();
                 String descriptionStr = description.getText().toString();
                 HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(), descriptionStr);
+                // setters
 
                 if (isNewHabitEvent) {
-                    habitEventStore.createHabitEvent(habitEvent);
+                    habitEventStore.createHabitEvent(habitEvent, new HabitEventStore.HabitEventIDCallback() {
+                        @Override
+                        public void onCallback(String habitEventID) {
+                            // TODO: figure out what to add here
+                            System.out.println("habitevent id " + habitEventID);
+                            location.getText().clear();
+                            description.getText().clear();
+                        }
+                    });
+                    // habiteventcontroller.updateLoc(edittext)
                 } else {
                     habitEventStore.updateHabitEvent(habitEventID, habitEvent);
                 }
+
             }
         });
         // Let User Add/Change their habit event image as click ImageView area

@@ -9,15 +9,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,7 +31,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     private ImageView image;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "DefineHabitEventActivity";
-    private HabitEventStore habitEventStore = new HabitEventStore();
+    private HabitEventController habitEventController = new HabitEventController();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +70,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 // setters
 
                 if (isNewHabitEvent) {
-                    habitEventStore.createHabitEvent(habitEvent, new HabitEventStore.HabitEventIDCallback() {
+                    habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
                         @Override
                         public void onCallback(String habitEventID) {
                             // TODO: figure out what to add here
@@ -84,7 +81,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                     });
                     // habiteventcontroller.updateLoc(edittext)
                 } else {
-                    habitEventStore.updateHabitEvent(habitEventID, habitEvent);
+                    habitEventController.updateHabitEvent(habitEventID, habitEvent);
                 }
 
             }
@@ -110,7 +107,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                        // TODO: Move to HabitEventStore once async request handling is solved
+                        // TODO: Move to HabitEventController once async request handling is solved
 
                         // set fields in view
                         location.setText(document.getString("location"));

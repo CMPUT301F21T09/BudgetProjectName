@@ -9,12 +9,17 @@ import android.widget.TextView;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * Represents the habit event model containing fields like habit event ID, location, comment, date,
+ * image, and habit ID
+ */
 public class HabitEventModel{
     private final String ID; // TODO: change type depending on Firebase ID type
     private final String location; // TODO: change to Location once this is implemented
     private final String comment;
     private final Date date;
     private final Image image;
+    // TODO: add reference to the habitid (add to all constructors, etc.)
 
     HabitEventModel(String location, Date date, String comment, Image image) {
         this.ID = "s1w9kwequ290"; // placeholder ID

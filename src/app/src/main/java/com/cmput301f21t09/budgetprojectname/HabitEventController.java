@@ -13,24 +13,24 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
- * Represents a habitEventStore that interfaces with FirestoreDB to
+ * Represents a Habit Event Controller that interfaces with FirestoreDB to
  * create, read, update, and delete HabitEvents.
  *
  */
-public class HabitEventStore {
+public class HabitEventController {
     private FirebaseFirestore dbStore = FirebaseFirestore.getInstance();
-    private static final String TAG = "HabitEventStore";
+    private static final String TAG = "HabitEventController";
     public HabitEventModel retrievedHabitEventModel;
 
 
 //    // Apply Singleton Design Pattern
-//    private static HabitEventStore habitEventStore = new HabitEventStore();
+//    private static HabitEventController habitEventStore = new HabitEventController();
 //
-public HabitEventStore(){}
-//
-//    public static HabitEventStore getInstance(){
+//    public static HabitEventController getInstance(){
 //        return habitEventStore;
 //    }
+
+    public HabitEventController(){}
 
     public interface HabitEventCallback{
         void onCallback(HabitEventModel habitEvent);
@@ -74,7 +74,6 @@ public HabitEventStore(){}
      * @param modifiedHabitEvent habitEvent to be updated
      */
     public void updateHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
-        //db = FirebaseFirestore.getInstance();
         DocumentReference habitEventRef = dbStore.collection("habit_events")
                 .document(habitEventID);
         habitEventRef.update("comment", modifiedHabitEvent.getComment(),

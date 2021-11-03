@@ -47,13 +47,14 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     private TextView habitName;
     private EditText location;
     private EditText description;
-    private ImageView image;
+    private ImageView imageView;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "DefineHabitEventActivity";
 
     private ActivityResultLauncher<Intent> GalleryResultLauncher;
     private ActivityResultLauncher<Intent> CameraResultLauncher;
     String mPhotoPath;
+    Bitmap image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +82,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
 
         location = findViewById(R.id.location);
         description = findViewById(R.id.description);
-        image = findViewById(R.id.image);
+        imageView = findViewById(R.id.image);
 
         ImageButton doneBtn = findViewById(R.id.done);
         doneBtn.setOnClickListener(new View.OnClickListener() {
@@ -99,42 +100,41 @@ public class DefineHabitEventActivity extends AppCompatActivity {
             }
         });
 
-        //Get Image from Launcher
+        // Get Image from Launcher
         GalleryResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Uri selectedImage = result.getData().getData();
                         try {
-                            Bitmap bitmap = BitmapFactory.decodeStream(getBaseContext().getContentResolver().openInputStream(selectedImage));
-                            image.setImageBitmap(bitmap);
+                            image = BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage));
+                            imageView.setImageBitmap(image);
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
                     }
                 });
 
-        //Get Image from Camera
+        // Get Image from Camera
         CameraResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         File file = new File(mPhotoPath);
-                        Bitmap selectedImage = null;
                         try {
-                            selectedImage = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.fromFile(file));
+                            image = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.fromFile(file));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        image.setImageBitmap(selectedImage);
+                        imageView.setImageBitmap(image);
                     }
                 });
 
-        String[] actionList = new String[]{"Gallery", "Take a Photo"};
 
-        image.setOnClickListener(v -> new MaterialAlertDialogBuilder(this, R.style.MyDialogTheme)
+        // Add or Replace Image by Clicking ImageView area
+        imageView.setOnClickListener(v -> new MaterialAlertDialogBuilder(this, R.style.MyDialogTheme)
                 .setTitle("Select Image From")
-                .setItems(actionList, (dialog, which) -> {
+                .setItems(new String[]{"Gallery", "Take a Photo"}, (dialog, which) -> {
                     if (which == 0) {
                         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).setType("image/*");
                         if (galleryIntent.resolveActivity(getPackageManager()) != null) {
@@ -144,6 +144,8 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                         // Check if Corresponding Permissions are granted
                         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                             requestPermissions(new String[]{Manifest.permission.CAMERA}, 0);
+                        } else {
+                            runCameraIntent();
                         }
                     }
                 }).show());
@@ -153,35 +155,16 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                // Create the File where the photo should go
-                File photoFile = null;
-                try {
-                    photoFile = createImageFile();
-                } catch (IOException ex) {
-                    // Error occurred while creating the File
-                }
-                // Continue only if the File created successfully
-                if (photoFile != null) {
-                    Uri photoURI = FileProvider.getUriForFile(this,
-                            "com.cmput301f21t09.budgetprojectname.provider",
-                            photoFile);
-                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                    CameraResultLauncher.launch(cameraIntent);
-                }
-            }
-
+            runCameraIntent();
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-                Snackbar.make(getWindow().getDecorView().getRootView(), "This Action Requires Camera Permission", Snackbar.LENGTH_INDEFINITE)
+                Snackbar.make(getWindow().getDecorView().getRootView(), "This action requires\ncamera permission", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Grant Permission", v1 -> {
                             requestPermissions(new String[]{Manifest.permission.CAMERA}, 0);
                         }).show();
             } else {
-                Snackbar.make(getWindow().getDecorView().getRootView(), "This Action Requires Camera Permission. Press OK to Go to the Settings", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("OK", v1 -> {
+                Snackbar.make(getWindow().getDecorView().getRootView(), "This action requires\ncamera permission.", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("Go to Settings", v1 -> {
                             Uri uri = Uri.fromParts("package", getPackageName(), null);
                             startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(uri));
                         }).show();
@@ -189,12 +172,23 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         }
     }
 
-    private File createImageFile() throws IOException {
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile("temp", ".jpg", storageDir);
+    private void runCameraIntent() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File imageFile = null;
+            try {
+                // Try to Create Temporary File
+                imageFile = File.createTempFile("temp", ".jpg", getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            mPhotoPath = imageFile.getAbsolutePath();
 
-        mPhotoPath = image.getAbsolutePath();
-        return image;
+            Uri photoURI = FileProvider.getUriForFile(this, "com.cmput301f21t09.budgetprojectname.provider", imageFile);
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            CameraResultLauncher.launch(cameraIntent);
+        }
     }
 
     /**

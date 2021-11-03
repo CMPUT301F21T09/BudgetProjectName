@@ -2,9 +2,10 @@ package com.cmput301f21t09.budgetprojectname.services.database;
 
 import androidx.annotation.NonNull;
 
+import com.cmput301f21t09.budgetprojectname.services.ServiceTask;
+import com.cmput301f21t09.budgetprojectname.services.ServiceTaskListener;
+import com.cmput301f21t09.budgetprojectname.services.ServiceTaskManager;
 import com.cmput301f21t09.budgetprojectname.services.database.serializers.DocumentModelSerializer;
-import com.cmput301f21t09.budgetprojectname.services.database.serializers.ModelMapParser;
-import com.cmput301f21t09.budgetprojectname.services.database.result.TaskResult;
 import com.google.firebase.firestore.DocumentReference;
 
 /**
@@ -28,75 +29,38 @@ public final class DocumentHandle<T> {
 
     /**
      * Retrieve a given document's data as parsed using a provided ModelMapParser
-     * @param listener to invoke on task completion
-     * @param parser to use for deserialization
-     * @param <S> type of model data represents
-     */
-    public <S extends T> void retrieve(TaskListener<S> listener, ModelMapParser<S> parser) {
-        registerGetListener(listener, DocumentModelSerializer.getInstance(parser));
-    }
-
-    /**
-     * Retrieve a given document's data as parsed using the class definition to deserialize
-     * @param listener to invoke on task completion
-     * @param tClass class definition to use to deserialize
-     * @param <S> type of model data represents
-     */
-    public <S extends T> void retrieve(TaskListener<S> listener, Class<S> tClass) {
-        registerGetListener(listener, DocumentModelSerializer.getInstance(tClass));
-    }
-
-    /**
-     * Listen to updates on a given document's data as parsed using a provided ModelMapParser
-     * @param listener to invoke on task completion
-     * @param parser to use for deserialization
-     * @param <S> type of model data represents
-     */
-    public <S extends T> void listen(TaskListener<S> listener, ModelMapParser<S> parser) {
-        registerSnapshotListener(listener, DocumentModelSerializer.getInstance(parser));
-    }
-
-    /**
-     * Listen to updates on a given document's data as parsed using the class definition to deserialize
-     * @param listener to invoke on task completion
-     * @param tClass class definition to use to deserialize
-     * @param <S> type of model data represents
-     */
-    public <S extends T> void listen(TaskListener<S> listener, Class<S> tClass) {
-        registerSnapshotListener(listener, DocumentModelSerializer.getInstance(tClass));
-    }
-
-    /**
-     * Registers a listener for a "get" operation on the document
-     * @param listener to invoke on task completion
      * @param serializer to use for document deserialization
      * @param <S> type of model data represents
      */
-    private <S extends T> void registerGetListener(TaskListener<S> listener, DocumentModelSerializer<S> serializer) {
+    public <S extends T> ServiceTask<S> retrieve(DocumentModelSerializer<S> serializer) {
+        ServiceTaskManager<S> taskManager = new ServiceTaskManager<>();
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 S data = serializer.deserialize(task.getResult());
-                listener.onResponse(TaskResult.getInstance(data));
+                taskManager.setSuccess(data);
             } else {
-                listener.onResponse(TaskResult.getInstance(TaskError.fromFirebaseException(task.getException())));
+                taskManager.setFailure(task.getException());
             }
         });
+        return taskManager.getTask();
     }
 
     /**
-     * Registers a listener for a "snapshot update" operation on the document
-     * @param listener to invoke on task completion
+     * Retrieve a given document's data as parsed using a provided ModelMapParser
+     * @param model to serialize and push to database
      * @param serializer to use for document deserialization
      * @param <S> type of model data represents
      */
-    private <S extends T> void registerSnapshotListener(TaskListener<S> listener, DocumentModelSerializer<S> serializer) {
-        docRef.addSnapshotListener((snapshot, e) -> {
-            if (e != null) {
-                listener.onResponse(TaskResult.getInstance(TaskError.fromFirebaseException(e)));
+    public <S extends T> ServiceTask<Void> save(S model, DocumentModelSerializer<S> serializer) {
+        ServiceTaskManager<Void> taskManager = new ServiceTaskManager<>();
+        docRef.set(serializer.serialize(model)).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                taskManager.setSuccess(null);
             } else {
-                S data = serializer.deserialize(snapshot);
-                listener.onResponse(TaskResult.getInstance(data));
+                taskManager.setFailure(task.getException());
             }
         });
+        return taskManager.getTask();
     }
+
 }

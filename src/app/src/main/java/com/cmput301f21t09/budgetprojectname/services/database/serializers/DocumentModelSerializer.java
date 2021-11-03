@@ -22,16 +22,6 @@ public interface DocumentModelSerializer<T> {
     }
 
     /**
-     * Returns an instance of the DocumentModelSerializer that uses the given class definition
-     * @param tClass class definition to use for serialization/deserialization
-     * @param <S> type of model to serialize/deserialize
-     * @return instance of DocumentModelSerializer
-     */
-    static <S> DocumentModelSerializer<S> getInstance(Class<S> tClass) {
-        return new ModelClassSerializer<>(tClass);
-    }
-
-    /**
      * Serialize a given model to a Firestore friendly object
      * @param model to serialize
      * @return serialized data

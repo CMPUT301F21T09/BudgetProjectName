@@ -1,6 +1,7 @@
 package com.cmput301f21t09.budgetprojectname.services.database;
 
 import com.cmput301f21t09.budgetprojectname.HabitEventModel;
+import com.cmput301f21t09.budgetprojectname.models.IHabitModel;
 
 /**
  * Database Collection Specifiers with ids and model types as defined in the database backend
@@ -10,7 +11,7 @@ public class CollectionSpecifier<T> {
     /**
      * Collection Identifier for all habits
      */
-    public static CollectionSpecifier<?> HABITS = new CollectionSpecifier<>("habits");
+    public static CollectionSpecifier<IHabitModel> HABITS = new CollectionSpecifier<>("habits");
 
     /**
      * Collection Identifier for all habit events

@@ -17,19 +17,25 @@
             android:exported="true"
             android:label="@string/viewHabitActivity" />
         <activity
-            android:name=".ExampleActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:name=".UserRegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserLoginActivity"
+            android:exported="false" />
         <activity
             android:name=".DefineHabitEventActivity"
             android:exported="false" />
         <activity
             android:name=".ViewHabitEventActivity"
             android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

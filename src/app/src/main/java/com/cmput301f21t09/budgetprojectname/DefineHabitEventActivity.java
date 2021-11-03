@@ -54,8 +54,8 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         }
 
         // update title according to mode selected: "add" or "edit"
-        //  toolbarTitle = findViewById(R.id.toolbar_title);
-        //  toolbarTitle.setText(modeStr);
+        toolbarTitle = findViewById(R.id.toolbar_title);
+        toolbarTitle.setText(modeStr);
 
         habitEventName = (TextView) findViewById(R.id.habitName);
 
@@ -77,6 +77,11 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                     setHabitEventFields(habitEventID);
                 }
             }
+        });
+
+        //Let User Add/Change their habit event image as click ImageView area
+        image.setOnClickListener(v -> {
+            // TODO: Let User Choose Image from Gallery or Take a Photo
         });
     }
 
@@ -163,11 +168,5 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 }
             }
         });
-
-        //Let User Add/Change their habit event image as click ImageView area
-        image.setOnClickListener(v -> {
-            // TODO: Let User Choose Image from Gallery or Take a Photo
-        });
-
     }
 }

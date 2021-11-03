@@ -2,11 +2,10 @@ package com.cmput301f21t09.budgetprojectname;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -85,27 +84,17 @@ public class ViewHabitActivity extends AppCompatActivity {
 
         habitEventAdapter = new HabitEventCustomList(this, habitEventDataList);
         habitEventList.setAdapter(habitEventAdapter);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Brings the user back to the previous activity if the back button on the app bar is pressed
-            case android.R.id.home:
-                finish();
-                return true;
-            // Todo: Implement delete habit function
-            case R.id.actionDeleteHabit:
-                return true;
-        }
+        // Go Back
+        ImageButton back = findViewById(R.id.view_habit_back_button);
+        back.setOnClickListener(v -> {
+            finish();
+        });
 
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Add the delete button to the app bar
-        getMenuInflater().inflate(R.menu.menu_view_habit_details_screen, menu);
-        return true;
+        // Delete Habit
+        ImageButton remove = findViewById(R.id.view_habit_remove_button);
+        remove.setOnClickListener(v -> {
+            // TODO: Remove Targeted Habit. Dialog To Confirm?
+        });
     }
 }

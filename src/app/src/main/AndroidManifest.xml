@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BudgetProjectName">
         <activity
+            android:name=".DefineHabitActivity"
+            android:exported="true" />
+        <activity
             android:name=".ViewHabitActivity"
             android:exported="true"
             android:label="@string/viewHabitActivity" />

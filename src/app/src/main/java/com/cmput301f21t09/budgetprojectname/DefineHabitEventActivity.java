@@ -89,10 +89,15 @@ public class DefineHabitEventActivity extends AppCompatActivity {
 
             }
         });
-        // Let User Add/Change their habit event image as click ImageView area
+
+
+        //Let User Add/Change their habit event image as click ImageView area
         image.setOnClickListener(v -> {
             // TODO: Let User Choose Image from Gallery or Take a Photo
         });
+    }
+
+
     }
 
     /**

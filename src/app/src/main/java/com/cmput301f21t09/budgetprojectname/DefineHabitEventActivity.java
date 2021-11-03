@@ -132,6 +132,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
 
 
         // Add or Replace Image by Clicking ImageView area
+        // TODO: Detect orientation of photo, 1:1 Crop function
         imageView.setOnClickListener(v -> new MaterialAlertDialogBuilder(this, R.style.MyDialogTheme)
                 .setTitle("Select Image From")
                 .setItems(new String[]{"Gallery", "Take a Photo"}, (dialog, which) -> {

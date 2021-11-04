@@ -104,10 +104,10 @@ public class UserLoginActivity extends AppCompatActivity {
                         "Sign in failed: " + task.getException().getMessage(),
                         Toast.LENGTH_SHORT).show();
             }
-        });
 
-        // Stop loading indicator
-        progressIndicator.setVisibility(View.INVISIBLE);
+            // Stop loading indicator
+            progressIndicator.setVisibility(View.INVISIBLE);
+        });
     }
 
     /**
@@ -149,12 +149,12 @@ public class UserLoginActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.email_edittext);
         passwordEditText = findViewById(R.id.password_edittext);
 
-        // Get progress indicator
-        progressIndicator = findViewById(R.id.progress_circular);
-
         // Get buttons
         signUpButton = findViewById(R.id.sign_up_button);
         signInButton = findViewById(R.id.sign_in_button);
+
+        // Get progress indicator
+        progressIndicator = findViewById(R.id.progress_circular);
 
         // Get firebase auth instance
         firebaseAuth = FirebaseAuth.getInstance();

@@ -5,7 +5,6 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,32 +12,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.protobuf.StringValue;
 
-import org.w3c.dom.Text;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,6 +66,7 @@ public class ViewHabitActivity extends AppCompatActivity {
 
         // The code below deals with the past habit events. The HabitEventCustomList is used
         // to arrange and output the details
+
         habitEventList = findViewById(R.id.past_habit_event_list);
         habitEventDataList = new ArrayList<>();
         habitEventAdapter = new HabitEventCustomList(this, habitEventDataList);
@@ -89,7 +78,7 @@ public class ViewHabitActivity extends AppCompatActivity {
             public void onCallback(ArrayList<HabitEventModel> hbEvtLst) {
                 habitEventDataList.clear();
 
-                for (HabitEventModel hEM: habitEventDataList) {
+                for (HabitEventModel hEM : habitEventDataList) {
                     System.out.println(hEM.getDate());
                 }
 
@@ -97,36 +86,44 @@ public class ViewHabitActivity extends AppCompatActivity {
                 habitEventAdapter.notifyDataSetChanged();
             }
         });
+        // Go Back
+        ImageButton back = findViewById(R.id.view_habit_back_button);
+        back.setOnClickListener(v -> {
+            finish();
+        });
+
+        // Delete Habit
+        ImageButton remove = findViewById(R.id.view_habit_remove_button);
+        remove.setOnClickListener(v -> {
+            // TODO: Remove Targeted Habit. Dialog To Confirm?
+        });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Todo: Implement delete habit function
-            case R.id.actionDeleteHabit:
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Add the delete button to the app bar
-        getMenuInflater().inflate(R.menu.menu_view_habit_details_screen, menu);
-        return true;
-    }
 
     // Todo: Refactor this into the habit controller
+
     /**
      * Fetch the habit details from the habits collection
+     *
      * @param habitID
      */
     private void showHabitDetail(String habitID) {
+        /**
+         * Habit title
+         */
         final TextView habitTitle = (TextView) findViewById(R.id.habitTitle);
+
+        /**
+         * Habit description
+         */
         final TextView habitDescription = (TextView) findViewById(R.id.habitDescription);
+
+        /**
+         * Habit start date
+         */
         final TextView habitDate = (TextView) findViewById(R.id.habitDate);
 
+        // Maps [0,6] to the day icons on the UI
         HashMap<Integer, ImageView> hmIcon = new HashMap<>();
         hmIcon.put(0, findViewById(R.id.sunday_icon));
         hmIcon.put(1, findViewById(R.id.monday_icon));
@@ -136,6 +133,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         hmIcon.put(5, findViewById(R.id.friday_icon));
         hmIcon.put(6, findViewById(R.id.saturday_icon));
 
+        // Stores the positive (days user commit to habit) icons in an ArrayList
         ArrayList<Integer> positiveIcons = new ArrayList<Integer>();
         positiveIcons.add(R.drawable.ic_sunday_positive);
         positiveIcons.add(R.drawable.ic_monday_positive);
@@ -145,6 +143,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         positiveIcons.add(R.drawable.ic_friday_positive);
         positiveIcons.add(R.drawable.ic_saturday_positive);
 
+        // Stores the negative (days user doesn't commit to habit) icons in an ArrayList
         ArrayList<Integer> negativeIcons = new ArrayList<Integer>();
         negativeIcons.add(R.drawable.ic_sunday_negative);
         negativeIcons.add(R.drawable.ic_monday_negative);
@@ -154,8 +153,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         negativeIcons.add(R.drawable.ic_friday_negative);
         negativeIcons.add(R.drawable.ic_saturday_negative);
 
-        System.out.println("************ Viewing habit");
-
+        // Fetches the document using habitID from the habits collection
         DocumentReference docRef = db.collection("habits").document(habitID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -186,3 +184,4 @@ public class ViewHabitActivity extends AppCompatActivity {
         });
     }
 }
+

@@ -3,6 +3,7 @@ package com.cmput301f21t09.budgetprojectname;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Authorization service. Handles user sign in, sign out, and registration.
@@ -16,13 +17,12 @@ public class AuthorizationService {
     /**
      * Firebase auth instance
      */
-    private FirebaseAuth firebaseAuth;
+    private final FirebaseAuth firebaseAuth;
 
     /**
      * Constructor. Configures and instantiates authorization service.
      */
     private AuthorizationService() {
-        // Get firebase authentication service
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
@@ -39,18 +39,23 @@ public class AuthorizationService {
     }
 
     /**
-     * Sign in
+     * Sign in with given email and password
+     * @param email The email to sign in with
+     * @param password The password to sign in with
+     * @return `Task` of `AuthResult` with the result of the sign in attempt
      */
-//    public Task<AuthResult> signIn() {
-//        // TODO
-//        return;
-//    }
+    public Task<AuthResult> signIn(String email, String password) {
+        return firebaseAuth.signInWithEmailAndPassword(email, password);
+    }
 
     /**
-     * Register
+     * Register with given email and password
+     * @param email The email to register
+     * @param password The password to register
+     * @return `Task` of `AuthResult` with the result of the registration attempt
      */
-    public void register() {
-        // TODO
+    public Task<AuthResult> register(String email, String password) {
+        return firebaseAuth.createUserWithEmailAndPassword(email, password);
     }
 
     /**
@@ -58,5 +63,20 @@ public class AuthorizationService {
      */
     public void signOut() {
         firebaseAuth.signOut();
+    }
+
+    /**
+     * Check if signed in
+     */
+    public boolean isSignedIn() {
+        return firebaseAuth.getCurrentUser() != null;
+    }
+
+    /**
+     * Get current signed in user
+     * @return The current signed in user. Return null if no user is signed in
+     */
+    public FirebaseUser getCurrentUser() {
+        return firebaseAuth.getCurrentUser();
     }
 }

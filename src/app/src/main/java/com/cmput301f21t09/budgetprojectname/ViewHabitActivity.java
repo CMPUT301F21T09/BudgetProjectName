@@ -1,8 +1,13 @@
 package com.cmput301f21t09.budgetprojectname;
 
+import static java.lang.Integer.parseInt;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,7 +17,23 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.protobuf.StringValue;
 
 import org.w3c.dom.Text;
 
@@ -20,13 +41,18 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 
 public class ViewHabitActivity extends AppCompatActivity {
     private TextView habitName;
     private ListView habitEventList;
     ArrayAdapter<HabitEventModel> habitEventAdapter;
     ArrayList<HabitEventModel> habitEventDataList;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static final String TAG = "ViewHabitActivity";
+    private HabitEventController habitEventController = new HabitEventController();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +66,8 @@ public class ViewHabitActivity extends AppCompatActivity {
         Intent intent = getIntent();
         int habitID = intent.getIntExtra("HABIT_ID", -1);
 
-        final TextView habitTitle = (TextView) findViewById(R.id.habitTitle);
-        final TextView habitDescription = (TextView) findViewById(R.id.habitDescription);
-        final TextView habitDate = (TextView) findViewById(R.id.habitDate);
+        // Todo: Change the mock habitID below to the habitID from intent
+        showHabitDetail("zViEJpRvJ01aleO1d0K3");
 
         // Todo: Implement edit Habit function
         final Button editHabitBtn = findViewById(R.id.editHabitButton);
@@ -51,48 +76,29 @@ public class ViewHabitActivity extends AppCompatActivity {
             }
         });
 
-        // Todo: Change the habit title and description to actual data from Firestore using habitID
-        habitTitle.setText("Wash Dishes");
-        habitDescription.setText("Dirty dishes really suck :(");
-
-        // Todo: Change the frequency of habit to actual data from Firestore using habitID
-        ImageView sundayIcon = findViewById(R.id.sunday_icon);
-        ImageView mondayIcon = findViewById(R.id.monday_icon);
-        ImageView tuesdayIcon = findViewById(R.id.tuesday_icon);
-        ImageView wednesdayIcon = findViewById(R.id.wednesday_icon);
-        ImageView thursdayIcon = findViewById(R.id.thursday_icon);
-        ImageView fridayIcon = findViewById(R.id.friday_icon);
-        ImageView saturdayIcon = findViewById(R.id.saturday_icon);
-
-        // If a user chooses to commit to the habit on a particular day, the "ic_<Day>_positive" icon
-        // will be shown. Similarly, the <Day>negative icon will be shown if the user chooses not to commit
-        sundayIcon.setImageResource(R.drawable.ic_sunday_negative);
-        mondayIcon.setImageResource(R.drawable.ic_monday_positive);
-        tuesdayIcon.setImageResource(R.drawable.ic_tuesday_positive);
-        wednesdayIcon.setImageResource(R.drawable.ic_wednesday_positive);
-        thursdayIcon.setImageResource(R.drawable.ic_thursday_negative);
-        fridayIcon.setImageResource(R.drawable.ic_friday_negative);
-        saturdayIcon.setImageResource(R.drawable.ic_saturday_negative);
-
-        // Todo: Change the habit date to the actual date from Firestore using habitID
-        habitDate.setText(new SimpleDateFormat("MM/dd/yyyy").format(new Date()));
-
         // The code below deals with the past habit events. The HabitEventCustomList is used
         // to arrange and output the details
-        // Todo: Change the past habit events' data below to actual data from Firestore using HabitID and HabitEventID
-        String[] locations = {"", "", "", "", "", ""};
-        Date[] dates = {new Date(), new Date(), new Date(), new Date(), new Date(), new Date()};
-        String[] descriptions = {"", "", "", "", "", ""};
-
         habitEventList = findViewById(R.id.past_habit_event_list);
         habitEventDataList = new ArrayList<>();
-
-        for (int i = 0; i < locations.length; i++) {
-            habitEventDataList.add(new HabitEventModel(locations[i], dates[i], descriptions[i]));
-        }
-
         habitEventAdapter = new HabitEventCustomList(this, habitEventDataList);
         habitEventList.setAdapter(habitEventAdapter);
+
+        // Todo: Change the habitID below to the actual habitID passed into this activity
+        String testHabitID = "zViEJpRvJ01aleO1d0K3";
+
+        habitEventController.readHabitEvent(testHabitID, new HabitEventController.HabitEventListCallback() {
+            @Override
+            public void onCallback(ArrayList<HabitEventModel> hbEvtLst) {
+                habitEventDataList.clear();
+
+                for (HabitEventModel hEM: habitEventDataList) {
+                    System.out.println(hEM.getDate());
+                }
+
+                habitEventDataList.addAll(hbEvtLst);
+                habitEventAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -115,5 +121,74 @@ public class ViewHabitActivity extends AppCompatActivity {
         // Add the delete button to the app bar
         getMenuInflater().inflate(R.menu.menu_view_habit_details_screen, menu);
         return true;
+    }
+
+    // Todo: Refactor this into the habit controller
+    /**
+     * Fetch the habit details from the habits collection
+     * @param habitID
+     */
+    private void showHabitDetail(String habitID) {
+        final TextView habitTitle = (TextView) findViewById(R.id.habitTitle);
+        final TextView habitDescription = (TextView) findViewById(R.id.habitDescription);
+        final TextView habitDate = (TextView) findViewById(R.id.habitDate);
+
+        HashMap<Integer, ImageView> hmIcon = new HashMap<>();
+        hmIcon.put(0, findViewById(R.id.sunday_icon));
+        hmIcon.put(1, findViewById(R.id.monday_icon));
+        hmIcon.put(2, findViewById(R.id.tuesday_icon));
+        hmIcon.put(3, findViewById(R.id.wednesday_icon));
+        hmIcon.put(4, findViewById(R.id.thursday_icon));
+        hmIcon.put(5, findViewById(R.id.friday_icon));
+        hmIcon.put(6, findViewById(R.id.saturday_icon));
+
+        ArrayList<Integer> positiveIcons = new ArrayList<Integer>();
+        positiveIcons.add(R.drawable.ic_sunday_positive);
+        positiveIcons.add(R.drawable.ic_monday_positive);
+        positiveIcons.add(R.drawable.ic_tuesday_positive);
+        positiveIcons.add(R.drawable.ic_wednesday_positive);
+        positiveIcons.add(R.drawable.ic_thursday_positive);
+        positiveIcons.add(R.drawable.ic_friday_positive);
+        positiveIcons.add(R.drawable.ic_saturday_positive);
+
+        ArrayList<Integer> negativeIcons = new ArrayList<Integer>();
+        negativeIcons.add(R.drawable.ic_sunday_negative);
+        negativeIcons.add(R.drawable.ic_monday_negative);
+        negativeIcons.add(R.drawable.ic_tuesday_negative);
+        negativeIcons.add(R.drawable.ic_wednesday_negative);
+        negativeIcons.add(R.drawable.ic_thursday_negative);
+        negativeIcons.add(R.drawable.ic_friday_negative);
+        negativeIcons.add(R.drawable.ic_saturday_negative);
+
+        System.out.println("************ Viewing habit");
+
+        DocumentReference docRef = db.collection("habits").document(habitID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        habitTitle.setText(String.valueOf(document.getData().get("title")));
+                        habitDescription.setText(String.valueOf(document.getData().get("reason")));
+                        habitDate.setText(new SimpleDateFormat("MM/dd/yyyy").format(((Timestamp)document.getData().get("startDate")).toDate()));
+                        ArrayList<Boolean> fireStoreFrequency = (ArrayList<Boolean>) document.getData().get("frequency");
+
+                        for (int i = 0; i < fireStoreFrequency.size(); i++) {
+                            if (fireStoreFrequency.get(i)) {
+                                hmIcon.get(i).setImageResource(positiveIcons.get(i));
+                            }
+                            else {
+                                hmIcon.get(i).setImageResource(negativeIcons.get(i));
+                            }
+                        }
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "Error ", task.getException());
+                }
+            }
+        });
     }
 }

@@ -6,6 +6,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.firestore.DocumentId;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -17,6 +19,7 @@ public class HabitEventModel{
     /**
      * HabitEvent ID
      */
+    @DocumentId
     private String ID;
 
     /**

@@ -47,7 +47,7 @@ public class ExampleActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ViewHabitActivity.class);
                 final String HABIT_ID = "HABIT_ID";
-                int habitID = 1;
+                String habitID = "IdninLJ01WM1PD8e4NzX";
                 intent.putExtra(HABIT_ID, habitID);
                 startActivity(intent);
             }

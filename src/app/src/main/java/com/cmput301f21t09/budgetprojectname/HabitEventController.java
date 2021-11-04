@@ -10,7 +10,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -21,7 +20,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
-
 
 /**
  * Represents a Habit Event Controller that interfaces with FirestoreDB to
@@ -48,6 +46,13 @@ public class HabitEventController {
         void onCallback(String habitEventID);
     }
 
+    public interface HabitEventListCallback {
+        void onCallback(ArrayList<HabitEventModel> habitEventList);
+    }
+
+    /**
+     * HabitEventListCallback interface
+     */
     public interface HabitEventListCallback {
         void onCallback(ArrayList<HabitEventModel> habitEventList);
     }
@@ -168,6 +173,7 @@ public class HabitEventController {
      *
      * @param habitEventID ID of habitEvent to be retrieved
      */
+
     public void readHabitEvent(String habitEventID, HabitEventCallback habitEventCallback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("habit_events").document(habitEventID);
@@ -198,6 +204,36 @@ public class HabitEventController {
             }
         });
     }
+
+
+    /**
+     * Read habitEvent document in the habit_events collection
+     *
+     * @param habitID habitID is used to query all the corresponding habit events
+     */
+    public void readHabitEvents(String habitID, HabitEventListCallback hbEvtLstCallback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        ArrayList<HabitEventModel> habitEventDataList = new ArrayList<>();
+        CollectionReference collectionReference = db.collection("habit_events");
+        collectionReference
+                .whereEqualTo("habitID", habitID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            // Append every document into habitEventDataList
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                habitEventDataList.add(doc.toObject(HabitEventModel.class));
+                            }
+                            hbEvtLstCallback.onCallback(habitEventDataList);
+                        } else {
+                            Log.d(TAG, "Error: ", task.getException());
+                        }
+                    }
+                });
+    }
+
 }
 
 

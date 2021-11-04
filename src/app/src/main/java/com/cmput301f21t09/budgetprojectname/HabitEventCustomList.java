@@ -1,6 +1,9 @@
 package com.cmput301f21t09.budgetprojectname;
 
+
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,13 +16,20 @@ import androidx.annotation.Nullable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
+/**
+ * CustomList for ViewHabitActivity
+ * Show the habit event's date and whether or not the user has added a location, comment, and/or photograph
+ */
 public class HabitEventCustomList extends ArrayAdapter<HabitEventModel> {
     private ArrayList<HabitEventModel> habitEvents;
     private Context context;
 
-
+    /**
+     * Constructor for HabitEventCustomList
+     * @param context
+     * @param habitEvents
+     */
     public HabitEventCustomList(Context context, ArrayList<HabitEventModel> habitEvents) {
         super(context, 0, habitEvents);
         this.habitEvents = habitEvents;
@@ -34,34 +44,46 @@ public class HabitEventCustomList extends ArrayAdapter<HabitEventModel> {
 
         HabitEventModel habitEvent = habitEvents.get(position);
 
+
+        /* Views */
+
+        /**
+         * Text View for habit date
+         */
+
         TextView habitDate = view.findViewById(R.id.date);
+
+        /**
+         * Image View for location icon
+         */
         ImageView locationIcon = view.findViewById(R.id.location_icon);
+
+        /**
+         * Image View for description icon
+         */
         ImageView descriptionIcon = view.findViewById(R.id.comment_icon);
+
+        /**
+         * Image View for Image icon
+         */
         ImageView ImageIcon = view.findViewById(R.id.image_icon);
 
-        // Todo: Change the date of past habit events to actual habit event data from Firestore
+        // Set the date when the habit event occured
         DateFormat df = new SimpleDateFormat("MMMM dd, YYYY");
         habitDate.setText(df.format(habitEvent.getDate()));
 
-        // Todo: Change the icons' opacity according to the actual habit events' data from Firestore
-        if (isNull(habitEvent.getLocation())) {
-            locationIcon.setImageResource(R.drawable.ic_map_marker_negative);
-        } else {
+        // Set the location, comment, and image icons accordingly
+        // location and comment are empty string by default
+        // image is null by default
+        if (habitEvent.getLocation().length() > 0) {
             locationIcon.setImageResource(R.drawable.ic_map_marker_positive);
         }
-        if (isNull(habitEvent.getComment())) {
-            descriptionIcon.setImageResource(R.drawable.ic_comment_negative);
-        } else {
+        if (habitEvent.getComment().length() > 0) {
             descriptionIcon.setImageResource(R.drawable.ic_comment_positive);
         }
-        if (isNull(habitEvent.getImage())) {
-            ImageIcon.setImageResource(R.drawable.ic_image_negative);
-        } else {
+        if (nonNull(habitEvent.getImage())) {
             ImageIcon.setImageResource(R.drawable.ic_image_positive);
         }
-//        locationIcon.setImageResource(R.drawable.ic_map_marker_positive);
-//        descriptionIcon.setImageResource(R.drawable.ic_comment_negative);
-//        ImageIcon.setImageResource(R.drawable.ic_image_positive);
 
         return view;
     }

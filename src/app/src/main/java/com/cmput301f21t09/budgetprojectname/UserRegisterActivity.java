@@ -3,13 +3,13 @@ package com.cmput301f21t09.budgetprojectname;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Responsible for user registration
@@ -56,9 +56,9 @@ public class UserRegisterActivity extends AppCompatActivity {
     private Button createButton;
 
     /**
-     * Firebase auth instance
+     * Progress indicator
      */
-    private FirebaseAuth firebaseAuth;
+    private ProgressBar progressIndicator;
 
     /**
      * Class for handling registration input
@@ -181,11 +181,14 @@ public class UserRegisterActivity extends AppCompatActivity {
             return;
         }
 
+        // Loading indicator while verifying sign up
+        progressIndicator.setVisibility(View.VISIBLE);
+
         // Register with Firebase
-        firebaseAuth.createUserWithEmailAndPassword(input.email, input.password).addOnCompleteListener(task -> {
+        AuthorizationService.getInstance().register(input.email, input.password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 // Tell user account creation was successful
-                Toast.makeText(UserRegisterActivity.this, "Account creation successful.",
+                Toast.makeText(UserRegisterActivity.this, "Account creation successful",
                         Toast.LENGTH_SHORT).show();
 
                 // Generate the account in Firebase
@@ -195,10 +198,19 @@ public class UserRegisterActivity extends AppCompatActivity {
                 startActivity(new Intent(this, MainActivity.class));
             } else {
                 // Tell user account creation failed, along with error message
-                Toast.makeText(UserRegisterActivity.this,
-                        "Account creation failed: " + task.getException().getMessage(),
-                        Toast.LENGTH_SHORT).show();
+                if (task.getException() != null) {
+                    Toast.makeText(UserRegisterActivity.this,
+                            "Account creation failed: " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(UserRegisterActivity.this,
+                            "Account creation failed: Unknown error",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
+
+            // Stop loading indicator
+            progressIndicator.setVisibility(View.INVISIBLE);
         });
     }
 
@@ -218,8 +230,8 @@ public class UserRegisterActivity extends AppCompatActivity {
         backButton = findViewById(R.id.back_button);
         createButton = findViewById(R.id.create_button);
 
-        // Get firebase auth instance
-        firebaseAuth = FirebaseAuth.getInstance();
+        // Get progress indicator
+        progressIndicator = findViewById(R.id.progress_circular);
 
         // Back to Sign In Screen
         backButton.setOnClickListener(v -> finish());

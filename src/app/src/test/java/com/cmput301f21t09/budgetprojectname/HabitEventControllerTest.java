@@ -17,7 +17,9 @@ public class HabitEventControllerTest {
     public void testCreateHabitEvent(){
         HabitEventController habitEventController = new HabitEventController();
         HabitEventModel habitEvent =
-                new HabitEventModel("YEGtest", new Date(), "yeg test comment", "");
+                new HabitEventModel(null, "YEGtest", new Date(),
+                        "yeg test comment", null,"");
+
         habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
             @Override
             public void onCallback(String habitEventID) {

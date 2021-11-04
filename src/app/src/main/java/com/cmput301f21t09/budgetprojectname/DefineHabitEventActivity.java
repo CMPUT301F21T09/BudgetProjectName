@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -69,9 +70,8 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 String locationStr = location.getText().toString();
                 String descriptionStr = description.getText().toString();
 
-                HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(),
-                        descriptionStr, habitID);
-                // setters
+                HabitEventModel habitEvent = new HabitEventModel(null, locationStr, new Date(),
+                        descriptionStr, null,habitID);
 
                 if (isNewHabitEvent) {
                     habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {

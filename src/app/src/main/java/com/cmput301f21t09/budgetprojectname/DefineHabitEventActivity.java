@@ -72,7 +72,8 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 // Todo: Change the habitID below to the actual habitID passed into this activity
                 String testHabitID = "zViEJpRvJ01aleO1d0K3";
 
-                HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(), descriptionStr, testHabitID);
+                HabitEventModel habitEvent = new HabitEventModel(null, locationStr, new Date(),
+                        descriptionStr, null, testHabitID);
 
                 if (isNewHabitEvent) {
                     storeNewHabitEvent(habitEvent);

@@ -44,39 +44,21 @@ public class HabitEventModel{
      */
     private String habitID;
 
-    HabitEventModel(String location, Date date, String comment, Image image, String habitID) {
-        this.ID = "s1w9kwequ290"; // placeholder ID
+    /**
+     * Constructor for creating a habitevent model
+     * @param ID id of habitevent
+     * @param location location of habitevent completion (optional)
+     * @param date completion date of habitevent
+     * @param comment comment for habitevent (optional)
+     * @param image image for habitevent (optional)
+     * @param habitID ID of habit
+     */
+    HabitEventModel(String ID, String location, Date date, String comment, Image image, String habitID) {
+        this.ID = ID;
         this.location = location;
         this.comment = comment;
         this.date = date;
         this.image = image;
-        this.habitID = habitID;
-    }
-
-    HabitEventModel(String location, Date date, String comment, String habitID) {
-        this.ID = "s1w9kwequ290"; // placeholder ID
-        this.location = location;
-        this.comment = comment;
-        this.date = date;
-        this.image = null;
-        this.habitID = habitID;
-    }
-
-    HabitEventModel(String location, Date date, Image image, String habitID) {
-        this.ID = "s1w9kwequ290"; // placeholder ID
-        this.location = location;
-        this.date = date;
-        this.image = image;
-        this.comment = null;
-        this.habitID = habitID;
-    }
-
-    HabitEventModel(Date date, String habitID) {
-        this.ID = "s1w9kwequ290"; // placeholder ID
-        this.location = null;
-        this.date = date;
-        this.image = null;
-        this.comment = null;
         this.habitID = habitID;
     }
 
@@ -85,7 +67,7 @@ public class HabitEventModel{
         this.ID = null;
         this.location = null;
         this.comment = null;
-        this.date = new Date();
+        this.date = null;
         this.image = null;
         this.habitID = null;
     }
@@ -180,10 +162,10 @@ public class HabitEventModel{
 
     /**
      * Sets the id of habit
-     * @param id to set as habitid
+     * @param habitID to set as habitid
      */
-    public void setImage(String id){
-        this.habitID = id;
+    public void setHabitID(String habitID){
+        this.habitID = ID;
     }
 
 }

@@ -14,51 +14,57 @@ import java.util.Date;
  * image, and habit ID
  */
 public class HabitEventModel{
-    private final String ID; // TODO: change type depending on Firebase ID type
+    private final String ID;
     private final String location; // TODO: change to Location once this is implemented
     private final String comment;
     private final Date date;
     private final Image image;
-    // TODO: add reference to the habitid (add to all constructors, etc.)
+    private final String habitID; // references habit
 
-    HabitEventModel(String location, Date date, String comment, Image image) {
+    HabitEventModel(String location, Date date, String comment, Image image, String habitID) {
         this.ID = "s1w9kwequ290"; // placeholder ID
         this.location = location;
         this.comment = comment;
         this.date = date;
         this.image = image;
+        this.habitID = habitID;
     }
 
-    HabitEventModel(String location, Date date, String comment) {
+    HabitEventModel(String location, Date date, String comment, String habitID) {
         this.ID = "s1w9kwequ290"; // placeholder ID
         this.location = location;
         this.comment = comment;
         this.date = date;
-        image = null;
+        this.image = null;
+        this.habitID = habitID;
     }
 
-    HabitEventModel(String location, Date date, Image image) {
+    HabitEventModel(String location, Date date, Image image, String habitID) {
         this.ID = "s1w9kwequ290"; // placeholder ID
         this.location = location;
         this.date = date;
         this.image = image;
         this.comment = null;
+        this.habitID = habitID;
     }
 
-    HabitEventModel(Date date) {
+    HabitEventModel(Date date, String habitID) {
         this.ID = "s1w9kwequ290"; // placeholder ID
         this.location = null;
         this.date = date;
         this.image = null;
         this.comment = null;
+        this.habitID = habitID;
     }
 
+    // need to declare an empty constructor for serialization purposes
     HabitEventModel(){
         this.ID = null;
         this.location = null;
         this.comment = null;
         this.date = new Date();
         this.image = null;
+        this.habitID = null;
     }
 
     public String getID(){
@@ -80,5 +86,7 @@ public class HabitEventModel{
     public Image getImage(){
         return image;
     }
+
+    public String getHabitID() { return habitID;}
 
 }

@@ -80,12 +80,14 @@ public class ViewHabitActivity extends AppCompatActivity {
         String[] locations = {"", "", "", "", "", ""};
         Date[] dates = {new Date(), new Date(), new Date(), new Date(), new Date(), new Date()};
         String[] descriptions = {"", "", "", "", "", ""};
+        String[] habitIDs = {"", "", "", "", "", ""};
 
         habitEventList = findViewById(R.id.past_habit_event_list);
         habitEventDataList = new ArrayList<>();
 
         for (int i = 0; i < locations.length; i++) {
-            habitEventDataList.add(new HabitEventModel(locations[i], dates[i], descriptions[i]));
+            habitEventDataList.add(new HabitEventModel(locations[i], dates[i],
+                    descriptions[i], habitIDs[i]));
         }
 
         habitEventAdapter = new HabitEventCustomList(this, habitEventDataList);

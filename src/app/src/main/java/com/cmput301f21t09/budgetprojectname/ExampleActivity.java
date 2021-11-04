@@ -30,10 +30,13 @@ public class ExampleActivity extends AppCompatActivity {
         habitEventBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), DefineHabitEventActivity.class);
-                // TODO: use actual habit event ID
+                // TODO: use actual habit event ID from habit screen
                 final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
+                final String HABIT_ID = "HABIT_ID";
                 String habitEventID = "OIrJQ32PmTPCiufwKsPF"; // example habit event I created
+                String habitID = "m8AhoYbaYIyTi2dGua8t"; // example habit from firestore
                 // intent.putExtra(HABIT_EVENT_ID, habitEventID);
+                intent.putExtra(HABIT_ID, habitID);
                 startActivity(intent);
             }
         });

@@ -47,7 +47,6 @@ public class HabitEventController {
      */
     public void createHabitEvent(HabitEventModel habitEvent, HabitEventIDCallback idCallback) {
         // db = FirebaseFirestore.getInstance();
-        System.out.println("store new habit");
         dbStore.collection("habit_events")
                 .add(habitEvent)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -78,7 +77,8 @@ public class HabitEventController {
                 .document(habitEventID);
         habitEventRef.update("comment", modifiedHabitEvent.getComment(),
                 "location", modifiedHabitEvent.getLocation(),
-                "image", modifiedHabitEvent.getImage())
+                "image", modifiedHabitEvent.getImage(),
+                "habitID", modifiedHabitEvent.getHabitID())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

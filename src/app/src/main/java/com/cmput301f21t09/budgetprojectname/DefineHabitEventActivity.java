@@ -40,6 +40,8 @@ public class DefineHabitEventActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
+        String habitID = intent.getStringExtra("HABIT_ID");
+        System.out.println("*****habitID " + habitID);
         boolean isNewHabitEvent = (habitEventID == null);
         String modeStr;
 
@@ -60,13 +62,15 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         location = (EditText) findViewById(R.id.location);
         description = (EditText) findViewById(R.id.description);
         image = (ImageView) findViewById(R.id.image);
-
         ImageButton doneBtn = findViewById(R.id.done);
+
         doneBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String locationStr = location.getText().toString();
                 String descriptionStr = description.getText().toString();
-                HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(), descriptionStr);
+
+                HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(),
+                        descriptionStr, habitID);
                 // setters
 
                 if (isNewHabitEvent) {
@@ -75,6 +79,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                         public void onCallback(String habitEventID) {
                             // TODO: figure out what to add here
                             System.out.println("habitevent id " + habitEventID);
+
                             location.getText().clear();
                             description.getText().clear();
                         }
@@ -92,9 +97,6 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         image.setOnClickListener(v -> {
             // TODO: Let User Choose Image from Gallery or Take a Photo
         });
-    }
-
-
     }
 
     /**

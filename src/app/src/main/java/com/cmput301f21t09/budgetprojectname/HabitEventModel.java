@@ -165,7 +165,8 @@ public class HabitEventModel{
      * @param habitID to set as habitid
      */
     public void setHabitID(String habitID){
-        this.habitID = ID;
+        this.habitID = habitID;
+
     }
 
 }

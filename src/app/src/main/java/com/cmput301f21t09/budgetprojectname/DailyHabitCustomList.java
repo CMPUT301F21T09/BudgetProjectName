@@ -13,12 +13,12 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class HabitCustomList extends ArrayAdapter<HabitModel> {
+public class DailyHabitCustomList extends ArrayAdapter<HabitModel> {
     private ArrayList<HabitModel> habits;
     private Context context;
 
 
-    public HabitCustomList(Context context, ArrayList<HabitModel> habits) {
+    public DailyHabitCustomList(Context context, ArrayList<HabitModel> habits) {
         super(context, 0, habits);
         this.habits = habits;
         this.context = context;
@@ -27,7 +27,7 @@ public class HabitCustomList extends ArrayAdapter<HabitModel> {
     public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
         View view = convertView;
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.activity_habit_custom_list, parent, false);
+            view = LayoutInflater.from(context).inflate(R.layout.daily_habit_custom_list, parent, false);
         }
         HabitModel habit = habits.get(position);
 

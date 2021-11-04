@@ -50,7 +50,7 @@ public class DailyHabitFragment extends Fragment {
             habitDataList.add(new HabitModel("TestID", "TestString" + 1, "TestReason", new Date(), new Date(), i));
         }
 
-        ArrayAdapter<HabitModel> habitAdapter = new HabitCustomList(getContext(), habitDataList);
+        ArrayAdapter<HabitModel> habitAdapter = new DailyHabitCustomList(getContext(), habitDataList);
         habitList.setAdapter(habitAdapter);
 
         habitList.setOnItemClickListener((parent, view1, position, id) -> {

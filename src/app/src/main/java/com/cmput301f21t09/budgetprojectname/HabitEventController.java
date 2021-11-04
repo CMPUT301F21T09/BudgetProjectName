@@ -31,9 +31,6 @@ import java.util.Date;
 public class HabitEventController {
     private FirebaseFirestore dbStore = FirebaseFirestore.getInstance();
     private static final String TAG = "HabitEventController";
-    public HabitEventModel retrievedHabitEventModel;
-
-
 //    // Apply Singleton Design Pattern
 //    private static HabitEventController habitEventStore = new HabitEventController();
 //
@@ -110,21 +107,13 @@ public class HabitEventController {
                     }
                 });
     }
-    // updateLoc()
-    /**
-     * new HEModel(oldHE stuff, new loc)
-     * cachedModel = heModel
-     * notifyListeners()
-     * commit()
-     */
-
 
     /**
      * Read habitEvent document in the habit_events collection
      *
      * @param habitID habitID is used to query all the corresponding habit events
      */
-    public void readHabitEvent(String habitID, HabitEventListCallback hbEvtLstCallback) {
+    public void readHabitEvents(String habitID, HabitEventListCallback hbEvtLstCallback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         ArrayList<HabitEventModel> habitEventDataList = new ArrayList<>();
         CollectionReference collectionReference = db.collection("habit_events");
@@ -172,6 +161,42 @@ public class HabitEventController {
                         Log.w(TAG, "Error deleting document", e);
                     }
                 });
+    }
+
+    /**
+     * Gets existing habitevent from Firestore Db
+     *
+     * @param habitEventID ID of habitEvent to be retrieved
+     */
+    public void readHabitEvent(String habitEventID, HabitEventCallback habitEventCallback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("habit_events").document(habitEventID);
+        System.out.println("here");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
+                        String id = (String) doc.getId();
+                        Date date  = ((Timestamp) doc.getData().get("date")).toDate();
+                        String location = (String) doc.getData().get("location");
+                        String comment = (String) doc.getData().get("comment");
+                        Image image = (Image) doc.getData().get("image");
+                        String habitID = (String) doc.getData().get("habitID");
+                        HabitEventModel retrievedHabitEventModel =
+                                new HabitEventModel(id, location, date, comment, image, habitID);
+                        habitEventCallback.onCallback(retrievedHabitEventModel);
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 }
 

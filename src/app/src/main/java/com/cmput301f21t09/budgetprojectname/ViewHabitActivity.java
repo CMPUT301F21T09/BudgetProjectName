@@ -1,14 +1,10 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import static java.lang.Integer.parseInt;
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,31 +15,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.protobuf.StringValue;
-
-import org.w3c.dom.Text;
-
-import java.text.DateFormat;
-import java.text.ParseException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -90,7 +72,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         // Todo: Change the habitID below to the actual habitID passed into this activity
         String testHabitID = "zViEJpRvJ01aleO1d0K3";
 
-        habitEventController.readHabitEvent(testHabitID, new HabitEventController.HabitEventListCallback() {
+        habitEventController.readHabitEvents(testHabitID, new HabitEventController.HabitEventListCallback() {
             @Override
             public void onCallback(ArrayList<HabitEventModel> hbEvtLst) {
                 habitEventDataList.clear();

@@ -11,9 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cmput301f21t09.budgetprojectname.controllers.HabitController;
+import com.cmput301f21t09.budgetprojectname.models.IHabitModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.text.SimpleDateFormat;
 
 public class ViewHabitEventActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -25,7 +29,7 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_habit_event);
 
-        // TODO: Get Targeted Habit Event
+        // data received from viewhabitactivity
         Intent intent = getIntent();
         String habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
         String habitID = intent.getStringExtra("HABIT_ID");
@@ -34,11 +38,29 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         TextView habitEventLocation = findViewById(R.id.view_habit_event_habit_event_location);
         TextView habitEventDescription = findViewById(R.id.view_habit_event_habit_event_description);
         TextView habitEventDate = findViewById(R.id.view_habit_event_habit_event_date);
-        // TODO: Set Proper Name of Habit, Location of Habit Event to the TextViews
-        // habitTitle.setText();
-        // habitEventLocation.setText();
-        // habitEventDescription.setText();
-        // habitEventDate.setText();
+
+        // TODO: Set Proper Name of Habit
+        // TODO: resolve null error
+        /**
+        HabitController controller = HabitController.getEditHabitController(habitID);
+        if(controller.isTaskComplete(HabitController.HABIT_MODEL_LOAD)){
+             IHabitModel model = controller.getModel();
+             habitTitle.setText(model.getTitle());
+             System.out.println("habit title " + model.getTitle());
+        }
+         **/
+
+        // Set the Habit Event fields
+        // TODO: move to a helper function
+        HabitEventController habitEventController = new HabitEventController();
+        habitEventController.readHabitEvent(habitEventID, retrievedhabitEvent -> {
+            System.out.println("habitevent id " + retrievedhabitEvent.getID());
+            habitEventLocation.setText(retrievedhabitEvent.getLocation());
+            habitEventDescription.setText(retrievedhabitEvent.getComment());
+            SimpleDateFormat format = new SimpleDateFormat("MMMM dd,yyyy");
+            String strDate = format.format(retrievedhabitEvent.getDate());
+            habitEventDate.setText(strDate);
+        });
 
         ImageButton editHabitEvent = findViewById(R.id.view_habit_event_habit_event_edit_button);
         editHabitEvent.setOnClickListener(v -> {
@@ -53,8 +75,6 @@ public class ViewHabitEventActivity extends AppCompatActivity {
 
         Button deleteHabitEventBtn = findViewById(R.id.view_habit_event_habit_event_delete_button);
         deleteHabitEventBtn.setOnClickListener(v -> {
-            // TODO: Get habitEventID from the habit detail screen (passed in Intent)
-
             System.out.println("habit event to delete " + habitEventID);
             habitEventController.deleteHabitEvent(habitEventID);
             startActivity(new Intent(this, ViewHabitActivity.class));

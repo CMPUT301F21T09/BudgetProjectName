@@ -55,7 +55,10 @@ public class CurrentUserProfileTest {
         Activity activity = rule.getActivity();
     }
 
-    void navigateToPersonalProfile() {
+    /**
+     * Navigates to personal profile fragment
+     */
+    private void navigateToPersonalProfile() {
         solo.clickOnView(solo.getView(R.id.profile));
         assertTrue(solo.waitForView(R.id.current_user_habit_listview));
     }

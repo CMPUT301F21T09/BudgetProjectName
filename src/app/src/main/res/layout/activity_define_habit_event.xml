@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
     android:background="#F2F8FD"
     tools:context=".DefineHabitEventActivity">
 
@@ -24,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Add/Edit Habit Event"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="24sp" />
 
@@ -170,7 +169,7 @@
         app:shapeAppearanceOverlay="@style/roundedCorners" />
 
     <ImageView
-        android:id="@+id/add_image"
+        android:id="@+id/addImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@null"

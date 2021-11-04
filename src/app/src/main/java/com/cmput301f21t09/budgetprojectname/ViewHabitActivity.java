@@ -5,14 +5,15 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,6 +64,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         // Display the back button
         // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         // The specific habitID is fetched from the previous activity
         Intent intent = getIntent();
         int habitID = intent.getIntExtra("HABIT_ID", -1);
@@ -78,6 +81,7 @@ public class ViewHabitActivity extends AppCompatActivity {
 
         // The code below deals with the past habit events. The HabitEventCustomList is used
         // to arrange and output the details
+
         habitEventList = findViewById(R.id.past_habit_event_list);
         habitEventDataList = new ArrayList<>();
         habitEventAdapter = new HabitEventCustomList(this, habitEventDataList);
@@ -99,28 +103,52 @@ public class ViewHabitActivity extends AppCompatActivity {
                 habitEventAdapter.notifyDataSetChanged();
             }
         });
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Brings the user back to the previous activity if the back button on the app bar is pressed
-            case android.R.id.home:
-                finish();
-                return true;
-            // Todo: Implement delete habit function
-            case R.id.actionDeleteHabit:
-                return true;
+
+        // Todo: Change the past habit events' data below to actual data from Firestore using HabitID and HabitEventID
+
+        String[] locations = {"", "", "", "", "", "", "", "", "", "", "", ""};
+        Date[] dates = {new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date()};
+        String[] descriptions = {"", "", "", "", "", "", "", "", "", "", "", ""};
+        String[] habitIDs = {"", "", "", "", "", "", "", "", "", "", "", ""};
+
+        habitEventList = findViewById(R.id.past_habit_event_list);
+        habitEventDataList = new ArrayList<>();
+
+        for (int i = 0; i < locations.length; i++) {
+            habitEventDataList.add(new HabitEventModel(null, locations[i], dates[i],
+                    descriptions[i], null, habitIDs[i]));
         }
 
-        return super.onOptionsItemSelected(item);
-    }
+        habitEventAdapter = new HabitEventCustomList(this, habitEventDataList);
+        habitEventList.setAdapter(habitEventAdapter);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Add the delete button to the app bar
-        getMenuInflater().inflate(R.menu.menu_view_habit_details_screen, menu);
-        return true;
+        // selection of past habit event item start habit event detail screen
+        habitEventList.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            public void onItemClick(AdapterView<?> arg0,View arg1, int position, long arg3)
+            {
+                HabitEventModel selectedHEM = habitEventAdapter.getItem(position);
+                System.out.println("selected element id " + selectedHEM.getID());
+
+                Intent intent = new Intent(getApplicationContext(), ViewHabitEventActivity.class);
+                intent.putExtra("HABIT_EVENT_ID", selectedHEM.getID());
+                intent.putExtra("HABIT_ID", selectedHEM.getHabitID());
+                startActivity(intent);
+            }
+        });
+
+        // Go Back
+        ImageButton back = findViewById(R.id.view_habit_back_button);
+        back.setOnClickListener(v -> {
+            finish();
+        });
+
+        // Delete Habit
+        ImageButton remove = findViewById(R.id.view_habit_remove_button);
+        remove.setOnClickListener(v -> {
+            // TODO: Remove Targeted Habit. Dialog To Confirm?
+        });
     }
 
     // Todo: Refactor this into the habit controller

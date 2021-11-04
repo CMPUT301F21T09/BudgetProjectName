@@ -20,19 +20,23 @@ public class ExampleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_example);
 
         Button viewHabitEventDetail = findViewById(R.id.example_view_habit_event_detail);
-        viewHabitEventDetail.setOnClickListener(v -> {
-            startActivity(new Intent(this, ViewHabitEventActivity.class));
-        });
+        viewHabitEventDetail.setOnClickListener(v -> startActivity(new Intent(this, ViewHabitEventActivity.class)));
+
+        Button userLogin = findViewById(R.id.user_login);
+        userLogin.setOnClickListener(v -> startActivity(new Intent(this, UserLoginActivity.class)));
 
         // TODO: move button into habitlist activity and pass habitID to intent
         final Button habitEventBtn = findViewById(R.id.createhabiteventBtn);
         habitEventBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), DefineHabitEventActivity.class);
-                // TODO: use actual habit event ID
+                // TODO: use actual habit event ID from habit screen
                 final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
-                String habitEventID = "v5BYLwHC2W4wGHkjff9K"; // example habit event I created
-                intent.putExtra(HABIT_EVENT_ID, habitEventID);
+                final String HABIT_ID = "HABIT_ID";
+                String habitEventID = "OIrJQ32PmTPCiufwKsPF"; // example habit event I created
+                String habitID = "m8AhoYbaYIyTi2dGua8t"; // example habit from firestore
+                // intent.putExtra(HABIT_EVENT_ID, habitEventID);
+                intent.putExtra(HABIT_ID, habitID);
                 startActivity(intent);
             }
         });

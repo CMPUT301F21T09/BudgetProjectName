@@ -18,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class ViewHabitEventActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "ViewHabitEventActivity";
+    HabitEventController habitEventController = new HabitEventController();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,9 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_habit_event);
 
         // TODO: Get Targeted Habit Event
+        Intent intent = getIntent();
+        String habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
+        String habitID = intent.getStringExtra("HABIT_ID");
 
         TextView habitTitle = findViewById(R.id.view_habit_event_habit_title);
         TextView habitEventLocation = findViewById(R.id.view_habit_event_habit_event_location);
@@ -50,31 +54,13 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         Button deleteHabitEventBtn = findViewById(R.id.view_habit_event_habit_event_delete_button);
         deleteHabitEventBtn.setOnClickListener(v -> {
             // TODO: Get habitEventID from the habit detail screen (passed in Intent)
-            deleteHabitEvent("ET8RjgfzLexTHZeSY7rg");
+
+            System.out.println("habit event to delete " + habitEventID);
+            habitEventController.deleteHabitEvent(habitEventID);
             startActivity(new Intent(this, ViewHabitActivity.class));
         });
     }
 
-    /**
-     * Deletes habit event from Firestore DB
-     * @param habitEventID
-     */
-    public void deleteHabitEvent(String habitEventID){
-        // TODO: refactor and move to HabitEventStore class
-        db.collection("habit_events").document(habitEventID)
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error deleting document", e);
-                    }
-                });
-    }
+
 
 }

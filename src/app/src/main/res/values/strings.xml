@@ -3,4 +3,9 @@
     <string name="viewHabitActivity">"View Habit Details"</string>
     <string name="createHabitEventMode">Add Habit Event</string>
     <string name="editHabitEventMode">Edit Habit Event</string>
+    <string name="adh_editHabitTitleLabel">Title</string>
+    <string name="adh_editHabitReasonLabel">Reason</string>
+    <string name="adh_chooseDatesLabel">Choose dates</string>
+    <string name="adh_editStartDateLabel">Start date</string>
+    <string name="title_activity_user_login">UserLoginActivity</string>
 </resources>

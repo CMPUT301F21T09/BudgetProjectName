@@ -1,9 +1,7 @@
 package com.cmput301f21t09.budgetprojectname;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-
 import android.media.Image;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -12,6 +10,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -22,6 +21,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
+
 
 /**
  * Represents a Habit Event Controller that interfaces with FirestoreDB to
@@ -55,7 +55,6 @@ public class HabitEventController {
         void onCallback(ArrayList<HabitEventModel> habitEventList);
     }
 
-
     /**
      * Creates habitEvent document in the habit_events collection
      *
@@ -64,6 +63,7 @@ public class HabitEventController {
     public void createHabitEvent(HabitEventModel habitEvent, HabitEventIDCallback idCallback) {
         // db = FirebaseFirestore.getInstance();
         System.out.println("store new habit");
+
         dbStore.collection("habit_events")
                 .add(habitEvent)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -94,7 +94,9 @@ public class HabitEventController {
                 .document(habitEventID);
         habitEventRef.update("comment", modifiedHabitEvent.getComment(),
                 "location", modifiedHabitEvent.getLocation(),
-                "image", modifiedHabitEvent.getImage())
+                "image", modifiedHabitEvent.getImage(),
+                "habitID", modifiedHabitEvent.getHabitID())
+
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -115,6 +117,7 @@ public class HabitEventController {
      * notifyListeners()
      * commit()
      */
+
 
     /**
      * Read habitEvent document in the habit_events collection
@@ -149,5 +152,28 @@ public class HabitEventController {
                 });
     }
 
-    // TODO: add delete scenario
+    /**
+     * Deletes habit event from Firestore DB
+     * @param habitEventID id of habit event to be deleted
+     */
+    public void deleteHabitEvent(String habitEventID){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("habit_events").document(habitEventID)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+    }
 }
+
+
+

@@ -1,6 +1,7 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,11 +17,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // 4 main fragments for bottom navigation UI
-        MainFragment habitFragment = new MainFragment();
+        DailyHabitFragment habitFragment = new DailyHabitFragment();
         SearchFragment searchFragment = new SearchFragment();
         AddFragment addFragment = new AddFragment();
         FollowingFragment followingFragment = new FollowingFragment();
-        ProfileFragment profileFragment = new ProfileFragment();
+        CurrentUserProfileFragment currentUserProfileFragment = new CurrentUserProfileFragment();
 
         // Fragment switch
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
@@ -33,13 +34,14 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment, searchFragment).commit();
                     return true;
                 case R.id.add:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, addFragment).commit();
+                    Intent intent = new Intent(this, DefineHabitActivity.class);
+                    startActivity(intent);
                     return true;
                 case R.id.following:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment, followingFragment).commit();
                     return true;
                 case R.id.profile:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, profileFragment).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, currentUserProfileFragment).commit();
                     return true;
             }
             return false;

@@ -57,8 +57,8 @@ public class HabitModel implements IHabitModel {
     private HabitModel(String id, String title, String reason, Date startDate, Date lastCompleted, long streak, IHabitScheduleModel schedule) {
         setId(id);
 
-        setTitle(sanitizeStringFromDatabase(title, IHabitModel.MAX_TITLE_LENGTH));
-        setReason(sanitizeStringFromDatabase(reason, IHabitModel.MAX_REASON_LENGTH));
+        this.title = sanitizeStringFromDatabase(title, IHabitModel.MAX_TITLE_LENGTH);
+        this.reason = sanitizeStringFromDatabase(reason, IHabitModel.MAX_REASON_LENGTH);
         setStartDate(startDate != null ? startDate : new Date());
         this.lastCompleted = lastCompleted;
         this.schedule = schedule;
@@ -128,9 +128,11 @@ public class HabitModel implements IHabitModel {
      * @param title to set
      */
     public void setTitle(String title) {
-        if (title.length() > IHabitModel.MAX_TITLE_LENGTH) {
+        if (title.length() > IHabitModel.MAX_TITLE_LENGTH)
             throw new IllegalArgumentException("Cannot set title to String of length greater than " + IHabitModel.MAX_TITLE_LENGTH);
-        }
+        else if (title.trim().length() == 0)
+            throw new IllegalArgumentException("Cannot set title to empty string");
+
         this.title = title;
     }
 
@@ -229,7 +231,7 @@ public class HabitModel implements IHabitModel {
             map.put("title", model.getTitle());
             map.put("reason", model.getReason());
             map.put("start_date", model.getStartDate());
-            map.put("last_completed", model.getStartDate());
+            map.put("last_completed", model.getLastCompleted());
             map.put("streak", model.getStreak());
             map.put("schedule", model.getSchedule().toMap());
             return map;

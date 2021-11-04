@@ -52,7 +52,7 @@ public class DefineHabitActivity extends AppCompatActivity {
 
         // Get any passed in data
         Intent intent = getIntent();
-        String habitId = intent.getStringExtra("HABIT_EVENT_ID");
+        String habitId = intent.getStringExtra("HABIT_ID");
         boolean isNewHabitEvent = habitId == null;
 
         // Load the appropriate controller
@@ -96,7 +96,7 @@ public class DefineHabitActivity extends AppCompatActivity {
             loadingBar.setVisibility(View.GONE);
             habitTitle.setEnabled(true);
             habitReason.setEnabled(true);
-            habitStartDate.setEnabled(true);
+            habitStartDate.setEnabled(controller.isStartDateEditable());
 
             // Update fields
             IHabitModel model = controller.getModel();
@@ -122,10 +122,15 @@ public class DefineHabitActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.menu_commit_changes:
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(habitStartDate.getYear(), habitStartDate.getMonth(), habitStartDate.getDayOfMonth());
-                controller.updateModel(habitTitle.getText().toString(), habitReason.getText().toString(), calendar.getTime());
-                return true;
+                String titleError = controller.getTitleError(habitTitle.getText().toString());
+                if (titleError != null) {
+                    habitTitle.setError(titleError);
+                } else {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(habitStartDate.getYear(), habitStartDate.getMonth(), habitStartDate.getDayOfMonth());
+                    controller.updateModel(habitTitle.getText().toString(), habitReason.getText().toString(), calendar.getTime());
+                    return true;
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }

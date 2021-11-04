@@ -53,6 +53,28 @@ public class HabitController extends ServiceTaskController<String> {
     }
 
     /**
+     * Whether or not the start date is editable
+     * @return true is the start date is editable
+     */
+    public boolean isStartDateEditable() {
+        return getModel().getLastCompleted() == null;
+    }
+
+    /**
+     * Checks the given title to see if it complies with the model spec
+     * @param title to check
+     * @return error code to display if not
+     */
+    public String getTitleError(String title) {
+        // TODO: move this check to the model
+        if (title.trim().length() == 0) return "Required";
+        if (title.length() > IHabitModel.MAX_TITLE_LENGTH)
+            return "Must be under " + IHabitModel.MAX_TITLE_LENGTH + "characters";
+
+        return null;
+    }
+
+    /**
      * Update the model with the given data and commit the changes to the backend
      *
      * @param title to update model to

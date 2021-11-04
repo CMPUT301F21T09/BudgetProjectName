@@ -89,6 +89,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         habitDescription = (TextView) findViewById(R.id.habitDescription);
         habitDate = (TextView) findViewById(R.id.habitDate);
         habitTitleToolbar = findViewById(R.id.toolbar_title);
+        
         // Set up the controller and set the views accordingly
         controller = HabitController.getEditHabitController(habitID);
         controller.attachListener(this::updateView);
@@ -151,7 +152,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         fridayIcon = findViewById(R.id.friday_icon);
         saturdayIcon = findViewById(R.id.saturday_icon);
 
-        // TODO: maybe refactor methods like these to attach to specific "streams" of updated data?
+        // Set the views of the habit details accordingly
         if(controller.isTaskComplete(HabitController.HABIT_MODEL_LOAD)){
             // Set the toolbar title, habit tile, habit reason, and habit date view
             IHabitModel model = controller.getModel();

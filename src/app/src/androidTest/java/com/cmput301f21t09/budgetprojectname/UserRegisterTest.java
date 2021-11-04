@@ -10,11 +10,12 @@ import static org.junit.Assert.*;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.robotium.solo.Solo;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
- * Test class for the bottomNavigation which currently resides in MainActivity.
+ * Test class for UserRegisterActivity.
  */
 public class UserRegisterTest {
     private Solo solo;
@@ -91,6 +92,7 @@ public class UserRegisterTest {
         solo.enterText((EditText) solo.getView(R.id.password_edittext), "12345678");
         solo.clickOnView(solo.getView(R.id.create_button));
         assertTrue(solo.waitForView(R.id.today_date));
-        firebaseAuth.getCurrentUser().delete();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        user.delete();
     }
 }

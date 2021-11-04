@@ -19,15 +19,16 @@ public class MainActivity extends AppCompatActivity {
         // 4 main fragments for bottom navigation UI
         MainFragment habitFragment = new MainFragment();
         SearchFragment searchFragment = new SearchFragment();
-        AddFragment addFragment = new AddFragment();
         FollowingFragment followingFragment = new FollowingFragment();
         ProfileFragment profileFragment = new ProfileFragment();
 
-        // Fragment switch
+        // Fragment switching
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
+        bottomNavigationView.getMenu().findItem(R.id.add).setCheckable(false);
+
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
-                case R.id.main:
+                case R.id.daily_habit:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment, habitFragment).commit();
                     return true;
                 case R.id.search:
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.add:
                     Intent intent = new Intent(this, DefineHabitActivity.class);
                     startActivity(intent);
-                    return true;
+                    // break instead of return to keep previous fragment selection
+                    break;
                 case R.id.following:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment, followingFragment).commit();
                     return true;
@@ -46,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
-        bottomNavigationView.setSelectedItemId(R.id.main);
+
+        bottomNavigationView.setSelectedItemId(R.id.daily_habit);
 
     }
 }

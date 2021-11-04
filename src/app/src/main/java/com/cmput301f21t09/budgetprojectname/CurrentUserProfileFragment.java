@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,7 @@ public class CurrentUserProfileFragment extends Fragment {
      */
     private void signOut() {
         AuthorizationService.getInstance().signOut();
+        Toast.makeText(getActivity(), "Signed out", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(getActivity(), UserLoginActivity.class));
     }
 

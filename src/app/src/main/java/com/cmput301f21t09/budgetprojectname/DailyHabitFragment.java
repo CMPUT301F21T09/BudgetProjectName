@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 public class DailyHabitFragment extends Fragment {
@@ -32,27 +33,42 @@ public class DailyHabitFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Set Today's Date
+        Date date = new Date();
         TextView dateText = view.findViewById(R.id.today_date);
-        dateText.setText(new SimpleDateFormat("EEEE, MMMM d").format(new Date()));
+        dateText.setText(new SimpleDateFormat("EEEE, MMMM d").format(date));
 
-        // Spinner Setup
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("Monday");
-        arrayList.add("Tuesday");
-        arrayList.add("Wednesday");
-        arrayList.add("Thursday");
-        arrayList.add("Friday");
+        // Set Today's Day to set to the Spinner
+        ArrayList<String> dayList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.dayArray)));
+        String day = new SimpleDateFormat("EEEE").format(new Date());
+        int todayIndex = 0;
+        switch (day) {
+            case "Monday":
+                todayIndex = 0;
+                break;
+            case "Tuesday":
+                todayIndex = 1;
+                break;
+            case "Wednesday":
+                todayIndex = 2;
+                break;
+            case "Thursday":
+                todayIndex = 3;
+                break;
+            case "Friday":
+                todayIndex = 4;
+        }
+        dayList.set(todayIndex, "Today");
 
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, arrayList);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, dayList);
 
         Spinner spinner = view.findViewById(R.id.day_spinner);
         spinner.setAdapter(spinnerAdapter);
+        spinner.setSelection(todayIndex);
 
         // ListView setup
         ListView habitList = view.findViewById(R.id.habit_listview);
 
         ArrayList<HabitModel> habitDataList = new ArrayList<>();
-
         // This is mock data
         for (int i = 0; i < 10; i++) {
             habitDataList.add(new HabitModel("TestID", "TestString" + 1, "TestReason", new Date(), new Date(), i));

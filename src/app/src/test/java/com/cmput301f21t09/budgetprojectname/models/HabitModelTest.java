@@ -13,6 +13,7 @@ import java.util.Date;
  * Test class for the HabitModel.
  * Verifies that data is set and get correctly.
  */
+
 public class HabitModelTest {
     private HabitModel newHabitModel;
 
@@ -22,6 +23,9 @@ public class HabitModelTest {
         newHabitModel = newServiceTaskHabitModel.getResult();
     }
 
+    /**
+     * Test for setting and getting ID from habitModel
+     */
     @Test
     public void testIdGetterAndSetter() {
         String id = "123";
@@ -29,6 +33,9 @@ public class HabitModelTest {
         assertEquals(id, newHabitModel.getId());
     }
 
+    /**
+     * Test for setting and getting title from habitModel
+     */
     @Test
     public void testTitleGetterAndSetter() {
         String title = "Dishes";
@@ -36,6 +43,9 @@ public class HabitModelTest {
         assertEquals(title, newHabitModel.getTitle());
     }
 
+    /**
+     * Test for setting and getting reason from habitModel
+     */
     @Test
     public void testReasonGetterAndSetter() {
         String reason = "this is a good reason";
@@ -43,12 +53,18 @@ public class HabitModelTest {
         assertEquals(reason, newHabitModel.getReason());
     }
 
+    /**
+     * Test for incrementing and getting streak from habitModel
+     */
     @Test
     public void testGetStreak() {
         //TODO: increment streak
         assertEquals(newHabitModel.getStreak(), 0);
     }
 
+    /**
+     * Test for setting and getting startDate from habitModel
+     */
     @Test
     public void testStartDateGetterAndSetter() {
         Date date = new Date(2021, 1, 1);
@@ -56,6 +72,9 @@ public class HabitModelTest {
         assertEquals(date, newHabitModel.getStartDate());
     }
 
+    /**
+     * Test for incrementing and getting lastCompleted from habitModel
+     */
     @Test
     //TODO: set lastCompleted
     public void testGetLastCompleted() {

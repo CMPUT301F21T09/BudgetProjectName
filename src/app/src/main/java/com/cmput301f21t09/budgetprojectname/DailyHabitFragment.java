@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
+/**
+ * Fragment that shows User's Daily Habit
+ */
 public class DailyHabitFragment extends Fragment {
 
     @Nullable

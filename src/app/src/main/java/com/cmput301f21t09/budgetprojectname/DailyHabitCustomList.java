@@ -13,11 +13,20 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * CustomList for DailyHabitFragment
+ * Show the habit's name, reason, and streak with button that create a habit event for the habit
+ */
 public class DailyHabitCustomList extends ArrayAdapter<HabitModel> {
     private ArrayList<HabitModel> habits;
     private Context context;
 
-
+    /**
+     * Constructor for DailyHabitCustomList
+     *
+     * @param context a current context of application
+     * @param habits  a arrayList of habits
+     */
     public DailyHabitCustomList(Context context, ArrayList<HabitModel> habits) {
         super(context, 0, habits);
         this.habits = habits;

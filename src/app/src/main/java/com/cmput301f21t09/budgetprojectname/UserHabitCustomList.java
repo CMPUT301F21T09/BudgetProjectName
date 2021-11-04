@@ -32,6 +32,7 @@ public class UserHabitCustomList extends ArrayAdapter<HabitModel> {
         this.context = context;
     }
 
+    @Override
     public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
         View view = convertView;
         if (view == null) {

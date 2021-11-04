@@ -133,12 +133,7 @@ public class HabitEventController {
                         if (task.isSuccessful()) {
                             // Append every document into habitEventDataList
                             for (QueryDocumentSnapshot doc : task.getResult()) {
-                                String id = (String) doc.getId();
-                                Date date  = ((Timestamp) doc.getData().get("date")).toDate();
-                                String location = (String) doc.getData().get("location");
-                                String comment = (String) doc.getData().get("comment");
-                                Image image = (Image) doc.getData().get("image");
-                                habitEventDataList.add(new HabitEventModel(id, location, date, comment, image, habitID));
+                                habitEventDataList.add(doc.toObject(HabitEventModel.class));
                             }
                             hbEvtLstCallback.onCallback(habitEventDataList);
                         } else {

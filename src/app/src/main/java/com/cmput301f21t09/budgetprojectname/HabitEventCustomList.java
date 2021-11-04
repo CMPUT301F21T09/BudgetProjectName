@@ -1,6 +1,6 @@
 package com.cmput301f21t09.budgetprojectname;
 
-import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -68,19 +68,15 @@ public class HabitEventCustomList extends ArrayAdapter<HabitEventModel> {
         habitDate.setText(df.format(habitEvent.getDate()));
 
         // Set the location, comment, and image icons accordingly
-        if (isNull(habitEvent.getLocation())) {
-            locationIcon.setImageResource(R.drawable.ic_map_marker_negative);
-        } else {
+        // location and comment are empty string by default
+        // image is null by default
+        if (habitEvent.getLocation().length() > 0) {
             locationIcon.setImageResource(R.drawable.ic_map_marker_positive);
         }
-        if (isNull(habitEvent.getComment())) {
-            descriptionIcon.setImageResource(R.drawable.ic_comment_negative);
-        } else {
+        if (habitEvent.getComment().length() > 0) {
             descriptionIcon.setImageResource(R.drawable.ic_comment_positive);
         }
-        if (isNull(habitEvent.getImage())) {
-            ImageIcon.setImageResource(R.drawable.ic_image_negative);
-        } else {
+        if (nonNull(habitEvent.getImage())) {
             ImageIcon.setImageResource(R.drawable.ic_image_positive);
         }
 

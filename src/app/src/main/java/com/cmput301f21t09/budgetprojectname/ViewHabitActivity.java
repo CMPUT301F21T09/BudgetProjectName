@@ -165,38 +165,24 @@ public class ViewHabitActivity extends AppCompatActivity {
             IWeeklyHabitScheduleModel schedule = (IWeeklyHabitScheduleModel) model.getSchedule();
             if (schedule.getDay(IWeeklyHabitScheduleModel.SUNDAY))
                 sundayIcon.setImageResource(R.drawable.ic_sunday_positive);
-            else
-                sundayIcon.setImageResource(R.drawable.ic_sunday_negative);
 
             if (schedule.getDay(IWeeklyHabitScheduleModel.MONDAY))
                 mondayIcon.setImageResource(R.drawable.ic_monday_positive);
-            else
-                mondayIcon.setImageResource(R.drawable.ic_monday_negative);
 
             if (schedule.getDay(IWeeklyHabitScheduleModel.TUESDAY))
                 tuesdayIcon.setImageResource(R.drawable.ic_tuesday_positive);
-            else
-                tuesdayIcon.setImageResource(R.drawable.ic_tuesday_negative);
 
             if (schedule.getDay(IWeeklyHabitScheduleModel.WEDNESDAY))
                 wednesdayIcon.setImageResource(R.drawable.ic_wednesday_positive);
-            else
-                wednesdayIcon.setImageResource(R.drawable.ic_wednesday_negative);
 
             if (schedule.getDay(IWeeklyHabitScheduleModel.THURSDAY))
                 thursdayIcon.setImageResource(R.drawable.ic_thursday_positive);
-            else
-                thursdayIcon.setImageResource(R.drawable.ic_thursday_negative);
 
             if (schedule.getDay(IWeeklyHabitScheduleModel.FRIDAY))
                 fridayIcon.setImageResource(R.drawable.ic_friday_positive);
-            else
-                fridayIcon.setImageResource(R.drawable.ic_friday_negative);
 
             if (schedule.getDay(IWeeklyHabitScheduleModel.SATURDAY))
                 saturdayIcon.setImageResource(R.drawable.ic_saturday_positive);
-            else
-                saturdayIcon.setImageResource(R.drawable.ic_saturday_negative);
         }
     }
 }

@@ -69,4 +69,6 @@ public class CurrentUserProfileTest {
         solo.clickOnView(solo.getView(R.id.logout_button));
         assertTrue(solo.waitForView(R.id.login_label));
     }
+
+    //TODO: Add intent tests for profile information being pulled correctly
 }

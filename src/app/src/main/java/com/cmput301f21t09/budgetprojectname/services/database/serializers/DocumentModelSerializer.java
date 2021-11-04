@@ -30,6 +30,7 @@ public interface DocumentModelSerializer<T> {
      * @return date representation of object
      */
     static Date parseAsDate(Object dateObject) {
+
         return ((Timestamp)dateObject).toDate();
     }
 

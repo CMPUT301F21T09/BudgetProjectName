@@ -1,7 +1,6 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -60,7 +59,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
 
         location = (EditText) findViewById(R.id.location);
         description = (EditText) findViewById(R.id.description);
-        image = (ImageView) findViewById(R.id.image);
+        image = (ImageView) findViewById(R.id.profile_pic);
         ImageButton doneBtn = findViewById(R.id.done);
 
         doneBtn.setOnClickListener(new View.OnClickListener() {

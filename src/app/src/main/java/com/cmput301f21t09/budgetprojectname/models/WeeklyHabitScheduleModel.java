@@ -79,4 +79,9 @@ public class WeeklyHabitScheduleModel implements IWeeklyHabitScheduleModel {
         return days[day];
     }
 
+    @Override
+    public boolean[] getAllDays() {
+        return days.clone();
+    }
+
 }

@@ -1,4 +1,5 @@
 package com.cmput301f21t09.budgetprojectname.models;
+
 import com.cmput301f21t09.budgetprojectname.services.ServiceTask;
 import com.cmput301f21t09.budgetprojectname.services.ServiceTaskManager;
 import com.cmput301f21t09.budgetprojectname.services.database.CollectionSpecifier;
@@ -9,8 +10,6 @@ import com.cmput301f21t09.budgetprojectname.services.database.serializers.ModelM
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-//TODO: Add Frequency
 
 /**
  * Model class for user habits
@@ -181,6 +180,14 @@ public class HabitModel implements IHabitModel {
     @Override
     public IHabitScheduleModel getSchedule() {
         return this.schedule;
+    }
+
+    /**
+     * Set the schedule of the habit
+     * @param schedule to set
+     */
+    public void setSchedule(IHabitScheduleModel schedule) {
+        this.schedule = schedule;
     }
 
     /**

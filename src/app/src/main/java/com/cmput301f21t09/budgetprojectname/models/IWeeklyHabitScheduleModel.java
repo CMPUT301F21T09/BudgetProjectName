@@ -52,4 +52,10 @@ public interface IWeeklyHabitScheduleModel extends IHabitScheduleModel {
      * @return true if habit is scheduled for completion on that day
      */
     boolean getDay(int day);
+
+    /**
+     * Return all days as an array indexable using the same values as getDay
+     * @return array representing all days of the week
+     */
+    boolean[] getAllDays();
 }

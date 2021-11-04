@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.cmput301f21t09.budgetprojectname.models.HabitModel;
 import com.cmput301f21t09.budgetprojectname.models.IHabitModel;
+import com.cmput301f21t09.budgetprojectname.models.IHabitScheduleModel;
 
 import java.util.Date;
 
@@ -81,13 +82,14 @@ public class HabitController extends ServiceTaskController<String> {
      * @param reason to update model to
      * @param startDate to update model to
      */
-    public void updateModel(String title, String reason, Date startDate) {
+    public void updateModel(String title, String reason, Date startDate, IHabitScheduleModel schedule) {
         Log.d("HabitController", "Habit Model Save Command issued");
 
         // Set data
         model.setTitle(title);
         model.setReason(reason);
         model.setStartDate(startDate);
+        model.setSchedule(schedule);
 
         // Commit changes
         registerTask(HABIT_MODEL_SAVE, model.commit());
@@ -114,7 +116,7 @@ public class HabitController extends ServiceTaskController<String> {
      * @return true if the model is currently being saved
      */
     public boolean isSaving() {
-        return !isTaskComplete(HABIT_MODEL_SAVE);
+        return hasTask(HABIT_MODEL_SAVE) && !isTaskComplete(HABIT_MODEL_SAVE);
     }
 
     /**

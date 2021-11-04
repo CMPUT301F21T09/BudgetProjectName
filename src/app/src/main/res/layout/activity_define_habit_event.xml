@@ -115,7 +115,7 @@
         app:layout_constraintTop_toBottomOf="@id/location_background" />
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/description_background"
+        android:id="@+id/search_user_background"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="4dp"
@@ -139,11 +139,11 @@
         android:inputType="textPersonName"
         android:textColor="#3C85B9"
         android:textColorHint="#80B8DF"
-        android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="@id/description_background"
-        app:layout_constraintEnd_toEndOf="@+id/description_background"
-        app:layout_constraintStart_toStartOf="@id/description_background"
-        app:layout_constraintTop_toTopOf="@id/description_background" />
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/search_user_background"
+        app:layout_constraintEnd_toEndOf="@+id/search_user_background"
+        app:layout_constraintStart_toStartOf="@id/search_user_background"
+        app:layout_constraintTop_toTopOf="@id/search_user_background" />
 
     <TextView
         android:id="@+id/imageLabel"
@@ -154,7 +154,7 @@
         android:textColor="#2B638B"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@id/locationLabel"
-        app:layout_constraintTop_toBottomOf="@id/description_background" />
+        app:layout_constraintTop_toBottomOf="@id/search_user_background" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/image_placeholder"

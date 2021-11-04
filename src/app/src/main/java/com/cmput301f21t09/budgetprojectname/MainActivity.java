@@ -1,6 +1,7 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment, searchFragment).commit();
                     return true;
                 case R.id.add:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, addFragment).commit();
+                    Intent intent = new Intent(this, DefineHabitActivity.class);
+                    startActivity(intent);
                     return true;
                 case R.id.following:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment, followingFragment).commit();

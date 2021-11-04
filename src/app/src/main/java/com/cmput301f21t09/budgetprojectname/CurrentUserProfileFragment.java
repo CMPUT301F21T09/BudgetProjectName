@@ -15,6 +15,9 @@ import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Fragment that shows user's profile with their name, username, and habits
+ */
 public class CurrentUserProfileFragment extends Fragment {
 
     @Nullable

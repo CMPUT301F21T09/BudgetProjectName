@@ -11,11 +11,21 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * CustomList for CurrentUserProfileFragment and OtherUserProfileActivity
+ * Show the habit's name, reason, and streak
+ */
 public class UserHabitCustomList extends ArrayAdapter<HabitModel> {
     private ArrayList<HabitModel> habits;
     private Context context;
 
 
+    /**
+     * Constructor for UserHabitCustomList
+     *
+     * @param context a current context of application
+     * @param habits  a arrayList of habits
+     */
     public UserHabitCustomList(Context context, ArrayList<HabitModel> habits) {
         super(context, 0, habits);
         this.habits = habits;

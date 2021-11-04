@@ -68,7 +68,11 @@ public class DefineHabitEventActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String locationStr = location.getText().toString();
                 String descriptionStr = description.getText().toString();
-                HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(), descriptionStr);
+
+                // Todo: Change the habitID below to the actual habitID passed into this activity
+                String testHabitID = "zViEJpRvJ01aleO1d0K3";
+
+                HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(), descriptionStr, testHabitID);
 
                 if (isNewHabitEvent) {
                     storeNewHabitEvent(habitEvent);
@@ -119,7 +123,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     private void storeEditedHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
         DocumentReference habitEventRef = db.collection("habit_events")
                 .document(habitEventID);
-        habitEventRef.update("description", modifiedHabitEvent.getDescription(),
+        habitEventRef.update("description", modifiedHabitEvent.getComment(),
                 "location", modifiedHabitEvent.getLocation(),
                 "image", modifiedHabitEvent.getImage())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

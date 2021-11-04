@@ -61,10 +61,13 @@ public class ViewHabitActivity extends AppCompatActivity {
 
         // The specific habitID is fetched from the previous activity
         Intent intent = getIntent();
-        int habitID = intent.getIntExtra("HABIT_ID", -1);
+        String habitID = intent.getStringExtra("HABIT_ID");
+
+        // Todo: Change the habitID below to the actual habitID passed into this activity
+        String testHabitID = "zViEJpRvJ01aleO1d0K3";
 
         // Todo: Change the mock habitID below to the habitID from intent
-        showHabitDetail("zViEJpRvJ01aleO1d0K3");
+        showHabitDetail(testHabitID);
 
         // Todo: Implement edit Habit function
         final Button editHabitBtn = findViewById(R.id.editHabitButton);
@@ -80,9 +83,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         habitEventAdapter = new HabitEventCustomList(this, habitEventDataList);
         habitEventList.setAdapter(habitEventAdapter);
 
-        // Todo: Change the habitID below to the actual habitID passed into this activity
-        String testHabitID = "zViEJpRvJ01aleO1d0K3";
-
+        // Fetches the past habit events related to the current habit from Firestore using habitID
         habitEventController.readHabitEvent(testHabitID, new HabitEventController.HabitEventListCallback() {
             @Override
             public void onCallback(ArrayList<HabitEventModel> hbEvtLst) {

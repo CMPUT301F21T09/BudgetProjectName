@@ -1,9 +1,6 @@
 package com.cmput301f21t09.budgetprojectname;
 
-
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -44,13 +41,11 @@ public class HabitEventCustomList extends ArrayAdapter<HabitEventModel> {
 
         HabitEventModel habitEvent = habitEvents.get(position);
 
-
         /* Views */
 
         /**
          * Text View for habit date
          */
-
         TextView habitDate = view.findViewById(R.id.date);
 
         /**

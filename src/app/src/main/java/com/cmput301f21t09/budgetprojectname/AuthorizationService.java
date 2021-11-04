@@ -73,10 +73,16 @@ public class AuthorizationService {
     }
 
     /**
-     * Get current signed in user
-     * @return The current signed in user. Return null if no user is signed in
+     * Get current signed in user's id
+     * @return The current signed in user's id. Return empty string if user doesn't exist
      */
-    public FirebaseUser getCurrentUser() {
-        return firebaseAuth.getCurrentUser();
+    public String getCurrentUserId() {
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
+        if (currentUser != null) {
+            return currentUser.getUid();
+        } else {
+            return "";
+        }
     }
 }

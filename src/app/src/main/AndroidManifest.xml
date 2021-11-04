@@ -20,7 +20,7 @@
             android:name=".UserRegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".UserLoginActivity"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".DefineHabitEventActivity"
@@ -29,7 +29,7 @@
             android:name=".ViewHabitEventActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".UserLoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

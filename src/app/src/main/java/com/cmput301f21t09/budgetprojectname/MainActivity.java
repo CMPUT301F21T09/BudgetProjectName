@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.add:
                     Intent intent = new Intent(this, DefineHabitActivity.class);
                     startActivity(intent);
-                    // break instead of return to keep previous fragment selection
+                    // using break instead of return to keep previous fragment selection
                     break;
                 case R.id.following:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment, followingFragment).commit();
@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         bottomNavigationView.setSelectedItemId(R.id.daily_habit);
-
     }
+
+
 }

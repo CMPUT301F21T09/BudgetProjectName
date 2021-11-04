@@ -71,6 +71,7 @@
             android:autofillHints="name"
             android:background="@null"
             android:inputType="textPersonName"
+            android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@id/first_name_edittext_background"
             app:layout_constraintEnd_toEndOf="@+id/first_name_edittext_background"
@@ -111,6 +112,8 @@
             android:autofillHints="name"
             android:background="@null"
             android:inputType="textPersonName"
+
+            android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@id/last_name_edittext_background"
             app:layout_constraintEnd_toEndOf="@+id/last_name_edittext_background"
@@ -151,7 +154,9 @@
             android:autofillHints="name"
             android:background="@null"
             android:inputType="textEmailAddress"
+            android:textColor="@color/black"
             android:textSize="18sp"
+
             app:layout_constraintBottom_toBottomOf="@id/email_edittext_background"
             app:layout_constraintEnd_toEndOf="@+id/email_edittext_background"
             app:layout_constraintStart_toStartOf="@id/email_edittext_background"
@@ -202,6 +207,8 @@
             android:autofillHints="name"
             android:background="@null"
             android:inputType="textPersonName"
+
+            android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/username_edittext_background"
             app:layout_constraintEnd_toEndOf="@+id/username_edittext_background"
@@ -240,8 +247,10 @@
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
             android:autofillHints="password"
+
             android:background="@null"
             android:inputType="textPassword"
+            android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/password_edittext_background"
             app:layout_constraintEnd_toEndOf="@+id/password_edittext_background"

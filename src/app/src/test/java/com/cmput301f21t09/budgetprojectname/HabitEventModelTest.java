@@ -17,16 +17,16 @@ public class HabitEventModelTest {
     private HabitEventModel testHE;
 
     @Before
-    public void init(){
+    public void init() {
         testHE = new HabitEventModel("habiteventid", "YEG",
-                new Date(1,1,1), "comment", null, "habitid");
+                new Date(1, 1, 1), "comment", null, "habitid");
     }
 
     @Test
-    public void testHabitEventModelConstructor(){
+    public void testHabitEventModelConstructor() {
         String id = "habiteventid";
         String location = "YEG";
-        Date date = new Date(1,1,1);
+        Date date = new Date(1, 1, 1);
         String comment = "comment";
         Image image = null;
         String habitID = "habitid";
@@ -37,14 +37,13 @@ public class HabitEventModelTest {
         assertEquals(comment, testHE.getComment());
         assertEquals(image, testHE.getImage());
         assertEquals(habitID, testHE.getHabitID());
-
     }
 
     @Test
-    public void testHabitEventModelSetters(){
+    public void testHabitEventModelSetters() {
         String id = "newhabiteventid";
         String location = "YYC";
-        Date date = new Date(2,2,2);
+        Date date = new Date(2, 2, 2);
         String comment = "newcomment";
         Image image = null;
         String habitID = "newhabitid";

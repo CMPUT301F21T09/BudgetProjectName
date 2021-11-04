@@ -1,0 +1,51 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#f2f8fd" />
+        </shape>
+    </item>
+
+    <item android:drawable="@drawable/pentagon">
+        <rotate
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fromDegrees="0"
+            android:pivotX="0%"
+            android:pivotY="0%"
+            android:toDegrees="0" />
+    </item>
+</layer-list>
+
+    <!--<layer-list xmlns:android="http://schemas.android.com/apk/res/android">-->
+    <!--<item>-->
+
+    <!--    <shape android:shape="rectangle">-->
+    <!--        <solid android:color="#3C85B9" />-->
+    <!--    </shape>-->
+    <!--</item>-->
+
+    <!--<item>-->
+    <!--    <rotate-->
+    <!--        android:fromDegrees="-30"-->
+    <!--        android:pivotX="23%"-->
+    <!--        android:pivotY="-48%"-->
+    <!--        android:toDegrees="-30">-->
+    <!--        <shape android:shape="rectangle">-->
+    <!--            <solid android:color="@color/white" />-->
+    <!--        </shape>-->
+    <!--    </rotate>-->
+    <!--</item>-->
+
+    <!--<item>-->
+    <!--    <rotate-->
+    <!--        android:fromDegrees="-30"-->
+    <!--        android:pivotX="100%"-->
+    <!--        android:pivotY="143%"-->
+    <!--        android:toDegrees="-30">-->
+    <!--        <shape android:shape="rectangle">-->
+    <!--            <solid android:color="@color/white" />-->
+    <!--        </shape>-->
+    <!--    </rotate>-->
+    <!--</item>-->
+
+    <!--</layer-list>-->

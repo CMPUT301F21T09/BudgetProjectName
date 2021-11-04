@@ -1,6 +1,9 @@
 package com.cmput301f21t09.budgetprojectname.services.database.serializers;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
+
+import java.util.Date;
 
 /**
  * Document to/from Model Serializer interface
@@ -19,6 +22,15 @@ public interface DocumentModelSerializer<T> {
      */
     static <S> DocumentModelSerializer<S> getInstance(ModelMapParser<S> mapParser) {
         return new MappedModelSerializer<>(mapParser);
+    }
+
+    /**
+     * Parse an object from the database that represents a date to a date object
+     * @param dateObject object to covert to date
+     * @return date representation of object
+     */
+    static Date parseAsDate(Object dateObject) {
+        return ((Timestamp)dateObject).toDate();
     }
 
     /**

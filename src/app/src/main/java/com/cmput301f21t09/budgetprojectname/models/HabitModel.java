@@ -11,118 +11,208 @@ import java.util.HashMap;
 import java.util.Map;
 
 //TODO: Add Frequency
+
+/**
+ * Model class for user habits
+ */
 public class HabitModel implements IHabitModel {
+    /**
+     * Habit title
+     */
     private String title;
-    private String ID;
+    /**
+     * Habit database entry id
+     */
+    private String id;
+    /**
+     * Habit reason
+     */
     private String reason;
-    private int streak;
+    /**
+     * Habit streak score
+     */
+    private long streak;
+    /**
+     * Habit start date
+     */
     private Date startDate;
+    /**
+     * Habit last completed date
+     */
     private Date lastCompleted;
 
-    private HabitModel(String ID, String title, String reason, Date startDate, Date lastCompleted, int streak) {
-        setID(ID);
-        setTitle(title);
-        setReason(reason);
-        setStartDate(startDate);
-        setLastCompleted(lastCompleted);
-        setStreak(streak);
+    /**
+     * Private constructor for creating a habit model with the given data
+     * @param id habit id
+     * @param title habit title string
+     * @param reason habit reason
+     * @param startDate habit start date
+     * @param lastCompleted habit last time completed date
+     * @param streak habit streak score
+     */
+    private HabitModel(String id, String title, String reason, Date startDate, Date lastCompleted, long streak) {
+        setId(id);
+
+        setTitle(sanitizeStringFromDatabase(title, IHabitModel.MAX_TITLE_LENGTH));
+        setReason(sanitizeStringFromDatabase(reason, IHabitModel.MAX_REASON_LENGTH));
+        setStartDate(startDate != null ? startDate : new Date());
+        this.lastCompleted = lastCompleted;
+        this.streak = streak;
     }
 
+    /**
+     * Get an instance of a habit that does not exist in the database
+     * @return completed load task for habit
+     */
     public static ServiceTask<HabitModel> getNewInstance() {
         ServiceTaskManager<HabitModel> taskman = new ServiceTaskManager<>();
-        taskman.setSuccess(new HabitModel(null, "", "", new Date(), null, 0));
+        taskman.setSuccess(new HabitModel(null, null, null, new Date(), null, 0));
         return taskman.getTask();
     }
 
-    public static ServiceTask<HabitModel> getInstanceById(String ID) {
+    /**
+     * Get an instance of a habit that exists in the database as specified by the given id
+     * @param id of habit
+     * @return load task for habit
+     */
+    public static ServiceTask<HabitModel> getInstanceById(String id) {
         return DatabaseService.getInstance().getCollection(CollectionSpecifier.HABITS)
-                .getDocument(ID)
+                .getDocument(id)
                 .retrieve(DocumentModelSerializer.getInstance(new HabitModelMapParser()));
     }
 
-    public String getID() {
-        return this.ID;
+    /**
+     * Sanitize a string from the database
+     *
+     * If the string is null, provide an empty string
+     * If the string is greater than the max length truncate it
+     * @param s string to sanitize
+     * @param maxLength max length of the string
+     * @return sanitized string
+     */
+    private static String sanitizeStringFromDatabase(String s, int maxLength) {
+        if (s == null) return "";
+        else if (s.length() > maxLength) return s.substring(0, maxLength);
+        else return s;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    @Override
+    public String getId() {
+        return this.id;
     }
 
+    /**
+     * Set the id of the habit
+     * @param id to set
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
     public String getTitle() {
         return this.title;
     }
 
+    /**
+     * Set the title of the habit
+     *
+     * Must comply with the following rules:
+     * String length is less than IHabitModel.MAX_TITLE_LENGTH
+     * @param title to set
+     */
     public void setTitle(String title) {
+        if (title.length() > IHabitModel.MAX_TITLE_LENGTH) {
+            throw new IllegalArgumentException("Cannot set title to String of length greater than " + IHabitModel.MAX_TITLE_LENGTH);
+        }
         this.title = title;
     }
 
+    @Override
     public String getReason() {
         return this.reason;
     }
 
+    /**
+     * Set the reason of the habit
+     *
+     * Must comply with the following rules:
+     * String length is less than IHabitModel.MAX_REASON_LENGTH
+     * @param reason to set
+     */
     public void setReason(String reason) {
+        if (reason.length() > IHabitModel.MAX_REASON_LENGTH) {
+            throw new IllegalArgumentException("Cannot set reason to String of length greater than " + IHabitModel.MAX_REASON_LENGTH);
+        }
         this.reason = reason;
     }
 
-    public int getStreak() {
+    @Override
+    public long getStreak() {
         return this.streak;
     }
 
-    public void setStreak(int streak) {
-        this.streak = streak;
-    }
-
+    @Override
     public Date getStartDate() {
         return this.startDate;
     }
 
+    /**
+     * Set the start date of the habit
+     * @param date to set
+     */
     public void setStartDate(Date date) {
         this.startDate = date;
     }
 
+    @Override
     public Date getLastCompleted() {
         return this.lastCompleted;
     }
 
-    public void setLastCompleted(Date date) {
-        this.lastCompleted = date;
-    }
-
+    /**
+     * Commit the habit model to the database, creating a new entry if necessary
+     * @return task representing status of save task
+     */
     public ServiceTask<Void> commit() {
         // TODO: prevent multiple commits at the same time through the same model
         DocumentModelSerializer<HabitModel> serializer = DocumentModelSerializer.getInstance(new HabitModelMapParser());
-        if (this.ID == null) {
+        // If this was a new habit model we push a new entry to the database
+        if (this.id == null) {
             ServiceTask<String> saveTask = DatabaseService.getInstance().getCollection(CollectionSpecifier.HABITS).push(this, serializer);
             saveTask.addTaskCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    this.ID = task.getResult();
+                    this.id = task.getResult();
                 }
             });
             return ServiceTaskManager.fromTask(saveTask, s -> null, e -> e);
         }
+        // Otherwise we just set the new model info
         return DatabaseService.getInstance().getCollection(CollectionSpecifier.HABITS)
-                .getDocument(this.ID)
+                .getDocument(this.id)
                 .save(this, serializer);
     }
 
+    /**
+     * Parser for mapping between a map and a habit model
+     */
     private static class HabitModelMapParser implements ModelMapParser<HabitModel> {
 
         @Override
-        public HabitModel parseMap(Map<String, Object> map) {
+        public HabitModel parseMap(Map<String, Object> map, String id) {
             return new HabitModel(
-                    (String) map.get("id"),
+                    id,
                     (String) map.get("title"),
                     (String) map.get("reason"),
-                    (Date) map.get("start_date"),
-                    (Date) map.get("last_completed"),
-                    map.get("streak") != null ? (Integer) map.get("streak") : 0
+                    DocumentModelSerializer.parseAsDate(map.get("start_date")),
+                    DocumentModelSerializer.parseAsDate(map.get("last_completed")),
+                    map.get("streak") != null ? (Long) map.get("streak") : 0
             );
         }
 
         @Override
         public Map<String, Object> parseModel(HabitModel model) {
             Map<String, Object> map = new HashMap<>();
-            map.put("id", model.getID());
             map.put("title", model.getTitle());
             map.put("reason", model.getReason());
             map.put("start_date", model.getStartDate());

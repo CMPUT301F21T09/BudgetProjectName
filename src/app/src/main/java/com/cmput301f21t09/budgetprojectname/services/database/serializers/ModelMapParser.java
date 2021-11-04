@@ -10,9 +10,10 @@ public interface ModelMapParser<T> {
     /**
      * Parse a map to a given model
      * @param map to parse
+     * @param id of document
      * @return model generated from map
      */
-    T parseMap(Map<String, Object> map);
+    T parseMap(Map<String, Object> map, String id);
 
     /**
      * Generate a map of key-value pairs from a model

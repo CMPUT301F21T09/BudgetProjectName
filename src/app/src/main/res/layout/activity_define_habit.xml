@@ -75,6 +75,7 @@
                 android:ems="20"
                 android:importantForAutofill="no"
                 android:inputType="textNoSuggestions"
+                android:maxLength="20"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -98,10 +99,10 @@
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
         <TextView
-            android:id="@+id/adh_chooseDatesLabel"
+            android:id="@+id/adh_reasonLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/adh_editHabitDescriptionLabel"
+            android:text="@string/adh_editHabitReasonLabel"
             android:textColor="#2B638B"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -115,10 +116,10 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/adh_chooseDatesLabel">
+            app:layout_constraintTop_toBottomOf="@+id/adh_reasonLabel">
 
             <EditText
-                android:id="@+id/adh_chooseDates"
+                android:id="@+id/adh_editHabitReason"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
@@ -129,6 +130,7 @@
                 android:ems="20"
                 android:importantForAutofill="no"
                 android:inputType="textNoSuggestions"
+                android:maxLength="30"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -151,7 +153,7 @@
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
 
         <TextView
-            android:id="@+id/adh_descriptionLabel"
+            android:id="@+id/adh_scheduleLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/adh_chooseDatesLabel"
@@ -168,10 +170,10 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/adh_descriptionLabel">
+            app:layout_constraintTop_toBottomOf="@+id/adh_scheduleLabel">
 
             <EditText
-                android:id="@+id/adh_editHabitDescription"
+                android:id="@+id/adh_editHabitSchedule"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"

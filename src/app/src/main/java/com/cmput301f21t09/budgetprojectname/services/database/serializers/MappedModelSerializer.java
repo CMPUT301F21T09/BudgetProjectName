@@ -27,6 +27,6 @@ class MappedModelSerializer<T> implements DocumentModelSerializer<T> {
 
     @Override
     public T deserialize(DocumentSnapshot documentSnapshot) {
-        return parser.parseMap(documentSnapshot.getData());
+        return parser.parseMap(documentSnapshot.getData(), documentSnapshot.getId());
     }
 }

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +28,7 @@ import java.util.Date;
 
 public class DefineHabitEventActivity extends AppCompatActivity {
 
-    private TextView screenTitle;
+    private TextView toolbarTitle;
     private TextView habitEventName;
     private EditText location;
     private EditText comment;
@@ -54,16 +55,17 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         }
 
         // update title according to mode selected: "add" or "edit"
-        screenTitle = (TextView) findViewById(R.id.CreateEditHabitEventTitle);
-        screenTitle.setText(modeStr);
+        toolbarTitle = findViewById(R.id.toolbar_title);
+        toolbarTitle.setText(modeStr);
 
-        habitEventName = (TextView) findViewById(R.id.habiteventName);
+        habitEventName = (TextView) findViewById(R.id.habitName);
+
         location = (EditText) findViewById(R.id.location);
         comment = (EditText) findViewById(R.id.comment);
         image = (ImageView) findViewById(R.id.image);
 
-        final Button checkBtn = findViewById(R.id.checkBtn);
-        checkBtn.setOnClickListener(new View.OnClickListener() {
+        ImageButton doneBtn = findViewById(R.id.done);
+        doneBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String locationStr = location.getText().toString();
                 String commentStr = comment.getText().toString();
@@ -84,6 +86,11 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                     }
                 }
             }
+        });
+
+        //Let User Add/Change their habit event image as click ImageView area
+        image.setOnClickListener(v -> {
+            // TODO: Let User Choose Image from Gallery or Take a Photo
         });
     }
 

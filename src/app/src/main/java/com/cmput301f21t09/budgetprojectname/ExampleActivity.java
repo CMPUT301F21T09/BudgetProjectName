@@ -20,9 +20,10 @@ public class ExampleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_example);
 
         Button viewHabitEventDetail = findViewById(R.id.example_view_habit_event_detail);
-        viewHabitEventDetail.setOnClickListener(v -> {
-            startActivity(new Intent(this, ViewHabitEventActivity.class));
-        });
+        viewHabitEventDetail.setOnClickListener(v -> startActivity(new Intent(this, ViewHabitEventActivity.class)));
+
+        Button userLogin = findViewById(R.id.user_login);
+        userLogin.setOnClickListener(v -> startActivity(new Intent(this, UserLoginActivity.class)));
 
         // TODO: move button into habitlist activity and pass habitID to intent
         final Button habitEventBtn = findViewById(R.id.createhabiteventBtn);
@@ -33,6 +34,18 @@ public class ExampleActivity extends AppCompatActivity {
                 final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
                 String habitEventID = "v5BYLwHC2W4wGHkjff9K"; // example habit event I created
                 // intent.putExtra(HABIT_EVENT_ID, habitEventID);
+                startActivity(intent);
+            }
+        });
+
+        // TODO: Move this function to relate to each habit that a user has and pass habitID to intent
+        final Button habitBtn = findViewById(R.id.viewHabitDetailsBtn);
+        habitBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ViewHabitActivity.class);
+                final String HABIT_ID = "HABIT_ID";
+                int habitID = 1;
+                intent.putExtra(HABIT_ID, habitID);
                 startActivity(intent);
             }
         });

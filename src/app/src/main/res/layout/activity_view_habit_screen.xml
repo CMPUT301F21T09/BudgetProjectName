@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F8FD"
+    tools:context=".ViewHabitActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#3C85B9"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:buttonGravity="center_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/view_habit_back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="33dp"
+            android:background="@null"
+            android:src="@drawable/ic_back" />
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ellipsize="marquee"
+            android:ems="7"
+            android:maxLines="1"
+            android:text="Name of Targeted Habit"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
+        <ImageButton
+            android:id="@+id/view_habit_remove_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="33dp"
+            android:background="@null"
+            android:src="@drawable/ic_trash_can" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+
+    <TextView
+        android:id="@+id/details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:text="Details"
+        android:textColor="#2B638B"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <Button
+        android:id="@+id/editHabitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="32dp"
+        android:backgroundTint="#C8E2F4"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
+        android:text="Edit"
+        android:textAllCaps="false"
+        android:textColor="#3C85B9"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/details"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/details" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/habit_details_background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="29dp"
+        android:background="@color/white"
+        app:layout_constraintDimensionRatio="1.824:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editHabitButton"
+        app:shapeAppearanceOverlay="@style/roundedCorners" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/habit_details_background"
+        app:layout_constraintEnd_toEndOf="@+id/habit_details_background"
+        app:layout_constraintStart_toStartOf="@+id/habit_details_background"
+        app:layout_constraintTop_toTopOf="@+id/habit_details_background">
+
+        <TextView
+            android:id="@+id/habitTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Habit Title"
+            android:textColor="#2B638B"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/habitDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="3dp"
+            android:text="Habit Description"
+            android:textColor="#80B8DF"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/habitTitle"
+            app:layout_constraintTop_toBottomOf="@id/habitTitle" />
+
+        <TextView
+            android:id="@+id/habitFrequencyLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="Frequency"
+            android:textColor="#2B638B"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="@id/habitTitle"
+            app:layout_constraintTop_toBottomOf="@id/habitDescription" />
+
+        <TextView
+            android:id="@+id/habitDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:textColor="#80B8DF"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/habitFrequencyLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/habitFrequencyLabel" />
+
+        <ImageView
+            android:id="@+id/sunday_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:src="@drawable/ic_sunday_negative"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/habitFrequencyLabel" />
+
+        <ImageView
+            android:id="@+id/monday_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_monday_negative"
+            app:layout_constraintStart_toEndOf="@id/sunday_icon"
+            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
+
+        <ImageView
+            android:id="@+id/tuesday_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_tuesday_negative"
+            app:layout_constraintStart_toEndOf="@id/monday_icon"
+            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
+
+        <ImageView
+            android:id="@+id/wednesday_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_wednesday_negative"
+            app:layout_constraintStart_toEndOf="@id/tuesday_icon"
+            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
+
+        <ImageView
+            android:id="@+id/thursday_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_thursday_negative"
+            app:layout_constraintStart_toEndOf="@id/wednesday_icon"
+            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
+
+        <ImageView
+            android:id="@+id/friday_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_friday_negative"
+            app:layout_constraintStart_toEndOf="@id/thursday_icon"
+            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
+
+        <ImageView
+            android:id="@+id/saturday_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_saturday_negative"
+            app:layout_constraintStart_toEndOf="@id/friday_icon"
+            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/pastHabitEvents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="31dp"
+        android:text="Past habit events"
+        android:textColor="#2B638B"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@id/details"
+        app:layout_constraintTop_toBottomOf="@id/habit_details_background" />
+
+
+    <ListView
+        android:id="@+id/past_habit_event_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="24dp"
+        android:divider="@null"
+        android:dividerHeight="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/habit_details_background"
+        app:layout_constraintStart_toStartOf="@id/habit_details_background"
+        app:layout_constraintTop_toBottomOf="@+id/pastHabitEvents" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

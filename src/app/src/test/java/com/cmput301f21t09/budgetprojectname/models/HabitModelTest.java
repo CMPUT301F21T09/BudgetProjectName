@@ -13,7 +13,6 @@ import java.util.Date;
  * Test class for the HabitModel.
  * Verifies that data is set and get correctly.
  */
-
 public class HabitModelTest {
     private HabitModel newHabitModel;
 

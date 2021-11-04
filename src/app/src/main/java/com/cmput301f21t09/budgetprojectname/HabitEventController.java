@@ -1,5 +1,6 @@
 package com.cmput301f21t09.budgetprojectname;
 
+import android.media.Image;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -8,9 +9,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Represents a Habit Event Controller that interfaces with FirestoreDB to
@@ -38,6 +46,10 @@ public class HabitEventController {
 
     public interface HabitEventIDCallback{
         void onCallback(String habitEventID);
+    }
+
+    public interface HabitEventListCallback {
+        void onCallback(ArrayList<HabitEventModel> habitEventList);
     }
 
     /**
@@ -99,6 +111,39 @@ public class HabitEventController {
      * notifyListeners()
      * commit()
      */
-    // TODO: add read scenario
+
+    /**
+     * Read habitEvent document in the habit_events collection
+     *
+     * @param habitID habitID is used to query all the corresponding habit events
+     */
+    public void readHabitEvent(String habitID, HabitEventListCallback hbEvtLstCallback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        ArrayList<HabitEventModel> habitEventDataList = new ArrayList<>();
+        CollectionReference collectionReference = db.collection("habit_events");
+        collectionReference
+                .whereEqualTo("habitID", habitID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            // Append every document into habitEventDataList
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                String id = (String) doc.getId();
+                                Date date  = ((Timestamp) doc.getData().get("date")).toDate();
+                                String location = (String) doc.getData().get("location");
+                                String comment = (String) doc.getData().get("comment");
+                                Image image = (Image) doc.getData().get("image");
+                                habitEventDataList.add(new HabitEventModel(id, location, date, comment, image, habitID));
+                            }
+                            hbEvtLstCallback.onCallback(habitEventDataList);
+                        } else {
+                            Log.d(TAG, "Error: ", task.getException());
+                        }
+                    }
+                });
+    }
+
     // TODO: add delete scenario
 }

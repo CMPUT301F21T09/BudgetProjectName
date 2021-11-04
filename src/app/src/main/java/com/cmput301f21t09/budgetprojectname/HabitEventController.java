@@ -46,9 +46,6 @@ public class HabitEventController {
         void onCallback(String habitEventID);
     }
 
-    public interface HabitEventListCallback {
-        void onCallback(ArrayList<HabitEventModel> habitEventList);
-    }
 
     /**
      * HabitEventListCallback interface
@@ -114,39 +111,6 @@ public class HabitEventController {
     }
 
     /**
-     * Read habitEvent document in the habit_events collection
-     *
-     * @param habitID habitID is used to query all the corresponding habit events
-     */
-    public void readHabitEvents(String habitID, HabitEventListCallback hbEvtLstCallback) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        ArrayList<HabitEventModel> habitEventDataList = new ArrayList<>();
-        CollectionReference collectionReference = db.collection("habit_events");
-        collectionReference
-                .whereEqualTo("habitID", habitID)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            // Append every document into habitEventDataList
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
-                                String id = (String) doc.getId();
-                                Date date  = ((Timestamp) doc.getData().get("date")).toDate();
-                                String location = (String) doc.getData().get("location");
-                                String comment = (String) doc.getData().get("comment");
-                                Image image = (Image) doc.getData().get("image");
-                                habitEventDataList.add(new HabitEventModel(id, location, date, comment, image, habitID));
-                            }
-                            hbEvtLstCallback.onCallback(habitEventDataList);
-                        } else {
-                            Log.d(TAG, "Error: ", task.getException());
-                        }
-                    }
-                });
-    }
-
-    /**
      * Deletes habit event from Firestore DB
      * @param habitEventID id of habit event to be deleted
      */
@@ -173,7 +137,6 @@ public class HabitEventController {
      *
      * @param habitEventID ID of habitEvent to be retrieved
      */
-
     public void readHabitEvent(String habitEventID, HabitEventCallback habitEventCallback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("habit_events").document(habitEventID);
@@ -194,7 +157,6 @@ public class HabitEventController {
                         HabitEventModel retrievedHabitEventModel =
                                 new HabitEventModel(id, location, date, comment, image, habitID);
                         habitEventCallback.onCallback(retrievedHabitEventModel);
-
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -205,11 +167,10 @@ public class HabitEventController {
         });
     }
 
-
     /**
-     * Read habitEvent document in the habit_events collection
      *
      * @param habitID habitID is used to query all the corresponding habit events
+     * @param hbEvtLstCallback Callback function
      */
     public void readHabitEvents(String habitID, HabitEventListCallback hbEvtLstCallback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();

@@ -23,10 +23,41 @@ public class HabitModelTest {
     }
 
     @Test
-    public void testId() {
+    public void testIdGetterAndSetter() {
         String id = "123";
         newHabitModel.setId(id);
-
         assertEquals(id, newHabitModel.getId());
+    }
+
+    @Test
+    public void testTitleGetterAndSetter() {
+        String title = "Dishes";
+        newHabitModel.setTitle(title);
+        assertEquals(title, newHabitModel.getTitle());
+    }
+
+    @Test
+    public void testReasonGetterAndSetter() {
+        String reason = "this is a good reason";
+        newHabitModel.setReason(reason);
+        assertEquals(reason, newHabitModel.getReason());
+    }
+
+    @Test
+    public void testGetStreak() {
+        //TODO: increment streak
+        assertEquals(newHabitModel.getStreak(), 0);
+    }
+
+    @Test
+    public void testStartDateGetterAndSetter() {
+        Date date = new Date(2021, 1, 1);
+        newHabitModel.setStartDate(date);
+        assertEquals(date, newHabitModel.getStartDate());
+    }
+
+    @Test
+    //TODO: set lastCompleted
+    public void testGetLastCompleted() {
     }
 }

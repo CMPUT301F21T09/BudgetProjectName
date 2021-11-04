@@ -22,7 +22,6 @@ public class HabitScheduleModelFactory {
         } else {
             throw new IllegalArgumentException("Unknown identifier for Habit Schedule data");
         }
-
     }
 
     /**

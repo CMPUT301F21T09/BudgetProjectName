@@ -1,5 +1,6 @@
 package com.cmput301f21t09.budgetprojectname;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.widget.Button;
@@ -160,7 +161,7 @@ public class UserRegisterActivity extends AppCompatActivity {
      * @param input The input
      */
     private void generateUser(RegistrationData input) {
-        // TODO
+        // TODO: Create a new user in Firebase
     }
 
     /**
@@ -183,13 +184,19 @@ public class UserRegisterActivity extends AppCompatActivity {
         // Register with Firebase
         firebaseAuth.createUserWithEmailAndPassword(input.email, input.password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Toast.makeText(UserRegisterActivity.this, "Account creation complete.",
+                // Tell user account creation was successful
+                Toast.makeText(UserRegisterActivity.this, "Account creation successful.",
                         Toast.LENGTH_SHORT).show();
 
                 // Generate the account in Firebase
                 generateUser(input);
+
+                // Bring to home screen
+                startActivity(new Intent(this, MainActivity.class));
             } else {
-                Toast.makeText(UserRegisterActivity.this, "Account creation failed.",
+                // Tell user account creation failed, along with error message
+                Toast.makeText(UserRegisterActivity.this,
+                        "Account creation failed: " + task.getException().getMessage(),
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -215,9 +222,7 @@ public class UserRegisterActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         // Back to Sign In Screen
-        backButton.setOnClickListener(v -> {
-            finish();
-        });
+        backButton.setOnClickListener(v -> finish());
 
         // Go through register process
         createButton.setOnClickListener(v -> attemptCreateAccount());

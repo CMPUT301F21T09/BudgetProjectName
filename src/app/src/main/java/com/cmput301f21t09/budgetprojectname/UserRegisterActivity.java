@@ -3,8 +3,10 @@ package com.cmput301f21t09.budgetprojectname;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,6 +56,11 @@ public class UserRegisterActivity extends AppCompatActivity {
      * Create account button
      */
     private Button createButton;
+
+    /**
+     * Progress indicator
+     */
+    private ProgressBar progressIndicator;
 
     /**
      * Firebase auth instance
@@ -181,6 +188,9 @@ public class UserRegisterActivity extends AppCompatActivity {
             return;
         }
 
+        // Loading indicator while verifying sign up
+        progressIndicator.setVisibility(View.VISIBLE);
+
         // Register with Firebase
         firebaseAuth.createUserWithEmailAndPassword(input.email, input.password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -199,6 +209,9 @@ public class UserRegisterActivity extends AppCompatActivity {
                         "Account creation failed: " + task.getException().getMessage(),
                         Toast.LENGTH_SHORT).show();
             }
+
+            // Stop loading indicator
+            progressIndicator.setVisibility(View.INVISIBLE);
         });
     }
 
@@ -217,6 +230,9 @@ public class UserRegisterActivity extends AppCompatActivity {
         // Get buttons
         backButton = findViewById(R.id.back_button);
         createButton = findViewById(R.id.create_button);
+
+        // Get progress indicator
+        progressIndicator = findViewById(R.id.progress_circular);
 
         // Get firebase auth instance
         firebaseAuth = FirebaseAuth.getInstance();

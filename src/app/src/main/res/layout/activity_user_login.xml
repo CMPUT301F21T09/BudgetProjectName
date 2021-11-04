@@ -51,7 +51,7 @@
             app:shapeAppearanceOverlay="@style/roundedCorners" />
 
         <EditText
-            android:id="@+id/username_edittext"
+            android:id="@+id/email_edittext"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"

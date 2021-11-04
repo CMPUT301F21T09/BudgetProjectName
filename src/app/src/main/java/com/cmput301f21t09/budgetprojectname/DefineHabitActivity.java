@@ -99,7 +99,7 @@ public class DefineHabitActivity extends AppCompatActivity {
             loadingBar.setVisibility(View.GONE);
             habitTitle.setEnabled(true);
             habitReason.setEnabled(true);
-            habitStartDate.setEnabled(true);
+            habitStartDate.setEnabled(controller.isStartDateEditable());
 
             // Update fields
             IHabitModel model = controller.getModel();
@@ -137,10 +137,15 @@ public class DefineHabitActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.menu_commit_changes:
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(habitStartDate.getYear(), habitStartDate.getMonth(), habitStartDate.getDayOfMonth());
-                HabitScheduleFragment hsv = ((HabitScheduleFragment) getSupportFragmentManager().findFragmentById(R.id.adh_scheduleFragment));
-                controller.updateModel(habitTitle.getText().toString(), habitReason.getText().toString(), calendar.getTime(), hsv.getSchedule() );
+                String titleError = controller.getTitleError(habitTitle.getText().toString());
+                if (titleError != null) {
+                    habitTitle.setError(titleError);
+                } else {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(habitStartDate.getYear(), habitStartDate.getMonth(), habitStartDate.getDayOfMonth());
+                    HabitScheduleFragment hsv = ((HabitScheduleFragment) getSupportFragmentManager().findFragmentById(R.id.adh_scheduleFragment));
+                    controller.updateModel(habitTitle.getText().toString(), habitReason.getText().toString(), calendar.getTime(), hsv.getSchedule());
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

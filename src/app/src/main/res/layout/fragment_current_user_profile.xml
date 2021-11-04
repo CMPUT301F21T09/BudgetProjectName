@@ -3,7 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f2f8fd">
+    android:background="@drawable/profile_background">
+
+    <ImageButton
+        android:id="@+id/logout_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="19dp"
+        android:background="@null"
+        android:src="@drawable/ic_logout_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/image_placeholder"
@@ -23,17 +34,18 @@
         android:id="@+id/image"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="9dp"
+        android:layout_margin="5dp"
         android:scaleType="centerCrop"
         android:src="@drawable/sample_habit_event_img"
         app:layout_constraintBottom_toBottomOf="@id/image_placeholder"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@+id/image_placeholder"
         app:layout_constraintStart_toStartOf="@id/image_placeholder"
         app:layout_constraintTop_toTopOf="@id/image_placeholder"
         app:shapeAppearanceOverlay="@style/roundedCorners" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
@@ -45,7 +57,7 @@
         app:layout_constraintTop_toBottomOf="@+id/image_placeholder" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="\@userName"
@@ -53,17 +65,32 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/name" />
 
     <TextView
+        android:id="@+id/all_habits_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="41dp"
         android:layout_marginTop="150dp"
-        android:layout_marginLeft="41dp"
         android:text="All habits"
         android:textColor="#3C85B9"
-        android:textSize="24dp"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+
+    <ListView
+        android:id="@+id/current_user_habit_listview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="38dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="17dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/all_habits_label" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

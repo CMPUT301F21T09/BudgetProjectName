@@ -3,8 +3,10 @@ package com.cmput301f21t09.budgetprojectname;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +36,11 @@ public class UserLoginActivity extends AppCompatActivity {
      * Sign in button
      */
     private Button signInButton;
+
+    /**
+     * Progress indicator
+     */
+    private ProgressBar progressIndicator;
 
     /**
      * Firebase auth instance
@@ -79,7 +86,8 @@ public class UserLoginActivity extends AppCompatActivity {
             return;
         }
 
-        // TODO: Some sort of loading indicator while verifying sign in
+        // Loading indicator while verifying sign in
+        progressIndicator.setVisibility(View.VISIBLE);
 
         // Verify sign in info
         firebaseAuth.signInWithEmailAndPassword(emailText, passwordText) .addOnCompleteListener(task -> {
@@ -97,6 +105,27 @@ public class UserLoginActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         });
+
+        // Stop loading indicator
+        progressIndicator.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Checks if user is already signed into app.
+     * Starts main activity if already signed in.
+     */
+    private void checkIfSignedIn() {
+        // Loading indicator while determining if user is signed in
+        progressIndicator.setVisibility(View.VISIBLE);
+
+        // Check if user already signed in
+        if (firebaseAuth.getCurrentUser() != null) {
+            // Go to main activity if already signed in
+            startActivity(new Intent(this, MainActivity.class));
+        }
+
+        // Stop loading indicator
+        progressIndicator.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -116,11 +145,12 @@ public class UserLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_login);
 
-        // TODO: Some sort of loading indicator while determining if user is signed in
-
         // Get fields
         emailEditText = findViewById(R.id.email_edittext);
         passwordEditText = findViewById(R.id.password_edittext);
+
+        // Get progress indicator
+        progressIndicator = findViewById(R.id.progress_circular);
 
         // Get buttons
         signUpButton = findViewById(R.id.sign_up_button);
@@ -129,16 +159,13 @@ public class UserLoginActivity extends AppCompatActivity {
         // Get firebase auth instance
         firebaseAuth = FirebaseAuth.getInstance();
 
-        // Check if user already signed in
-        if (firebaseAuth.getCurrentUser() != null) {
-            // Go to main activity if already signed in
-            startActivity(new Intent(this, MainActivity.class));
-        }
-
         // Sign up button: open registration activity
         signUpButton.setOnClickListener(v -> openSignUp());
 
         // Sign in button: attempt to sign in
         signInButton.setOnClickListener(v -> attemptSignIn());
+
+        // Check if already signed in
+        checkIfSignedIn();
     }
 }

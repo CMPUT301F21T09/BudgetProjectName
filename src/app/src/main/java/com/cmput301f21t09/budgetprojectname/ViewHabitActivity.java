@@ -22,7 +22,10 @@ import java.util.ArrayList;
 public class ViewHabitActivity extends AppCompatActivity {
 
     /* Controllers */
-    
+
+    /**
+     * Controller for fetching habit details
+     */
     private HabitController controller;
 
     /**

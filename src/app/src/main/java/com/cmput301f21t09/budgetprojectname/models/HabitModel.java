@@ -40,6 +40,10 @@ public class HabitModel implements IHabitModel {
      * Habit last completed date
      */
     private Date lastCompleted;
+    /**
+     * Habit schedule
+     */
+    private IHabitScheduleModel schedule;
 
     /**
      * Private constructor for creating a habit model with the given data
@@ -50,13 +54,14 @@ public class HabitModel implements IHabitModel {
      * @param lastCompleted habit last time completed date
      * @param streak habit streak score
      */
-    private HabitModel(String id, String title, String reason, Date startDate, Date lastCompleted, long streak) {
+    private HabitModel(String id, String title, String reason, Date startDate, Date lastCompleted, long streak, IHabitScheduleModel schedule) {
         setId(id);
 
         setTitle(sanitizeStringFromDatabase(title, IHabitModel.MAX_TITLE_LENGTH));
         setReason(sanitizeStringFromDatabase(reason, IHabitModel.MAX_REASON_LENGTH));
         setStartDate(startDate != null ? startDate : new Date());
         this.lastCompleted = lastCompleted;
+        this.schedule = schedule;
         this.streak = streak;
     }
 
@@ -65,8 +70,9 @@ public class HabitModel implements IHabitModel {
      * @return completed load task for habit
      */
     public static ServiceTask<HabitModel> getNewInstance() {
+        HabitScheduleModelFactory scheduleFactory = new HabitScheduleModelFactory();
         ServiceTaskManager<HabitModel> taskman = new ServiceTaskManager<>();
-        taskman.setSuccess(new HabitModel(null, null, null, new Date(), null, 0));
+        taskman.setSuccess(new HabitModel(null, null, null, new Date(), null, 0, scheduleFactory.getNewModelInstance()));
         return taskman.getTask();
     }
 
@@ -170,6 +176,11 @@ public class HabitModel implements IHabitModel {
         return this.lastCompleted;
     }
 
+    @Override
+    public IHabitScheduleModel getSchedule() {
+        return this.schedule;
+    }
+
     /**
      * Commit the habit model to the database, creating a new entry if necessary
      * @return task representing status of save task
@@ -200,13 +211,15 @@ public class HabitModel implements IHabitModel {
 
         @Override
         public HabitModel parseMap(Map<String, Object> map, String id) {
+            HabitScheduleModelFactory scheduleFactory = new HabitScheduleModelFactory();
             return new HabitModel(
                     id,
                     (String) map.get("title"),
                     (String) map.get("reason"),
                     DocumentModelSerializer.parseAsDate(map.get("start_date")),
                     DocumentModelSerializer.parseAsDate(map.get("last_completed")),
-                    map.get("streak") != null ? (Long) map.get("streak") : 0
+                    map.get("streak") != null ? (Long) map.get("streak") : 0,
+                    scheduleFactory.getModelInstanceFromData((Map<String, Object>) map.get("schedule"))
             );
         }
 
@@ -218,6 +231,7 @@ public class HabitModel implements IHabitModel {
             map.put("start_date", model.getStartDate());
             map.put("last_completed", model.getStartDate());
             map.put("streak", model.getStreak());
+            map.put("schedule", model.getSchedule().toMap());
             return map;
         }
     }

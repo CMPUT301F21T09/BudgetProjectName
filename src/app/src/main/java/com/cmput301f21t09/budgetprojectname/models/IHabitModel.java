@@ -52,4 +52,10 @@ public interface IHabitModel {
      */
     Date getLastCompleted();
 
+    /**
+     * Get the model object representing the habit's schedule
+     * @return habit schedule
+     */
+    IHabitScheduleModel getSchedule();
+
 }

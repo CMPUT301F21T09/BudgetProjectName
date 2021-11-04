@@ -102,10 +102,6 @@ public class ViewHabitActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // Brings the user back to the previous activity if the back button on the app bar is pressed
-            case android.R.id.home:
-                finish();
-                return true;
             // Todo: Implement delete habit function
             case R.id.actionDeleteHabit:
                 return true;

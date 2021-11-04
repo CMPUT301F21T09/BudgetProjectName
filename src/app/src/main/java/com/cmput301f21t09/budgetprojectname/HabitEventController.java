@@ -89,25 +89,25 @@ public class HabitEventController {
      * @param habitEventID       ID of habitEvent to be updated
      * @param modifiedHabitEvent habitEvent to be updated
      */
-//    public void updateHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
-//        DocumentReference habitEventRef = dbStore.collection("habit_events")
-//                .document(habitEventID);
-//        habitEventRef.update("comment", modifiedHabitEvent.getComment(),
-//                "location", modifiedHabitEvent.getLocation(),
-//                "image", modifiedHabitEvent.getImage())
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Log.d(TAG, "DocumentSnapshot successfully updated!");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.w(TAG, "Error updating document", e);
-//                    }
-//                });
-//    }
+    public void updateHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
+        DocumentReference habitEventRef = dbStore.collection("habit_events")
+                .document(habitEventID);
+        habitEventRef.update("comment", modifiedHabitEvent.getComment(),
+                "location", modifiedHabitEvent.getLocation(),
+                "image", modifiedHabitEvent.getImage())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+    }
     // updateLoc()
     /**
      * new HEModel(oldHE stuff, new loc)
@@ -121,103 +121,6 @@ public class HabitEventController {
      *
      * @param habitID habitID is used to query all the corresponding habit events
      */
-//    public void readHabitEvent(String habitID, HabitEventListCallback hbEvtLstCallback) {
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        ArrayList<HabitEventModel> habitEventDataList = new ArrayList<>();
-//        CollectionReference collectionReference = db.collection("habit_events");
-//        collectionReference
-//                .whereEqualTo("habitID", habitID)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot doc : task.getResult()) {
-////                                System.out.println(doc.getId());
-//                                // Todo: Fix image type
-//                                if (nonNull(doc.getData().get("location")) && nonNull(doc.getData().get("comment")) && nonNull(doc.getData().get("image"))) {
-//                                    // This particular habit event has a location, a comment, and an image
-//
-//                                    String id = (String) doc.getId();
-//                                    Date date  = ((Timestamp) doc.getData().get("date")).toDate();
-//                                    String location = (String) doc.getData().get("location");
-//                                    String comment = (String) doc.getData().get("comment");
-//                                    Image image = (Image) doc.getData().get("image");
-//
-//                                    habitEventDataList.add(new HabitEventModel(id, location, date, comment, image, habitID));
-//                                } else if (nonNull(doc.getData().get("location")) && nonNull(doc.getData().get("comment")) && isNull(doc.getData().get("image"))) {
-//                                    // This particular habit event has a location and a comment. (No image)
-//                                    String id = (String) doc.getId();
-//                                    Date date  = ((Timestamp) doc.getData().get("date")).toDate();
-//                                    String location = (String) doc.getData().get("location");
-//                                    System.out.println(location);
-//                                    String comment = (String) doc.getData().get("comment");
-//
-//                                    habitEventDataList.add(new HabitEventModel(id, location, date, comment, null, habitID));
-//                                } else if (nonNull(doc.getData().get("location")) && nonNull(doc.getData().get("image")) && isNull(doc.getData().get("comment"))) {
-//                                    // This particular habit event has a location and an image. (No comment)
-//
-//                                    String id = (String) doc.getId();
-//                                    Date date  = ((Timestamp) doc.getData().get("date")).toDate();
-//                                    String location = (String) doc.getData().get("location");
-//                                    Image image = (Image) doc.getData().get("image");
-//
-//                                    habitEventDataList.add(new HabitEventModel(id, location, date, null, image, habitID));
-//                                } else if (nonNull(doc.getData().get("comment")) && nonNull(doc.getData().get("image")) && isNull(doc.getData().get("location"))) {
-//                                    // This particular habit event has a comment and an image. (No location)
-//
-//                                    String id = String.valueOf(doc.getId());
-//                                    Date date  = ((Timestamp) doc.getData().get("date")).toDate();
-//                                    String location = (String) doc.getData().get("location");
-//                                    String comment = (String) doc.getData().get("comment");
-//                                    Image image = (Image) doc.getData().get("image");
-//
-//                                    habitEventDataList.add(new HabitEventModel(id, null, date, comment, image, habitID));
-//
-//                                } else if (nonNull(doc.getData().get("location")) && isNull(doc.getData().get("comment")) && isNull(doc.getData().get("image"))) {
-//                                    // This particular habit event has a location. (No image and no comment)
-//
-//                                    String id = (String) doc.getId();
-//                                    String location = (String) doc.getData().get("location");
-//                                    Date date  = ((Timestamp) doc.getData().get("date")).toDate();
-//
-//                                    habitEventDataList.add(new HabitEventModel(id, location, date, habitID));
-//                                } else if (nonNull(doc.getData().get("comment")) && isNull(doc.getData().get("location")) && isNull(doc.getData().get("image"))) {
-//                                    // This particular habit event has a comment. (No location and no image)
-//
-//                                    String id = (String) doc.getId();
-//                                    String location = (String) doc.getData().get("location");
-//                                    String comment = (String) doc.getData().get("comment");
-//                                    Date date  = ((Timestamp) doc.getData().get("date")).toDate();
-//
-//                                    habitEventDataList.add(new HabitEventModel(id, null, date, comment, null, habitID));
-//                                } else if (nonNull(doc.getData().get("image")) && isNull(doc.getData().get("location")) && isNull(doc.getData().get("comment"))) {
-//                                    // This particular habit event has an image. (No location and no comment)
-//
-//                                    String id = (String) doc.getId();
-//                                    String location = (String) doc.getData().get("location");
-//                                    Date date  = ((Timestamp) doc.getData().get("date")).toDate();
-//                                    Image image = (Image) doc.getData().get("image");
-//
-//                                    habitEventDataList.add(new HabitEventModel(id, null, date, null, image, habitID));
-//                                } else if (nonNull(doc.getData().get("location")) && nonNull(doc.getData().get("comment")) && isNull(doc.getData().get("image"))) {
-//                                    // This particular habit event has no location, no comment, and no image
-//
-//                                    String id = (String) doc.getId();
-//                                    Date date  = ((Timestamp) doc.getData().get("date")).toDate();
-//                                    habitEventDataList.add(new HabitEventModel(id, date, habitID));
-//                                } else {
-//                                    Log.d(TAG, "Error with icons");
-//                                }
-//                            }
-//                            hbEvtLstCallback.onCallback(habitEventDataList);
-//                        } else {
-//                            Log.d(TAG, "Error: ", task.getException());
-//                        }
-//                    }
-//                });
-//    }
-
     public void readHabitEvent(String habitID, HabitEventListCallback hbEvtLstCallback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         ArrayList<HabitEventModel> habitEventDataList = new ArrayList<>();
@@ -230,7 +133,6 @@ public class HabitEventController {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot doc : task.getResult()) {
-//                                System.out.println(doc.getId());
                                 // Todo: Fix image type
                                 if (nonNull(doc.getData().get("location")) && nonNull(doc.getData().get("comment")) && nonNull(doc.getData().get("image"))) {
                                     // This particular habit event has a location, a comment, and an image
@@ -247,7 +149,6 @@ public class HabitEventController {
                                     String id = (String) doc.getId();
                                     Date date  = ((Timestamp) doc.getData().get("date")).toDate();
                                     String location = (String) doc.getData().get("location");
-                                    System.out.println(location);
                                     String comment = (String) doc.getData().get("comment");
 
                                     habitEventDataList.add(new HabitEventModel(location, date, comment, habitID));
@@ -305,6 +206,7 @@ public class HabitEventController {
                                     habitEventDataList.add(new HabitEventModel(date, habitID));
                                 } else {
                                     Log.d(TAG, "Error with icons");
+                                    System.out.println(doc.getId());
                                 }
                             }
                             hbEvtLstCallback.onCallback(habitEventDataList);

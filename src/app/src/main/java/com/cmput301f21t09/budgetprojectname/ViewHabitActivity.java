@@ -1,23 +1,17 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.w3c.dom.Text;
-
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,10 +71,9 @@ public class ViewHabitActivity extends AppCompatActivity {
         // The code below deals with the past habit events. The HabitEventCustomList is used
         // to arrange and output the details
         // Todo: Change the past habit events' data below to actual data from Firestore using HabitID and HabitEventID
-        String[] locations = {"", "", "", "", "", ""};
-        Date[] dates = {new Date(), new Date(), new Date(), new Date(), new Date(), new Date()};
-        String[] descriptions = {"", "", "", "", "", ""};
-        String[] habitIDs = {"", "", "", "", "", ""};
+        String[] locations = {"", "", "", "", "", "", "", "", "", "", "", ""};
+        Date[] dates = {new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date(), new Date()};
+        String[] descriptions = {"", "", "", "", "", "", "", "", "", "", "", ""};
 
         habitEventList = findViewById(R.id.past_habit_event_list);
         habitEventDataList = new ArrayList<>();
@@ -92,27 +85,17 @@ public class ViewHabitActivity extends AppCompatActivity {
 
         habitEventAdapter = new HabitEventCustomList(this, habitEventDataList);
         habitEventList.setAdapter(habitEventAdapter);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Brings the user back to the previous activity if the back button on the app bar is pressed
-            case android.R.id.home:
-                finish();
-                return true;
-            // Todo: Implement delete habit function
-            case R.id.actionDeleteHabit:
-                return true;
-        }
+        // Go Back
+        ImageButton back = findViewById(R.id.view_habit_back_button);
+        back.setOnClickListener(v -> {
+            finish();
+        });
 
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Add the delete button to the app bar
-        getMenuInflater().inflate(R.menu.menu_view_habit_details_screen, menu);
-        return true;
+        // Delete Habit
+        ImageButton remove = findViewById(R.id.view_habit_remove_button);
+        remove.setOnClickListener(v -> {
+            // TODO: Remove Targeted Habit. Dialog To Confirm?
+        });
     }
 }

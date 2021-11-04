@@ -11,8 +11,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 /**
  * Handles sign-in page
  */
@@ -41,11 +39,6 @@ public class UserLoginActivity extends AppCompatActivity {
      * Progress indicator
      */
     private ProgressBar progressIndicator;
-
-    /**
-     * Firebase auth instance
-     */
-    private FirebaseAuth firebaseAuth;
 
     /**
      * Verify login input.
@@ -78,31 +71,38 @@ public class UserLoginActivity extends AppCompatActivity {
      */
     private void attemptSignIn() {
         // Get current value of fields
-        String emailText = emailEditText.getText().toString().trim();
-        String passwordText = passwordEditText.getText().toString().trim();
+        String email = emailEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString().trim();
 
         // Verify input
-        if (!verify(emailText, passwordText)) {
+        if (!verify(email, password)) {
             return;
         }
 
         // Loading indicator while verifying sign in
         progressIndicator.setVisibility(View.VISIBLE);
 
-        // Verify sign in info
-        firebaseAuth.signInWithEmailAndPassword(emailText, passwordText) .addOnCompleteListener(task -> {
+        // Attempt to sign in
+        AuthorizationService.getInstance().signIn(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 // Tell user account creation was successful
-                Toast.makeText(UserLoginActivity.this, "Sign in successful.",
+                Toast.makeText(UserLoginActivity.this, "Sign in successful",
                         Toast.LENGTH_SHORT).show();
 
                 // Bring to home screen
                 startActivity(new Intent(this, MainActivity.class));
             } else {
                 // Tell user account creation failed, along with error message
-                Toast.makeText(UserLoginActivity.this,
-                        "Sign in failed: " + task.getException().getMessage(),
-                        Toast.LENGTH_SHORT).show();
+
+                if (task.getException() != null) {
+                    Toast.makeText(UserLoginActivity.this,
+                            "Sign in failed: " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(UserLoginActivity.this,
+                            "Sign in failed: Unknown error",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
 
             // Stop loading indicator
@@ -119,7 +119,7 @@ public class UserLoginActivity extends AppCompatActivity {
         progressIndicator.setVisibility(View.VISIBLE);
 
         // Check if user already signed in
-        if (firebaseAuth.getCurrentUser() != null) {
+        if (AuthorizationService.getInstance().isSignedIn()) {
             // Go to main activity if already signed in
             startActivity(new Intent(this, MainActivity.class));
         }
@@ -155,9 +155,6 @@ public class UserLoginActivity extends AppCompatActivity {
 
         // Get progress indicator
         progressIndicator = findViewById(R.id.progress_circular);
-
-        // Get firebase auth instance
-        firebaseAuth = FirebaseAuth.getInstance();
 
         // Sign up button: open registration activity
         signUpButton.setOnClickListener(v -> openSignUp());

@@ -1,5 +1,6 @@
 package com.cmput301f21t09.budgetprojectname;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +21,16 @@ import java.util.Date;
  * Fragment that shows user's profile with their name, username, and habits
  */
 public class CurrentUserProfileFragment extends Fragment {
+    /**
+     * Sign out.
+     * Tells authorization service to sign out and
+     * takes user to login screen.
+     */
+    private void signOut() {
+        AuthorizationService.getInstance().signOut();
+        Toast.makeText(getActivity(), "Signed out", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(getActivity(), UserLoginActivity.class));
+    }
 
     @Nullable
     @Override
@@ -47,9 +59,8 @@ public class CurrentUserProfileFragment extends Fragment {
             // TODO: Pass targeted Habit to ViewHabitActivity
         });
 
+        // Sign out button pressed: sign out
         ImageButton signOut = view.findViewById(R.id.logout_button);
-        signOut.setOnClickListener(v -> {
-            // TODO: Sign Out process
-        });
+        signOut.setOnClickListener(v -> signOut());
     }
 }

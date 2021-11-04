@@ -1,6 +1,7 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,8 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -31,6 +30,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     private ImageView image;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "DefineHabitEventActivity";
+    private HabitEventController habitEventController = new HabitEventController();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +39,8 @@ public class DefineHabitEventActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
+        String habitID = intent.getStringExtra("HABIT_ID");
+        System.out.println("*****habitID " + habitID);
         boolean isNewHabitEvent = (habitEventID == null);
         String modeStr;
 
@@ -59,79 +61,40 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         location = (EditText) findViewById(R.id.location);
         description = (EditText) findViewById(R.id.description);
         image = (ImageView) findViewById(R.id.image);
-
         ImageButton doneBtn = findViewById(R.id.done);
+
         doneBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String locationStr = location.getText().toString();
                 String descriptionStr = description.getText().toString();
-                HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(), descriptionStr);
+
+                HabitEventModel habitEvent = new HabitEventModel(null, locationStr, new Date(),
+                        descriptionStr, null,habitID);
 
                 if (isNewHabitEvent) {
-                    storeNewHabitEvent(habitEvent);
+                    habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
+                        @Override
+                        public void onCallback(String habitEventID) {
+                            // TODO: figure out what to add here
+                            System.out.println("habitevent id " + habitEventID);
+
+                            location.getText().clear();
+                            description.getText().clear();
+                        }
+                    });
+                    // habiteventcontroller.updateLoc(edittext)
                 } else {
-                    storeEditedHabitEvent(habitEventID, habitEvent);
-                    setHabitEventFields(habitEventID);
+                    habitEventController.updateHabitEvent(habitEventID, habitEvent);
                 }
+
             }
         });
+
 
         //Let User Add/Change their habit event image as click ImageView area
         image.setOnClickListener(v -> {
             // TODO: Let User Choose Image from Gallery or Take a Photo
         });
-    }
-
-    /**
-     * Stores newly created habitEvent document in the habit_events collection
-     *
-     * @param habitEvent habitEvent to be added
-     */
-    private void storeNewHabitEvent(HabitEventModel habitEvent) {
-        System.out.println("store new habit");
-        db.collection("habit_events")
-                .add(habitEvent)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        String docID = documentReference.getId();
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + docID);
-                        System.out.println(docID);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
-    }
-
-    /**
-     * Stores modified habitEvent document in the habit_events collection
-     *
-     * @param habitEventID       ID of habitEvent to be updated
-     * @param modifiedHabitEvent habitEvent to be updated
-     */
-    private void storeEditedHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
-        DocumentReference habitEventRef = db.collection("habit_events")
-                .document(habitEventID);
-        habitEventRef.update("description", modifiedHabitEvent.getDescription(),
-                "location", modifiedHabitEvent.getLocation(),
-                "image", modifiedHabitEvent.getImage())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully updated!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error updating document", e);
-                    }
-                });
-
     }
 
     /**
@@ -149,12 +112,11 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                        // TODO: Possible refactoring where document retrieval is
-                        //  separate from setting fields
+                        // TODO: Move to HabitEventController once async request handling is solved
 
                         // set fields in view
                         location.setText(document.getString("location"));
-                        description.setText(document.getString("description"));
+                        description.setText(document.getString("comment"));
                         // TODO: set image
 
                     } else {
@@ -166,4 +128,5 @@ public class DefineHabitEventActivity extends AppCompatActivity {
             }
         });
     }
+
 }

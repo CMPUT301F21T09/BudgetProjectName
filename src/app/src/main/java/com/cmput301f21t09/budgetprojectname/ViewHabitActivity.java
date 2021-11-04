@@ -89,7 +89,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         habitDescription = (TextView) findViewById(R.id.habitDescription);
         habitDate = (TextView) findViewById(R.id.habitDate);
         habitTitleToolbar = findViewById(R.id.toolbar_title);
-        
+
         // Set up the controller and set the views accordingly
         controller = HabitController.getEditHabitController(habitID);
         controller.attachListener(this::updateView);

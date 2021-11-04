@@ -48,6 +48,9 @@ public class HabitEventController {
         void onCallback(String habitEventID);
     }
 
+    /**
+     * HabitEventListCallback interface
+     */
     public interface HabitEventListCallback {
         void onCallback(ArrayList<HabitEventModel> habitEventList);
     }

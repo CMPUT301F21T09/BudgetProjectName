@@ -78,7 +78,7 @@ public class HabitEventCustomList extends ArrayAdapter<HabitEventModel> {
         if (habitEvent.getLocation().length() > 0) {
             locationIcon.setImageResource(R.drawable.ic_map_marker_positive);
         }
-        if (habitEvent.getComment().length() > 0) {
+        if (habitEvent.getComment() != null && habitEvent.getComment().length() > 0) {
             descriptionIcon.setImageResource(R.drawable.ic_comment_positive);
         }
         if (nonNull(habitEvent.getImage())) {

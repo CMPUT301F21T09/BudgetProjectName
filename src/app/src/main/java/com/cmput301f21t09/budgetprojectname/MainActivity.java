@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // 4 main fragments for bottom navigation UI
-        MainFragment habitFragment = new MainFragment();
+        DailyHabitFragment habitFragment = new DailyHabitFragment();
         SearchFragment searchFragment = new SearchFragment();
         AddFragment addFragment = new AddFragment();
         FollowingFragment followingFragment = new FollowingFragment();

@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // 4 main fragments for bottom navigation UI
-        DailyHabitFragment habitFragment = new DailyHabitFragment();
+        DailyHabitFragment dailyHabitFragment = new DailyHabitFragment();
         SearchFragment searchFragment = new SearchFragment();
         FollowingFragment followingFragment = new FollowingFragment();
         CurrentUserProfileFragment currentUserProfileFragment = new CurrentUserProfileFragment();
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.daily_habit:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, habitFragment).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, dailyHabitFragment).commit();
                     return true;
                 case R.id.search:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment, searchFragment).commit();

@@ -20,7 +20,7 @@
             android:name=".UserRegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".UserLoginActivity"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".DefineHabitEventActivity"

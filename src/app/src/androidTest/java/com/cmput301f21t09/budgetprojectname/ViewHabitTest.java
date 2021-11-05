@@ -32,29 +32,32 @@ public class ViewHabitTest {
 
     /**
      * Runs before all tests and creates solo instance.
+     *
      * @throws Exception
      */
     @Before
-    public void setUp() throws Exception{
-        solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
+    public void setUp() throws Exception {
+        solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
         // NOTE: assume there is at least one habit in the list
     }
 
     /**
      * Closes the activity after each test
+     *
      * @throws Exception
      */
     @After
-    public void tearDown() throws Exception{
+    public void tearDown() throws Exception {
         solo.finishOpenedActivities();
     }
 
     /**
      * Gets the Activity
+     *
      * @throws Exception
      */
     @Test
-    public void start() throws Exception{
+    public void start() throws Exception {
         Activity activity = rule.getActivity();
     }
 
@@ -62,7 +65,7 @@ public class ViewHabitTest {
      * Test for navigating to edit page
      */
     @Test
-    public void checkEditNavigation(){
+    public void checkEditNavigation() {
         solo.waitForText("Today", 1, 3000);
         ListView list = (ListView) solo.getView(R.id.habit_listview);
         View v = list.getChildAt(0);
@@ -81,16 +84,17 @@ public class ViewHabitTest {
         solo.waitForText("Edit", 1, 3000);
         solo.assertCurrentActivity("Wrong Activity", DefineHabitActivity.class);
         String editTitle = ((EditText) solo.getView(R.id.adh_editHabitTitle)).getText().toString();
-        String editReason =((EditText) solo.getView(R.id.adh_editHabitReason)).getText().toString();
+        String editReason = ((EditText) solo.getView(R.id.adh_editHabitReason)).getText().toString();
 
         assertEquals(title, editTitle);
         assertEquals(reason, editReason);
     }
+
     /**
      * Test for navigating to past habit events
      */
     @Test
-    public void checkPastHabitEventsNavigation(){
+    public void checkPastHabitEventsNavigation() {
         solo.waitForText("Today", 1, 3000);
         ListView list = (ListView) solo.getView(R.id.habit_listview);
         View v = list.getChildAt(0);
@@ -103,7 +107,7 @@ public class ViewHabitTest {
         ListView heList = (ListView) solo.getView(R.id.past_habit_event_list);
 
         // check that there are past habits in list
-        if(heList.getCount() >= 0){
+        if (heList.getCount() >= 0) {
             View heView = heList.getChildAt(0);
             solo.clickOnView(heView);
             // check that activity changed

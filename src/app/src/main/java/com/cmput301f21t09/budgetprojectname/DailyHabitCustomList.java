@@ -38,21 +38,38 @@ public class DailyHabitCustomList extends ArrayAdapter<HabitModel> {
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.daily_habit_custom_list, parent, false);
         }
+
+        // Get the specific habit object being interacted with
         HabitModel habit = habits.get(position);
 
+        // Get the views
         TextView habitName = view.findViewById(R.id.habit_name);
         TextView habitDescription = view.findViewById(R.id.habit_description);
         TextView streak = view.findViewById(R.id.streak_text);
 
+        // Set the views accordingly
         habitName.setText(habit.getTitle());
         habitDescription.setText(habit.getReason());
         streak.setText(String.valueOf(habit.getStreak()));
 
+        /**
+         * Brings the user to the habit details screen
+         */
+        habitName.setOnClickListener(v -> {
+            // pass habit id to view the habit details for targeted habit
+            Intent intent = new Intent(context, ViewHabitActivity.class);
+            intent.putExtra("HABIT_ID", habit.getID());
+            context.startActivity(intent);
+        });
+
+        /**
+         * Brings the user to the create habit event screen
+         */
         ImageButton done = view.findViewById(R.id.done_button);
         done.setOnClickListener(v -> {
             // pass habit id to create habit event for targeted habit
             Intent intent = new Intent(context, DefineHabitEventActivity.class);
-            intent.putExtra("HABIT_EVENT_ID", habit.getID());
+            intent.putExtra("HABIT_ID", habit.getID());
             context.startActivity(intent);
         });
 

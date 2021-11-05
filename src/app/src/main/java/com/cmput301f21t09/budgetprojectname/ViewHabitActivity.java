@@ -116,11 +116,9 @@ public class ViewHabitActivity extends AppCompatActivity {
             @Override
             public void onCallback(ArrayList<HabitEventModel> hbEvtLst) {
                 habitEventDataList.clear();
-
                 for (HabitEventModel hEM : habitEventDataList) {
                     System.out.println(hEM.getDate());
                 }
-
                 habitEventDataList.addAll(hbEvtLst);
                 habitEventAdapter.notifyDataSetChanged();
             }
@@ -139,6 +137,11 @@ public class ViewHabitActivity extends AppCompatActivity {
                 startActivity(intent);
             }
 
+        });
+
+        ImageButton back = findViewById(R.id.view_habit_back_button);
+        back.setOnClickListener(v -> {
+            finish();
         });
     }
 

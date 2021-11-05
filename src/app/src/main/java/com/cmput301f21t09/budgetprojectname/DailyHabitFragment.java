@@ -1,10 +1,13 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -23,6 +26,12 @@ import java.util.Date;
  * Fragment that shows User's Daily Habit
  */
 public class DailyHabitFragment extends Fragment {
+
+    /**
+     * Controller for fetching habit events
+     */
+    private HabitListController habitListController = new HabitListController();
+
 
     @Nullable
     @Override
@@ -68,20 +77,27 @@ public class DailyHabitFragment extends Fragment {
         spinner.setAdapter(spinnerAdapter);
         spinner.setSelection(todayIndex);
 
-        // ListView setup
+        // Retrieve the specific view
         ListView habitList = view.findViewById(R.id.habit_listview);
 
+        // Set up the list and send an empty list to the view
         ArrayList<HabitModel> habitDataList = new ArrayList<>();
-        // This is mock data
-        for (int i = 0; i < 10; i++) {
-            habitDataList.add(new HabitModel("TestID", "TestString" + 1, "TestReason", new Date(), new Date(), i));
-        }
-
         ArrayAdapter<HabitModel> habitAdapter = new DailyHabitCustomList(getContext(), habitDataList);
         habitList.setAdapter(habitAdapter);
 
+        // Fetches the habits related to the current habit from Firestore 
+        habitListController.readHabitList(new HabitListController.HabitListCallback() {
+            @Override
+            public void onCallback(ArrayList<HabitModel> hbLst) {
+                habitDataList.clear();
+                habitDataList.addAll(hbLst);
+                habitAdapter.notifyDataSetChanged();
+            }
+        });
+
         habitList.setOnItemClickListener((parent, view1, position, id) -> {
             // TODO: Pass targeted Habit to ViewHabitActivity
+            Log.v("TAG", "CLICKED row number: ");
         });
     }
 }

@@ -140,7 +140,6 @@ public class HabitEventController {
     public void readHabitEvent(String habitEventID, HabitEventCallback habitEventCallback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("habit_events").document(habitEventID);
-        System.out.println("here");
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {

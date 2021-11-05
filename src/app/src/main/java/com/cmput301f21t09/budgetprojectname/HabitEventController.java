@@ -88,6 +88,7 @@ public class HabitEventController {
      * @param modifiedHabitEvent habitEvent to be updated
      */
     public void updateHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
+        System.out.println("updated habit id" + modifiedHabitEvent.getHabitID());
         DocumentReference habitEventRef = dbStore.collection("habit_events")
                 .document(habitEventID);
         habitEventRef.update("comment", modifiedHabitEvent.getComment(),

@@ -16,6 +16,7 @@ import java.util.Date;
  * image, and habit ID
  */
 public class HabitEventModel{
+
     /**
      * HabitEvent ID
      */
@@ -62,6 +63,7 @@ public class HabitEventModel{
         this.comment = comment;
         this.date = date;
         this.image = image;
+        this.comment = null;
         this.habitID = habitID;
     }
 

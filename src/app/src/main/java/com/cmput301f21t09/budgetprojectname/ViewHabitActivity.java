@@ -136,6 +136,7 @@ public class ViewHabitActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), ViewHabitEventActivity.class);
                 intent.putExtra("HABIT_EVENT_ID", selectedHEM.getID());
                 intent.putExtra("HABIT_ID", selectedHEM.getHabitID());
+                intent.putExtra("HABIT_TITLE", habitTitle.getText().toString());
                 startActivity(intent);
             }
 

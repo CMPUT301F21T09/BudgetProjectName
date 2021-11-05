@@ -30,13 +30,15 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
         String habitID = intent.getStringExtra("HABIT_ID");
+        String habitTitleStr = intent.getStringExtra("HABIT_TITLE");
 
         TextView habitTitle = findViewById(R.id.view_habit_event_habit_title);
         TextView habitEventLocation = findViewById(R.id.view_habit_event_habit_event_location);
         TextView habitEventDescription = findViewById(R.id.view_habit_event_habit_event_description);
         TextView habitEventDate = findViewById(R.id.view_habit_event_habit_event_date);
 
-        // TODO: Set Proper Name of Habit
+        habitTitle.setText(habitTitleStr);
+
         // TODO: resolve null error
         /**
          HabitController controller = HabitController.getEditHabitController(habitID);

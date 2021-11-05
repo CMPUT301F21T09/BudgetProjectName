@@ -25,6 +25,7 @@ public class ExampleActivity extends AppCompatActivity {
         Button userLogin = findViewById(R.id.user_login);
         userLogin.setOnClickListener(v -> startActivity(new Intent(this, UserLoginActivity.class)));
 
+        System.out.println("in example");
         // TODO: move button into habitlist activity and pass habitID to intent
         final Button habitEventBtn = findViewById(R.id.createhabiteventBtn);
         habitEventBtn.setOnClickListener(new View.OnClickListener() {

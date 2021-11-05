@@ -103,4 +103,13 @@ public class HabitEventTest {
         // check that the list has one less element
         assertEquals(oldCount-1, newCount);
     }
+
+    /**
+     * Tests the update of a habit event
+     */
+    @Test
+    public void testUpdateHabitEvent(){
+        // TODO: add test
+    }
+
 }

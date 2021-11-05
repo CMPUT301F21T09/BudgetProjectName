@@ -46,19 +46,19 @@ public class HabitModel implements IHabitModel {
 
     /**
      * Private constructor for creating a habit model with the given data
-     * @param id habit id
-     * @param title habit title string
-     * @param reason habit reason
-     * @param startDate habit start date
+     *
+     * @param id            habit id
+     * @param title         habit title string
+     * @param reason        habit reason
+     * @param startDate     habit start date
      * @param lastCompleted habit last time completed date
-     * @param streak habit streak score
+     * @param streak        habit streak score
      */
     private HabitModel(String id, String title, String reason, Date startDate, Date lastCompleted, long streak, IHabitScheduleModel schedule) {
-        setId(id);
-
+        this.id = id;
         this.title = sanitizeStringFromDatabase(title, IHabitModel.MAX_TITLE_LENGTH);
         this.reason = sanitizeStringFromDatabase(reason, IHabitModel.MAX_REASON_LENGTH);
-        setStartDate(startDate != null ? startDate : new Date());
+        this.startDate = startDate != null ? startDate : new Date();
         this.lastCompleted = lastCompleted;
         this.schedule = schedule;
         this.streak = streak;
@@ -66,6 +66,7 @@ public class HabitModel implements IHabitModel {
 
     /**
      * Get an instance of a habit that does not exist in the database
+     *
      * @return completed load task for habit
      */
     public static ServiceTask<HabitModel> getNewInstance() {
@@ -77,6 +78,7 @@ public class HabitModel implements IHabitModel {
 
     /**
      * Get an instance of a habit that exists in the database as specified by the given id
+     *
      * @param id of habit
      * @return load task for habit
      */
@@ -88,10 +90,11 @@ public class HabitModel implements IHabitModel {
 
     /**
      * Sanitize a string from the database
-     *
+     * <p>
      * If the string is null, provide an empty string
      * If the string is greater than the max length truncate it
-     * @param s string to sanitize
+     *
+     * @param s         string to sanitize
      * @param maxLength max length of the string
      * @return sanitized string
      */
@@ -108,6 +111,7 @@ public class HabitModel implements IHabitModel {
 
     /**
      * Set the id of the habit
+     *
      * @param id to set
      */
     public void setId(String id) {
@@ -121,9 +125,10 @@ public class HabitModel implements IHabitModel {
 
     /**
      * Set the title of the habit
-     *
+     * <p>
      * Must comply with the following rules:
      * String length is less than IHabitModel.MAX_TITLE_LENGTH
+     *
      * @param title to set
      */
     public void setTitle(String title) {
@@ -142,9 +147,10 @@ public class HabitModel implements IHabitModel {
 
     /**
      * Set the reason of the habit
-     *
+     * <p>
      * Must comply with the following rules:
      * String length is less than IHabitModel.MAX_REASON_LENGTH
+     *
      * @param reason to set
      */
     public void setReason(String reason) {
@@ -159,6 +165,15 @@ public class HabitModel implements IHabitModel {
         return this.streak;
     }
 
+    /**
+     * Set the streak
+     *
+     * @param streak Set the streak count
+     */
+    public void setStreak(long streak) {
+        this.streak = streak;
+    }
+
     @Override
     public Date getStartDate() {
         return this.startDate;
@@ -166,6 +181,7 @@ public class HabitModel implements IHabitModel {
 
     /**
      * Set the start date of the habit
+     *
      * @param date to set
      */
     public void setStartDate(Date date) {
@@ -184,6 +200,7 @@ public class HabitModel implements IHabitModel {
 
     /**
      * Set the schedule of the habit
+     *
      * @param schedule to set
      */
     public void setSchedule(IHabitScheduleModel schedule) {
@@ -192,6 +209,7 @@ public class HabitModel implements IHabitModel {
 
     /**
      * Commit the habit model to the database, creating a new entry if necessary
+     *
      * @return task representing status of save task
      */
     public ServiceTask<Void> commit() {

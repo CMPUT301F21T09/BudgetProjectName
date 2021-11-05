@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.imageview.ShapeableImageView;
 
+import com.cmput301f21t09.budgetprojectname.models.HabitModel;
+
 import java.util.ArrayList;
 
 /**
@@ -19,8 +21,8 @@ import java.util.ArrayList;
  * Show the habit's name, reason, and streak
  */
 public class UserHabitCustomList extends ArrayAdapter<HabitModel> {
-    private ArrayList<HabitModel> habits;
-    private Context context;
+    private final ArrayList<HabitModel> habits;
+    private final Context context;
 
 
     /**
@@ -59,7 +61,7 @@ public class UserHabitCustomList extends ArrayAdapter<HabitModel> {
         habitBackground.setOnClickListener(v -> {
             // pass habit id to view the habit details for targeted habit
             Intent intent = new Intent(context, ViewHabitActivity.class);
-            intent.putExtra("HABIT_ID", habit.getID());
+            intent.putExtra("HABIT_ID", habit.getId());
             context.startActivity(intent);
         });
 

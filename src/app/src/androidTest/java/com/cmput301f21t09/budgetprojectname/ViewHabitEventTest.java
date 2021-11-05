@@ -19,7 +19,7 @@ import org.junit.Test;
 
 import java.util.Date;
 
-public class HabitEventTest {
+public class ViewHabitEventTest {
     private Solo solo;
     private String habitEventID_DELETE = "";
     @Rule

@@ -69,6 +69,9 @@ public class HabitEventTest {
         System.out.println("printing!");
     }
 
+    /**
+     * Tests the deletion of a habit event
+     */
     @Test
     public void testDeleteHabitEvent(){
         solo.clickOnView(solo.getView(R.id.viewHabitDetailsBtn));

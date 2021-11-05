@@ -19,6 +19,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 
+/**
+ * Activity that shows the detail of the habit event
+ */
 public class ViewHabitEventActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "ViewHabitEventActivity";

@@ -66,8 +66,6 @@ public class DefineHabitEventActivity extends AppCompatActivity {
             setHabitEventFields(habitEventID);
         }
 
-
-
         // update title according to mode selected: "add" or "edit"
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

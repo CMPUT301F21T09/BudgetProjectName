@@ -64,7 +64,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         habitEventName = (TextView) findViewById(R.id.habitName);
 
         location = (EditText) findViewById(R.id.location);
-        comment = (EditText) findViewById(R.id.comment);
+        comment = (EditText) findViewById(R.id.description);
         image = (ImageView) findViewById(R.id.image);
         ImageButton doneBtn = findViewById(R.id.done);
 
@@ -73,6 +73,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 String locationStr = location.getText().toString();
                 String commentStr = comment.getText().toString();
                 // error checking/handling for adding optional comment of up to 20 chars
+                // TODO: move error checking elsewhere
                 if (commentStr.length() > 20) {
                     comment.setError(getString(R.string.errorHabitEventComment));
                     comment.requestFocus();

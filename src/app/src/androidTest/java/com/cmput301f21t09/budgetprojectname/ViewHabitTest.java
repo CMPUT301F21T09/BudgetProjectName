@@ -107,7 +107,7 @@ public class ViewHabitTest {
         ListView heList = (ListView) solo.getView(R.id.past_habit_event_list);
 
         // check that there are past habits in list
-        if (heList.getCount() >= 0) {
+        if (heList.getCount() > 0) {
             View heView = heList.getChildAt(0);
             solo.clickOnView(heView);
             // check that activity changed

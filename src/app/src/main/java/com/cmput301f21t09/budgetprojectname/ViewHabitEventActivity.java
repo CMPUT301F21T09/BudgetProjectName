@@ -77,7 +77,10 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         deleteHabitEventBtn.setOnClickListener(v -> {
             System.out.println("habit event to delete " + habitEventID);
             habitEventController.deleteHabitEvent(habitEventID);
-            startActivity(new Intent(this, ViewHabitActivity.class));
+            Intent deleteIntent = new Intent(getApplicationContext(), ViewHabitActivity.class);
+            final String HABIT_ID = "HABIT_ID";
+            deleteIntent.putExtra(HABIT_ID, habitID);
+            startActivity(deleteIntent);
         });
     }
 

@@ -73,49 +73,50 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 String locationStr = location.getText().toString();
                 String commentStr = comment.getText().toString();
                 // error checking/handling for adding optional comment of up to 20 chars
-                if(commentStr.length() > 20 ){
+                if (commentStr.length() > 20) {
                     comment.setError(getString(R.string.errorHabitEventComment));
                     comment.requestFocus();
                     Toast.makeText(getApplicationContext(), "ERROR: could not save habit event",
                             Toast.LENGTH_SHORT).show();
-                } else{
-                   
-                String descriptionStr = description.getText().toString();
-
-                HabitEventModel habitEvent = new HabitEventModel(null, locationStr, new Date(),
-                        descriptionStr, null,habitID);
-
-                if (isNewHabitEvent) {
-                    habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
-                        @Override
-                        public void onCallback(String habitEventID) {
-                            // TODO: figure out what to add here
-                            System.out.println("habitevent id " + habitEventID);
-                            // return back to main habit list
-                            Intent returnIntent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(returnIntent);
-
-                        }
-                    });
                 } else {
-                    habitEventController.updateHabitEvent(habitEventID, habitEvent);
-                    // return back to habit event detail page
-                    Intent returnIntent = new Intent(getApplicationContext(), ViewHabitEventActivity.class);
-                    final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
-                    returnIntent.putExtra(HABIT_EVENT_ID, habitEventID);
-                    startActivity(returnIntent);
+
+                    String descriptionStr = comment.getText().toString();
+
+                    HabitEventModel habitEvent = new HabitEventModel(null, locationStr, new Date(),
+                            descriptionStr, null, habitID);
+
+                    if (isNewHabitEvent) {
+                        habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
+                            @Override
+                            public void onCallback(String habitEventID) {
+                                // TODO: figure out what to add here
+                                System.out.println("habitevent id " + habitEventID);
+                                // return back to main habit list
+                                Intent returnIntent = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(returnIntent);
+
+                            }
+                        });
+                    } else {
+                        habitEventController.updateHabitEvent(habitEventID, habitEvent);
+                        // return back to habit event detail page
+                        Intent returnIntent = new Intent(getApplicationContext(), ViewHabitEventActivity.class);
+                        final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
+                        returnIntent.putExtra(HABIT_EVENT_ID, habitEventID);
+                        startActivity(returnIntent);
+                    }
                 }
             }
         });
 
-
-        //Let User Add/Change their habit event image as click ImageView area
+        // Let User Add/Change their habit event image as click ImageView area
         image.setOnClickListener(v -> {
             // TODO: Let User Choose Image from Gallery or Take a Photo
         });
     }
 
 
+    /**
      * Sets the fields with existing values from Firestore
      *
      * @param habitEventID ID of habitEvent to be retrieved

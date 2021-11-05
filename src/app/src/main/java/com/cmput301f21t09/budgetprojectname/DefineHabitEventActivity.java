@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -13,13 +15,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import com.cmput301f21t09.budgetprojectname.views.fragments.HabitScheduleFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.w3c.dom.Text;
+
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -27,14 +34,16 @@ import java.util.Date;
  */
 public class DefineHabitEventActivity extends AppCompatActivity {
 
-    private TextView toolbarTitle;
     private TextView habitEventName;
     private EditText location;
     private EditText comment;
     private ImageView image;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "DefineHabitEventActivity";
+    private boolean isNewHabitEvent;
     private HabitEventController habitEventController = new HabitEventController();
+    private String habitID;
+    private String habitEventID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +51,11 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_define_habit_event);
 
         Intent intent = getIntent();
-        String habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
-        String habitID = intent.getStringExtra("HABIT_ID");
+        habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
+        habitID = intent.getStringExtra("HABIT_ID");
         System.out.println("*****habitID " + habitID);
         System.out.println("****HE id" + habitEventID);
-        boolean isNewHabitEvent = (habitEventID == null);
+        isNewHabitEvent = (habitEventID == null);
         String modeStr;
 
         if (isNewHabitEvent) {
@@ -57,61 +66,32 @@ public class DefineHabitEventActivity extends AppCompatActivity {
             setHabitEventFields(habitEventID);
         }
 
+
+
         // update title according to mode selected: "add" or "edit"
-        toolbarTitle = findViewById(R.id.toolbar_title);
-        toolbarTitle.setText(modeStr);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        TextView tbTitle = findViewById(R.id.toolbar_title);
+        tbTitle.setText(modeStr);
 
         habitEventName = (TextView) findViewById(R.id.habitName);
 
         location = (EditText) findViewById(R.id.location);
         comment = (EditText) findViewById(R.id.comment);
         image = (ImageView) findViewById(R.id.image);
-        ImageButton doneBtn = findViewById(R.id.done);
-
-        doneBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String locationStr = location.getText().toString();
-                String commentStr = comment.getText().toString();
-                // error checking/handling for adding optional comment of up to 20 chars
-                if (commentStr.length() > 20) {
-                    comment.setError(getString(R.string.errorHabitEventComment));
-                    comment.requestFocus();
-                    Toast.makeText(getApplicationContext(), "ERROR: could not save habit event",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-
-                    String descriptionStr = comment.getText().toString();
-
-                    HabitEventModel habitEvent = new HabitEventModel(null, locationStr, new Date(),
-                            descriptionStr, null, habitID);
-
-                    if (isNewHabitEvent) {
-                        habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
-                            @Override
-                            public void onCallback(String habitEventID) {
-                                // TODO: figure out what to add here
-                                System.out.println("habitevent id " + habitEventID);
-                                // return back to main habit list
-                                Intent returnIntent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(returnIntent);
-
-                            }
-                        });
-                    } else {
-                        habitEventController.updateHabitEvent(habitEventID, habitEvent);
-                        // return back to habit event detail page
-                        Intent returnIntent = new Intent(getApplicationContext(), ViewHabitEventActivity.class);
-                        final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
-                        returnIntent.putExtra(HABIT_EVENT_ID, habitEventID);
-                        startActivity(returnIntent);
-                    }
-                }
-            }
-        });
 
         // Let User Add/Change their habit event image as click ImageView area
         image.setOnClickListener(v -> {
             // TODO: Let User Choose Image from Gallery or Take a Photo
+        });
+
+        ImageButton back = findViewById(R.id.back);
+
+        back.setOnClickListener(v -> {
+            finish();
         });
     }
 
@@ -147,6 +127,58 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_define_habit, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Brings the user back to the previous activity if the back button on the app bar is pressed
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.menu_commit_changes:
+                String locationStr = location.getText().toString();
+                String commentStr = comment.getText().toString();
+                // error checking/handling for adding optional comment of up to 30 chars
+                if (commentStr.length() > 20) {
+                    comment.setError(getString(R.string.errorHabitEventComment));
+                    comment.requestFocus();
+                    Toast.makeText(getApplicationContext(), "ERROR: could not save habit event",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+
+                    String descriptionStr = comment.getText().toString();
+
+                    HabitEventModel habitEvent = new HabitEventModel(null, locationStr, new Date(),
+                            descriptionStr, null, habitID);
+
+                    if (isNewHabitEvent) {
+                        habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
+                            @Override
+                            public void onCallback(String habitEventID) {
+                                // TODO: figure out what to add here
+                                System.out.println("habitevent id " + habitEventID);
+                                // return back to main habit list
+                                finish();
+
+                            }
+                        });
+                    } else {
+                        habitEventController.updateHabitEvent(habitEventID, habitEvent);
+                        // return back to habit event detail page
+                        finish();
+                    }
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }

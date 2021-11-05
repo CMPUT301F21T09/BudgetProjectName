@@ -135,12 +135,12 @@ public class HabitEventTest {
 
         // update fields
         solo.clearEditText((EditText) solo.getView(R.id.location)); // Clear edittext
-        solo.clearEditText((EditText) solo.getView(R.id.description)); // Clear edittext
+        solo.clearEditText((EditText) solo.getView(R.id.comment)); // Clear edittext
         solo.enterText((EditText)solo.getView(R.id.location), "Edmonton");
-        solo.enterText((EditText)solo.getView(R.id.description), "updated comment");
+        solo.enterText((EditText)solo.getView(R.id.comment), "updated comment");
 
         // click checkmark to confirm changes
-        solo.clickOnView(solo.getView(R.id.done));
+        solo.clickOnView(solo.getView(R.id.menu_commit_changes));
 
         // wait for habit event to load
         solo.waitForActivity("ViewHabitEventActivity");
@@ -151,7 +151,7 @@ public class HabitEventTest {
         assertEquals("Edmonton", modLocation);
 
         // check that comment is updated
-        String modComment = ((EditText) solo.getView(R.id.description)).getText().toString();
+        String modComment = ((EditText) solo.getView(R.id.comment)).getText().toString();
         assertEquals("updated comment", modComment);
 
 

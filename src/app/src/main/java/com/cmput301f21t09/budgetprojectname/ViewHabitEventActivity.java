@@ -52,6 +52,7 @@ public class ViewHabitEventActivity extends AppCompatActivity {
              System.out.println("habit title " + model.getTitle());
         }
          **/
+        System.out.println("in viewhabiteventactivity");
 
         // Set the Habit Event fields
         // TODO: move to a helper function
@@ -68,7 +69,11 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         ImageButton editHabitEvent = findViewById(R.id.view_habit_event_habit_event_edit_button);
         editHabitEvent.setOnClickListener(v -> {
             // TODO: Pass Targeted Habit Event Info to the Intent
-            startActivity(new Intent(this, DefineHabitEventActivity.class));
+            System.out.println("habit event to edit " + habitEventID);
+            Intent editIntent = new Intent(getApplicationContext(), DefineHabitEventActivity.class);
+            final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
+            editIntent.putExtra(HABIT_EVENT_ID, habitEventID);
+            startActivity(editIntent);
         });
 
         ImageView imageHabitEvent = findViewById(R.id.image);

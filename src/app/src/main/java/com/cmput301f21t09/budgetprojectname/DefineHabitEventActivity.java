@@ -44,6 +44,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         String habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
         String habitID = intent.getStringExtra("HABIT_ID");
         System.out.println("*****habitID " + habitID);
+        System.out.println("****HE id" + habitEventID);
         boolean isNewHabitEvent = (habitEventID == null);
         String modeStr;
 
@@ -80,14 +81,19 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                         public void onCallback(String habitEventID) {
                             // TODO: figure out what to add here
                             System.out.println("habitevent id " + habitEventID);
+                            // return back to main habit list
+                            Intent returnIntent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(returnIntent);
 
-                            location.getText().clear();
-                            description.getText().clear();
                         }
                     });
-                    // habiteventcontroller.updateLoc(edittext)
                 } else {
                     habitEventController.updateHabitEvent(habitEventID, habitEvent);
+                    // return back to habit event detail page
+                    Intent returnIntent = new Intent(getApplicationContext(), ViewHabitEventActivity.class);
+                    final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
+                    returnIntent.putExtra(HABIT_EVENT_ID, habitEventID);
+                    startActivity(returnIntent);
                 }
 
             }

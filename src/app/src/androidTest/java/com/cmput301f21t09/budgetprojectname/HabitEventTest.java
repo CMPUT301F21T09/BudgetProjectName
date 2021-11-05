@@ -3,6 +3,7 @@ package com.cmput301f21t09.budgetprojectname;
 import android.app.Activity;
 import android.media.Image;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 import static org.junit.Assert.*;
 
@@ -33,7 +34,7 @@ public class HabitEventTest {
     @Before
     public void setUp() throws Exception {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
-        // create a habitevent to delete
+        // create a habitevent to delete and update
         HabitEventController habitEventController = new HabitEventController();
         HabitEventModel habitEvent = new HabitEventModel(null, "YEG",
                 new Date(1,1,1),"comment",
@@ -103,4 +104,57 @@ public class HabitEventTest {
         // check that the list has one less element
         assertEquals(oldCount-1, newCount);
     }
+
+    /**
+     * Tests the update of a habit event
+     */
+    @Test
+    public void testUpdateHabitEvent(){
+        // TODO: add test
+        solo.clickOnView(solo.getView(R.id.viewHabitDetailsBtn));
+
+        // check that list contains newly created habitevent
+        solo.waitForActivity("ViewHabitActivity");
+        solo.waitForText("February", 1, 3000);
+        ListView list = (ListView) solo.getView(R.id.past_habit_event_list);
+
+        View v = list.getChildAt(0);
+        // click on first element in list
+        solo.clickOnView(v);
+
+        // wait for habit event to load
+        solo.waitForActivity("ViewHabitEventActivity");
+        solo.waitForText("February", 1, 3000);
+
+        // edit the habit event
+        solo.clickOnView(solo.getView(R.id.view_habit_event_habit_event_edit_button));
+
+        // check that we go back to the definehabiteventactivity
+        solo.waitForText("comment", 1, 3000);
+        solo.assertCurrentActivity("Wrong Activity", DefineHabitEventActivity.class);
+
+        // update fields
+        solo.clearEditText((EditText) solo.getView(R.id.location)); // Clear edittext
+        solo.clearEditText((EditText) solo.getView(R.id.description)); // Clear edittext
+        solo.enterText((EditText)solo.getView(R.id.location), "Edmonton");
+        solo.enterText((EditText)solo.getView(R.id.description), "updated comment");
+
+        // click checkmark to confirm changes
+        solo.clickOnView(solo.getView(R.id.done));
+
+        // wait for habit event to load
+        solo.waitForActivity("ViewHabitEventActivity");
+        solo.waitForText("February", 1, 3000);
+
+        // check that location is updated
+        String modLocation = ((EditText) solo.getView(R.id.location)).getText().toString();
+        assertEquals("Edmonton", modLocation);
+
+        // check that comment is updated
+        String modComment = ((EditText) solo.getView(R.id.description)).getText().toString();
+        assertEquals("updated comment", modComment);
+
+
+    }
+
 }

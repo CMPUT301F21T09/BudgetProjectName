@@ -99,8 +99,7 @@ public class CurrentUserProfileTest {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         int listViewCount = listView.getCount();
                         if (task.isSuccessful()) {
-                            int yeet = task.getResult().size();
-                            assertEquals(yeet, listViewCount);
+                            assertEquals(task.getResult().size(), listViewCount);
                         }
                     }
                 });

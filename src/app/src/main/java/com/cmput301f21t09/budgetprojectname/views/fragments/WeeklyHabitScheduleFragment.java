@@ -1,15 +1,14 @@
 package com.cmput301f21t09.budgetprojectname.views.fragments;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.controllers.WeeklyHabitScheduleController;
@@ -39,12 +38,13 @@ public class WeeklyHabitScheduleFragment extends HabitScheduleFragment {
     /**
      * Required empty public constructor
      */
-    public WeeklyHabitScheduleFragment() {}
+    public WeeklyHabitScheduleFragment() {
+    }
 
     /**
      * Create a new instance of the fragment from the provided model
      *
-     * @param model to use to set initial value
+     * @param model    to use to set initial value
      * @param editable set to true if the values should be editable
      * @return A new instance of WeeklyHabitScheduleFragment.
      */

@@ -2,19 +2,13 @@ package com.cmput301f21t09.budgetprojectname;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.cmput301f21t09.budgetprojectname.controllers.HabitController;
-import com.cmput301f21t09.budgetprojectname.models.IHabitModel;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -23,7 +17,7 @@ import java.text.SimpleDateFormat;
  * Activity that shows the detail of the habit event
  */
 public class ViewHabitEventActivity extends AppCompatActivity {
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "ViewHabitEventActivity";
     HabitEventController habitEventController = new HabitEventController();
 
@@ -47,12 +41,12 @@ public class ViewHabitEventActivity extends AppCompatActivity {
 
         // TODO: resolve null error
         /**
-        HabitController controller = HabitController.getEditHabitController(habitID);
-        if(controller.isTaskComplete(HabitController.HABIT_MODEL_LOAD)){
-             IHabitModel model = controller.getModel();
-             habitTitle.setText(model.getTitle());
-             System.out.println("habit title " + model.getTitle());
-        }
+         HabitController controller = HabitController.getEditHabitController(habitID);
+         if(controller.isTaskComplete(HabitController.HABIT_MODEL_LOAD)){
+         IHabitModel model = controller.getModel();
+         habitTitle.setText(model.getTitle());
+         System.out.println("habit title " + model.getTitle());
+         }
          **/
         System.out.println("in viewhabiteventactivity");
 
@@ -96,7 +90,6 @@ public class ViewHabitEventActivity extends AppCompatActivity {
             startActivity(deleteIntent);
         });
     }
-
 
 
 }

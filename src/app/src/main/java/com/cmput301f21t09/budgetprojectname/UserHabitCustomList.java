@@ -10,9 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.google.android.material.imageview.ShapeableImageView;
-
 import com.cmput301f21t09.budgetprojectname.models.HabitModel;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 

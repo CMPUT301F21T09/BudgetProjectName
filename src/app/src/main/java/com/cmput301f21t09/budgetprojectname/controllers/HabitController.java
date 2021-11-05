@@ -30,31 +30,35 @@ public class HabitController extends ServiceTaskController<String> {
     /**
      * Private constructor
      */
-    private HabitController() {}
+    private HabitController() {
+    }
 
     /**
      * Get a habit controller for editing the habit with the given id
+     *
      * @param id of habit to edit
      * @return controller for editing habit
      */
     public static HabitController getEditHabitController(String id) {
-        HabitController controller =  new HabitController();
+        HabitController controller = new HabitController();
         controller.registerTask(HABIT_MODEL_LOAD, HabitModel.getInstanceById(id));
         return controller;
     }
 
     /**
      * Get a habit controller for creating a new habit
+     *
      * @return controller for creating new habit
      */
     public static HabitController getCreateHabitController() {
-        HabitController controller =  new HabitController();
+        HabitController controller = new HabitController();
         controller.registerTask(HABIT_MODEL_LOAD, HabitModel.getNewInstance());
         return controller;
     }
 
     /**
      * Whether or not the start date is editable
+     *
      * @return true is the start date is editable
      */
     public boolean isStartDateEditable() {
@@ -63,6 +67,7 @@ public class HabitController extends ServiceTaskController<String> {
 
     /**
      * Checks the given title to see if it complies with the model spec
+     *
      * @param title to check
      * @return error code to display if not
      */
@@ -78,8 +83,8 @@ public class HabitController extends ServiceTaskController<String> {
     /**
      * Update the model with the given data and commit the changes to the backend
      *
-     * @param title to update model to
-     * @param reason to update model to
+     * @param title     to update model to
+     * @param reason    to update model to
      * @param startDate to update model to
      */
     public void updateModel(String title, String reason, Date startDate, IHabitScheduleModel schedule) {
@@ -105,6 +110,7 @@ public class HabitController extends ServiceTaskController<String> {
 
     /**
      * Get the habit model this controller holds
+     *
      * @return habit model, null if not loaded/doesn't exist
      */
     public IHabitModel getModel() {
@@ -113,6 +119,7 @@ public class HabitController extends ServiceTaskController<String> {
 
     /**
      * Whether or not the model is currently being saved
+     *
      * @return true if the model is currently being saved
      */
     public boolean isSaving() {
@@ -121,6 +128,7 @@ public class HabitController extends ServiceTaskController<String> {
 
     /**
      * Whether or not the model has been saved
+     *
      * @return true if the model has been saved
      */
     public boolean isSaved() {

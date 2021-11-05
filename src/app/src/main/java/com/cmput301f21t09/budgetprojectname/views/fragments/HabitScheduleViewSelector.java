@@ -11,7 +11,8 @@ public class HabitScheduleViewSelector {
 
     /**
      * Get an instance of a fragment that shows the provided type of view model
-     * @param model to represent
+     *
+     * @param model    to represent
      * @param editable if model is editable
      * @return fragment that represents the data in the given model
      */

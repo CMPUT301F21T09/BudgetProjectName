@@ -149,6 +149,12 @@ public class DefineHabitActivity extends AppCompatActivity {
                     HabitScheduleFragment hsv = ((HabitScheduleFragment) getSupportFragmentManager().findFragmentById(R.id.adh_scheduleFragment));
                     controller.updateModel(habitTitle.getText().toString(), habitReason.getText().toString(), calendar.getTime(), hsv.getSchedule());
                 }
+
+                // Head back to the daily habit fragment
+                Intent i = new Intent(this, MainActivity.class);
+                i.putExtra("frgToLoad", "daily_habits");
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

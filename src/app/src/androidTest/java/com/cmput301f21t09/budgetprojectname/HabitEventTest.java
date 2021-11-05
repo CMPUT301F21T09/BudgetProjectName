@@ -72,25 +72,32 @@ public class HabitEventTest {
     @Test
     public void testDeleteHabitEvent(){
         solo.clickOnView(solo.getView(R.id.viewHabitDetailsBtn));
+
+        // check that list contains newly created habitevent
         solo.waitForActivity("ViewHabitActivity");
         solo.waitForText("February", 1, 3000);
         ListView list = (ListView) solo.getView(R.id.past_habit_event_list);
 
-        int oldCount =  list.getChildCount();
-        System.out.println("oldcount " + oldCount);
+        // save current number of elements in list
+        int oldCount =  list.getCount();
         View v = list.getChildAt(0);
+        // click on first element in list
         solo.clickOnView(v);
 
+        // wait for habit event to load
         solo.waitForActivity("ViewHabitEventActivity");
         solo.waitForText("February", 1, 3000);
+
+        // delete the habit event
         solo.clickOnView(solo.getView(R.id.view_habit_event_habit_event_delete_button));
 
-        solo.waitForActivity("ViewHabitActivity");
-        int newCount =  list.getChildCount();
-        System.out.println("new count " + newCount);
-        v = list.getChildAt(0);
-        System.out.println("v " + v);
-        solo.clickOnView(v);
-        // assertEquals()
+        // check that we go back to the viewhabitactivity
+        solo.waitForText("Past", 1, 3000);
+        solo.assertCurrentActivity("Wrong Activity", ViewHabitActivity.class);
+        ListView modList = (ListView) solo.getView(R.id.past_habit_event_list);
+        int newCount =  modList.getCount();
+
+        // check that the list has one less element
+        assertEquals(oldCount-1, newCount);
     }
 }

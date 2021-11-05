@@ -8,8 +8,6 @@ public abstract class BaseController {
     }
 
     protected void notifyListener() {
-        if (r != null)  r.run();
+        if (r != null) r.run();
     }
-
-
 }

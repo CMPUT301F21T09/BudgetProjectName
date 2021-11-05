@@ -1,9 +1,7 @@
 package com.cmput301f21t09.budgetprojectname;
 
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.Nullable;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,11 +22,12 @@ import java.util.ArrayList;
  * Show the habit event's date and whether or not the user has added a location, comment, and/or photograph
  */
 public class HabitEventCustomList extends ArrayAdapter<HabitEventModel> {
-    private ArrayList<HabitEventModel> habitEvents;
-    private Context context;
+    private final ArrayList<HabitEventModel> habitEvents;
+    private final Context context;
 
     /**
      * Constructor for HabitEventCustomList
+     *
      * @param context
      * @param habitEvents
      */

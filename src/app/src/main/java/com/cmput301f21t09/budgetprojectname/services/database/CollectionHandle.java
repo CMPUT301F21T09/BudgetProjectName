@@ -1,13 +1,13 @@
 package com.cmput301f21t09.budgetprojectname.services.database;
 
 import com.cmput301f21t09.budgetprojectname.services.ServiceTask;
-import com.cmput301f21t09.budgetprojectname.services.ServiceTaskListener;
 import com.cmput301f21t09.budgetprojectname.services.ServiceTaskManager;
 import com.cmput301f21t09.budgetprojectname.services.database.serializers.DocumentModelSerializer;
 import com.google.firebase.firestore.CollectionReference;
 
 /**
  * Handle for accessing documents and querying a specified collection
+ *
  * @param <T> base class the documents in this collection represent
  */
 public class CollectionHandle<T> {
@@ -19,6 +19,7 @@ public class CollectionHandle<T> {
 
     /**
      * Constructor for collection handle that points to the given collection
+     *
      * @param cRef collection to point to
      */
     CollectionHandle(CollectionReference cRef) {
@@ -27,6 +28,7 @@ public class CollectionHandle<T> {
 
     /**
      * Get handle for a specific entry in the collection
+     *
      * @param id entry unique identifier
      * @return handle for accessing the specified entry's data
      */
@@ -38,13 +40,13 @@ public class CollectionHandle<T> {
         ServiceTaskManager<String> taskManager = new ServiceTaskManager<>();
 
         cRef.add(serializer.serialize(data)).addOnCompleteListener(
-            task -> {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    taskManager.setSuccess(task.getResult().getId());
-                } else {
-                    taskManager.setFailure(task.getException());
-                }
-        });
+                task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        taskManager.setSuccess(task.getResult().getId());
+                    } else {
+                        taskManager.setFailure(task.getException());
+                    }
+                });
         return taskManager.getTask();
     }
 

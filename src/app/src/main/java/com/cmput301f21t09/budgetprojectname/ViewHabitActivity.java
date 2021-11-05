@@ -36,7 +36,7 @@ public class ViewHabitActivity extends AppCompatActivity {
     /**
      * Controller for fetching habit events
      */
-    private HabitEventController habitEventController = new HabitEventController();
+    private final HabitEventController habitEventController = new HabitEventController();
 
     /* Views */
 
@@ -77,7 +77,7 @@ public class ViewHabitActivity extends AppCompatActivity {
 
     ArrayAdapter<HabitEventModel> habitEventAdapter;
     ArrayList<HabitEventModel> habitEventDataList;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "ViewHabitActivity";
 
     @Override

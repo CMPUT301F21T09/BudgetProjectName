@@ -46,7 +46,7 @@ public class UserLoginActivity extends AppCompatActivity {
      * Verify login input.
      * Make notification on fields that have been filled out incorrectly.
      *
-     * @param email The email to check
+     * @param email    The email to check
      * @param password The password to check
      * @return Whether the input is valid
      */

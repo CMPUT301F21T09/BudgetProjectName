@@ -38,7 +38,7 @@ public class HabitModel implements IHabitModel {
     /**
      * Habit last completed date
      */
-    private Date lastCompleted;
+    private final Date lastCompleted;
     /**
      * Habit schedule
      */

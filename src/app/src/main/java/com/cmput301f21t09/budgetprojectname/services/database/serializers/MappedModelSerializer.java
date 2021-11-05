@@ -4,6 +4,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 /**
  * Serializer that uses a ModelMapParser to serialize
+ *
  * @param <T> model type
  */
 class MappedModelSerializer<T> implements DocumentModelSerializer<T> {
@@ -14,6 +15,7 @@ class MappedModelSerializer<T> implements DocumentModelSerializer<T> {
 
     /**
      * Constructor that takes in a parser to use for serializing/deserializing
+     *
      * @param parser to use for operations
      */
     MappedModelSerializer(ModelMapParser<T> parser) {

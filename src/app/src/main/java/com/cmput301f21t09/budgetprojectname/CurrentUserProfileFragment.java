@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.models.HabitModel;
+import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,7 @@ public class CurrentUserProfileFragment extends Fragment {
     /**
      * Controller for fetching habit events
      */
-    private HabitListController habitListController = new HabitListController();
+    private final HabitListController habitListController = new HabitListController();
 
     /**
      * Sign out.

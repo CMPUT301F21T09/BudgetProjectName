@@ -20,13 +20,15 @@ public class WeeklyHabitScheduleModel implements IWeeklyHabitScheduleModel {
 
     /**
      * Empty constructor for default model instances
-     *
+     * <p>
      * All days are default set to not be completed
      */
-    public WeeklyHabitScheduleModel() {}
+    public WeeklyHabitScheduleModel() {
+    }
 
     /**
      * Return an instance of a WeeklyHabitScheduleModel with data from a map
+     *
      * @param map to parse
      * @return model with data set from the given map
      */
@@ -61,7 +63,8 @@ public class WeeklyHabitScheduleModel implements IWeeklyHabitScheduleModel {
 
     /**
      * Set if the habit is scheduled for that day of the week
-     * @param day to set
+     *
+     * @param day      to set
      * @param complete true if habit is to be completed that day
      */
     public void setDay(int day, boolean complete) {

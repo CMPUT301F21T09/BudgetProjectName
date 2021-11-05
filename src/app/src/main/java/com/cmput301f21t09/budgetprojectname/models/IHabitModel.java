@@ -18,42 +18,49 @@ public interface IHabitModel {
 
     /**
      * Get the id of the habit
+     *
      * @return id
      */
     String getId();
 
     /**
      * Get the title of the habit
+     *
      * @return habit title
      */
     String getTitle();
 
     /**
      * Get the reason of the habit
+     *
      * @return habit reason
      */
     String getReason();
 
     /**
      * Get the current streak score
+     *
      * @return streak score
      */
     long getStreak();
 
     /**
      * Get the start date of the habit
+     *
      * @return habit start date
      */
     Date getStartDate();
 
     /**
      * Get the date of the last habit event created for the habit
+     *
      * @return get the date that the habit was last completed
      */
     Date getLastCompleted();
 
     /**
      * Get the model object representing the habit's schedule
+     *
      * @return habit schedule
      */
     IHabitScheduleModel getSchedule();

@@ -20,10 +20,10 @@ import java.util.Date;
 
 public class ViewHabitEventTest {
     private Solo solo;
-    private String habitEventID_DELETE = "";
+
     @Rule
-    public ActivityTestRule<ExampleActivity> rule =
-            new ActivityTestRule<>(ExampleActivity.class, true, true);
+    public ActivityTestRule<MainActivity> rule =
+            new ActivityTestRule<>(MainActivity.class, true, true);
 
     /**
      * Runs before all tests and creates solo instance.
@@ -41,8 +41,6 @@ public class ViewHabitEventTest {
         habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
             @Override
             public void onCallback(String habitEventID) {
-                System.out.println("habitevent id " + habitEventID);
-                habitEventID_DELETE = habitEventID;
             }
         });
     }
@@ -74,7 +72,9 @@ public class ViewHabitEventTest {
      */
     @Test
     public void testDeleteHabitEvent(){
-        solo.clickOnView(solo.getView(R.id.viewHabitDetailsBtn));
+        solo.waitForText("Today", 1, 3000);
+        // click on a habit
+        solo.clickOnText("Test"); // OUR TEST HABIT
 
         // check that list contains newly created habitevent
         solo.waitForActivity("ViewHabitActivity");
@@ -109,8 +109,9 @@ public class ViewHabitEventTest {
      */
     @Test
     public void testUpdateHabitEvent(){
-        // TODO: add test
-        solo.clickOnView(solo.getView(R.id.viewHabitDetailsBtn));
+        solo.waitForText("Today", 1, 3000);
+        // click on a habit
+        solo.clickOnText("Test"); // OUR TEST HABIT
 
         // check that list contains newly created habitevent
         solo.waitForActivity("ViewHabitActivity");

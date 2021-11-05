@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -143,6 +144,17 @@ public class ViewHabitActivity extends AppCompatActivity {
         ImageButton back = findViewById(R.id.view_habit_back_button);
         back.setOnClickListener(v -> {
             finish();
+        });
+
+        // Brings the user to another activity to edit habit details
+        final Button editHabitBtn = findViewById(R.id.editHabitButton);
+        editHabitBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DefineHabitActivity.class);
+                final String HABIT_ID = "HABIT_ID";
+                intent.putExtra(HABIT_ID, habitID);
+                startActivity(intent);
+            }
         });
     }
 

@@ -17,6 +17,9 @@
             android:exported="true"
             android:label="@string/viewHabitActivity" />
         <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
             android:name=".UserRegisterActivity"
             android:exported="false" />
         <activity

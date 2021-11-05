@@ -14,8 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
+
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Fragment that shows user's profile with their name, username, and habits

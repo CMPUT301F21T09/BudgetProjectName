@@ -29,7 +29,7 @@
             android:name=".ViewHabitEventActivity"
             android:exported="false" />
         <activity
-            android:name=".ExampleActivity"
+            android:name=".UserLoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.google.android.material.imageview.ShapeableImageView;
+
 import java.util.ArrayList;
 
 /**
@@ -52,10 +54,9 @@ public class UserHabitCustomList extends ArrayAdapter<HabitModel> {
         habitDescription.setText(habit.getReason());
         streak.setText(String.valueOf(habit.getStreak()));
 
-        /**
-         * Brings the user to the habit details screen
-         */
-        habitName.setOnClickListener(v -> {
+        // Brings the user to the habit details screen
+        ShapeableImageView habitBackground = view.findViewById(R.id.habit_lists_background);
+        habitBackground.setOnClickListener(v -> {
             // pass habit id to view the habit details for targeted habit
             Intent intent = new Intent(context, ViewHabitActivity.class);
             intent.putExtra("HABIT_ID", habit.getID());

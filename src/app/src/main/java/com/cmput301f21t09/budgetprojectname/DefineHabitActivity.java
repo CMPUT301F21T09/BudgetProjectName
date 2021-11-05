@@ -20,6 +20,9 @@ import java.util.Calendar;
 import com.cmput301f21t09.budgetprojectname.views.fragments.HabitScheduleFragment;
 import com.cmput301f21t09.budgetprojectname.views.fragments.HabitScheduleViewSelector;
 
+/**
+ * Activity that makes the user to add/edit a habit
+ */
 public class DefineHabitActivity extends AppCompatActivity {
 
     /* Controllers */

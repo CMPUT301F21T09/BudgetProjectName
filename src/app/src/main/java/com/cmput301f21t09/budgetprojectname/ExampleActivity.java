@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 /**
  * This is an activity to be used for testing.
  * To begin execution/testing from this activity instead of mainActivity change AndroidManifest.xml
- * android:name=".MainActivity" --> android:name=".ExampleActivity"
+ * android:name=".MainActivity" to android:name=".ExampleActivity"
  */
 public class ExampleActivity extends AppCompatActivity {
 

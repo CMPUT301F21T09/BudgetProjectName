@@ -163,8 +163,11 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                         });
                     } else {
                         habitEventController.updateHabitEvent(habitEventID, habitEvent);
-                        // return back to habit event detail page
-                        finish();
+                        // return back to habit detail page
+                        Intent i = new Intent(getApplicationContext(), ViewHabitActivity.class);
+                        i.putExtra("HABIT_ID", habitID);
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
                     }
                 }
                 return true;

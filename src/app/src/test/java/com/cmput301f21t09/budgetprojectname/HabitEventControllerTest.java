@@ -1,68 +1,84 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import com.cmput301f21t09.budgetprojectname.models.HabitModel;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Tests for database operations on habit events mocked using arraylists
+ */
 public class HabitEventControllerTest {
-    // private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    // private HabitEventController;
-    // private FirebaseFirestore db;
-    private static final String TAG = "HabitEventStoreTEST";
-    HabitEventModel testHabitEvent;
 
+    /**
+     * Tests creation of a habit event
+     */
     @Test
-    public void testCreateHabitEvent(){
-        HabitEventController habitEventController = new HabitEventController();
+    public void testCreateHabitEvent() {
+        ArrayList<HabitEventModel> habitEventList = new ArrayList<>();
         HabitEventModel habitEvent =
                 new HabitEventModel(null, "YEGtest", new Date(),
-                        "yeg test comment", null,"");
+                        "yeg test comment", null, "");
+        habitEventList.add(habitEvent);
 
-        habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
-            @Override
-            public void onCallback(String habitEventID) {
-                // TODO: store the habiteventid
-                System.out.println("habitevent id " + habitEventID);
-            }
-        });
-        // TODO: make another call to habitEventController.getHabitEvent(habiteventid, callback)
-        //      to check if the habit event was successfully added
+        assertEquals(1, habitEventList.size());
+        assertTrue(habitEventList.contains(habitEvent));
     }
 
     /**
-     * Old test which did not work because async handling was not working yet
+     * Tests update of a habit event
+     */
     @Test
-    public void testCreateHabitEvent(){
-        HabitEventModel addedHabitEvent =
-                new HabitEventModel("YEGtest", new Date(), "yeg test comment");
-        habitEventStore.createHabitEvent(addedHabitEvent);
-        // check if inside DB -- maybe just where by name
-        DocumentReference docRef = db.collection("habit_events").document(needid);
+    public void testUpdateHabitEvent() {
+        ArrayList<HabitEventModel> habitEventList = new ArrayList<>();
+        HabitEventModel habitEvent =
+                new HabitEventModel(null, "YEGtest", new Date(),
+                        "yeg test comment", null, "");
+        habitEventList.add(habitEvent);
+        HabitEventModel toUpdateHE = habitEventList.get(0);
+        habitEventList.remove(0); // the actual DB will not remove the document
+        toUpdateHE.setComment("updated comment");
+        habitEventList.add(toUpdateHE);
 
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                        // TODO: Move to HabitEventController once async request handling is solved
-                       assertEquals("YEGtest", document.getString("location"));
-                       assertEquals("yeg test comment",document.getString("comment") );
-                        // TODO: check image
-
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
-
+        assertEquals(1, habitEventList.size());
+        assertEquals("updated comment", habitEventList.get(0).getComment());
     }
-    **/
+
+    /**
+     * Tests deletion of habit event
+     */
+    @Test
+    public void testDeleteHabitEvent() {
+        ArrayList<HabitEventModel> habitEventList = new ArrayList<>();
+        HabitEventModel habitEvent =
+                new HabitEventModel(null, "YEGtest", new Date(),
+                        "yeg test comment", null, "");
+        habitEventList.add(habitEvent);
+        habitEventList.remove(0);
+
+        assertEquals(0, habitEventList.size());
+    }
+
+    /**
+     * Tests reading of habit event
+     */
+    @Test
+    public void testReadHabitEvent() {
+        ArrayList<HabitEventModel> habitEventList = new ArrayList<>();
+
+        HabitEventModel habitEvent =
+                new HabitEventModel(null, "YEGtest", new Date(),
+                        "yeg test comment", null, "");
+        habitEventList.add(habitEvent);
+        HabitEventModel readHE = habitEventList.get(0);
+        assertEquals("YEGtest", readHE.getLocation());
+        assertEquals("yeg test comment", readHE.getComment());
+    }
+
 
 }

@@ -140,7 +140,7 @@ public class HabitEventTest {
         solo.enterText((EditText)solo.getView(R.id.comment), "updated comment");
 
         // click checkmark to confirm changes
-        solo.clickOnView(solo.getView(R.id.done));
+        solo.clickOnView(solo.getView(R.id.menu_commit_changes));
 
         // wait for habit event to load
         solo.waitForActivity("ViewHabitEventActivity");

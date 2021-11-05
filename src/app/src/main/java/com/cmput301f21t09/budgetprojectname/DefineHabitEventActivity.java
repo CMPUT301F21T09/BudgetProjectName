@@ -24,6 +24,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.w3c.dom.Text;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -68,10 +70,12 @@ public class DefineHabitEventActivity extends AppCompatActivity {
 
         // update title according to mode selected: "add" or "edit"
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(modeStr);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        TextView tbTitle = findViewById(R.id.toolbar_title);
+        tbTitle.setText(modeStr);
 
         habitEventName = (TextView) findViewById(R.id.habitName);
 
@@ -82,6 +86,12 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         // Let User Add/Change their habit event image as click ImageView area
         image.setOnClickListener(v -> {
             // TODO: Let User Choose Image from Gallery or Take a Photo
+        });
+
+        ImageButton back = findViewById(R.id.back);
+
+        back.setOnClickListener(v -> {
+            finish();
         });
     }
 
@@ -136,7 +146,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 String locationStr = location.getText().toString();
                 String commentStr = comment.getText().toString();
                 // error checking/handling for adding optional comment of up to 30 chars
-                if (commentStr.length() > 30) {
+                if (commentStr.length() > 20) {
                     comment.setError(getString(R.string.errorHabitEventComment));
                     comment.requestFocus();
                     Toast.makeText(getApplicationContext(), "ERROR: could not save habit event",

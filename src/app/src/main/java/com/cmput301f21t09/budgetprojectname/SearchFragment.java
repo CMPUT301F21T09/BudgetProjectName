@@ -9,6 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+/**
+ * Fragment that allows the user to search other user
+ */
 public class SearchFragment extends Fragment {
 
     @Nullable

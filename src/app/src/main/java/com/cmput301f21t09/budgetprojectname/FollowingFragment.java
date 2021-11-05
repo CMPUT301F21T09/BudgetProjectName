@@ -9,6 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+/**
+ * Fragment that shows the user's following user list and makes accepting/rejecting the follower request from other user
+ */
 public class FollowingFragment extends Fragment {
 
     @Nullable

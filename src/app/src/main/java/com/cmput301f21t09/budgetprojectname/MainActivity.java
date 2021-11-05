@@ -8,6 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+/**
+ * Activity that holds 4 main Fragment
+ */
 public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("NonConstantResourceId")
@@ -17,18 +20,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // 4 main fragments for bottom navigation UI
-        MainFragment habitFragment = new MainFragment();
+        DailyHabitFragment dailyHabitFragment = new DailyHabitFragment();
         SearchFragment searchFragment = new SearchFragment();
-        AddFragment addFragment = new AddFragment();
         FollowingFragment followingFragment = new FollowingFragment();
-        ProfileFragment profileFragment = new ProfileFragment();
+        CurrentUserProfileFragment currentUserProfileFragment = new CurrentUserProfileFragment();
 
-        // Fragment switch
+        // Fragment switching
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
+        bottomNavigationView.getMenu().findItem(R.id.add).setCheckable(false);
+
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
-                case R.id.main:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, habitFragment).commit();
+                case R.id.daily_habit:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, dailyHabitFragment).commit();
                     return true;
                 case R.id.search:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment, searchFragment).commit();
@@ -36,17 +40,18 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.add:
                     Intent intent = new Intent(this, DefineHabitActivity.class);
                     startActivity(intent);
-                    return true;
+                    // using break instead of return to keep previous fragment selection
+                    break;
                 case R.id.following:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment, followingFragment).commit();
                     return true;
                 case R.id.profile:
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, profileFragment).commit();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, currentUserProfileFragment).commit();
                     return true;
             }
             return false;
         });
-        bottomNavigationView.setSelectedItemId(R.id.main);
 
+        bottomNavigationView.setSelectedItemId(R.id.daily_habit);
     }
 }

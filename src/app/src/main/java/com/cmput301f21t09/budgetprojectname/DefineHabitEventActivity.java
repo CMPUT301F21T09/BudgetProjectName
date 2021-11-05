@@ -50,7 +50,6 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         } else {
             modeStr = getString(R.string.editHabitEventMode);
             // sets existing habitEvent fields
-            System.out.println("test here!");
             setHabitEventFields(habitEventID);
         }
 

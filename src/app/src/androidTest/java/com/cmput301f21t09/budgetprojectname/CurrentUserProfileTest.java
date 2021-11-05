@@ -3,16 +3,26 @@ package com.cmput301f21t09.budgetprojectname;
 import org.junit.Rule;
 
 import android.app.Activity;
+import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import org.junit.*;
 
 import static org.junit.Assert.*;
 
+import androidx.annotation.NonNull;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.robotium.solo.Solo;
 
 
@@ -73,5 +83,28 @@ public class CurrentUserProfileTest {
         assertTrue(solo.waitForView(R.id.login_label));
     }
 
-    //TODO: Add intent tests for profile information being pulled correctly
+    /**
+     * Test for checking profile list
+     */
+    @Test
+    public void testAllHabitList() {
+        navigateToPersonalProfile();
+        ListView listView = (ListView)solo.getView(R.id.current_user_habit_listview);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference collectionReference = db.collection("habits");
+        collectionReference
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        int listViewCount = listView.getCount();
+                        if (task.isSuccessful()) {
+                            int yeet = task.getResult().size();
+                            assertEquals(yeet, listViewCount);
+                        }
+                    }
+                });
+    }
+
+    //TODO: Add intent tests for user name being pulled correctly
 }

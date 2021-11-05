@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +30,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     private TextView toolbarTitle;
     private TextView habitEventName;
     private EditText location;
-    private EditText description;
+    private EditText comment;
     private ImageView image;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "DefineHabitEventActivity";
@@ -63,13 +64,22 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         habitEventName = (TextView) findViewById(R.id.habitName);
 
         location = (EditText) findViewById(R.id.location);
-        description = (EditText) findViewById(R.id.description);
+        comment = (EditText) findViewById(R.id.comment);
         image = (ImageView) findViewById(R.id.image);
         ImageButton doneBtn = findViewById(R.id.done);
 
         doneBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String locationStr = location.getText().toString();
+                String commentStr = comment.getText().toString();
+                // error checking/handling for adding optional comment of up to 20 chars
+                if(commentStr.length() > 20 ){
+                    comment.setError(getString(R.string.errorHabitEventComment));
+                    comment.requestFocus();
+                    Toast.makeText(getApplicationContext(), "ERROR: could not save habit event",
+                            Toast.LENGTH_SHORT).show();
+                } else{
+                   
                 String descriptionStr = description.getText().toString();
 
                 HabitEventModel habitEvent = new HabitEventModel(null, locationStr, new Date(),
@@ -95,7 +105,6 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                     returnIntent.putExtra(HABIT_EVENT_ID, habitEventID);
                     startActivity(returnIntent);
                 }
-
             }
         });
 
@@ -106,7 +115,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         });
     }
 
-    /**
+
      * Sets the fields with existing values from Firestore
      *
      * @param habitEventID ID of habitEvent to be retrieved
@@ -125,7 +134,8 @@ public class DefineHabitEventActivity extends AppCompatActivity {
 
                         // set fields in view
                         location.setText(document.getString("location"));
-                        description.setText(document.getString("comment"));
+                        comment.setText(document.getString("comment"));
+
                         // TODO: set image
 
                     } else {

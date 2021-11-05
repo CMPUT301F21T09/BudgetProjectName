@@ -1,4 +1,4 @@
-package com.cmput301f21t09.budgetprojectname;
+package com.cmput301f21t09.budgetprojectname.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

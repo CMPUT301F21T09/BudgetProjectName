@@ -2,10 +2,11 @@ package com.cmput301f21t09.budgetprojectname;
 import java.util.Date;
 
 //TODO: Add Frequency
-
+// TODO: DEPRICATED USE com.cmput301f21t09.budgetprojectname.models.HabitModel instead!
 /**
  * Class for a habit
  */
+@Deprecated
 public class HabitModel {
     final private String title;
     final private String ID;

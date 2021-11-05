@@ -8,6 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+/**
+ * Activity that holds 4 main Fragment
+ */
 public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("NonConstantResourceId")

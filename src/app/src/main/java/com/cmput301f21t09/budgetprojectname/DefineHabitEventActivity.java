@@ -21,6 +21,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
 
+/**
+ * Activity that makes the user to add/edit a habit event
+ */
 public class DefineHabitEventActivity extends AppCompatActivity {
 
     private TextView toolbarTitle;

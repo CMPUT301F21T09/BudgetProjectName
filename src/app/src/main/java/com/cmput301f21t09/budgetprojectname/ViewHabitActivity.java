@@ -1,10 +1,7 @@
 package com.cmput301f21t09.budgetprojectname;
 
-import static java.lang.Integer.parseInt;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,30 +11,19 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 
 import com.cmput301f21t09.budgetprojectname.controllers.HabitController;
 import com.cmput301f21t09.budgetprojectname.models.IHabitModel;
 import com.cmput301f21t09.budgetprojectname.models.IWeeklyHabitScheduleModel;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-
+/**
+ * Activity that shows the detail of the habit
+ */
 public class ViewHabitActivity extends AppCompatActivity {
 
     /* Controllers */
@@ -132,11 +118,9 @@ public class ViewHabitActivity extends AppCompatActivity {
             @Override
             public void onCallback(ArrayList<HabitEventModel> hbEvtLst) {
                 habitEventDataList.clear();
-
                 for (HabitEventModel hEM : habitEventDataList) {
                     System.out.println(hEM.getDate());
                 }
-
                 habitEventDataList.addAll(hbEvtLst);
                 habitEventAdapter.notifyDataSetChanged();
             }
@@ -156,6 +140,22 @@ public class ViewHabitActivity extends AppCompatActivity {
             }
 
         });
+
+        ImageButton back = findViewById(R.id.view_habit_back_button);
+        back.setOnClickListener(v -> {
+            finish();
+        });
+
+        // Brings the user to another activity to edit habit details
+        final Button editHabitBtn = findViewById(R.id.editHabitButton);
+        editHabitBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DefineHabitActivity.class);
+                final String HABIT_ID = "HABIT_ID";
+                intent.putExtra(HABIT_ID, habitID);
+                startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -174,7 +174,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         saturdayIcon = findViewById(R.id.saturday_icon);
 
         // Set the views of the habit details accordingly
-        if(controller.isTaskComplete(HabitController.HABIT_MODEL_LOAD)){
+        if (controller.isTaskComplete(HabitController.HABIT_MODEL_LOAD)) {
             // Set the toolbar title, habit tile, habit reason, and habit date view
             IHabitModel model = controller.getModel();
             habitTitleToolbar.setText(model.getTitle());
@@ -207,6 +207,3 @@ public class ViewHabitActivity extends AppCompatActivity {
         }
     }
 }
-
-
-

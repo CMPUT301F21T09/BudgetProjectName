@@ -26,10 +26,14 @@ import java.util.Date;
  *
  */
 public class HabitListController {
-    private FirebaseFirestore dbStore = FirebaseFirestore.getInstance();
+    /**
+     * TAG for HabitListController
+     */
     private static final String TAG = "HabitListController";
-    public HabitEventModel retrievedHabitEventModel;
 
+    /**
+     * Constructor for HabitListController
+     */
     public HabitListController(){}
 
     /**
@@ -56,24 +60,13 @@ public class HabitListController {
                         if (task.isSuccessful()) {
                             // Append every document into habitEventDataList
                             for (QueryDocumentSnapshot doc : task.getResult()) {
-                                System.out.println("******");
-                                System.out.println(doc.getId());
-                                System.out.println(doc.getData().get("title"));
-
                                 String ID = (String) doc.getId();
                                 String title = (String) doc.getData().get("title");
                                 String reason = (String) doc.getData().get("reason");
                                 Date startDate  = ((Timestamp) doc.getData().get("start_date")).toDate();
-//                                Date lastCompleted  = ((Timestamp) doc.getData().get("lastCompleted")).toDate();
                                 int streak = ((Long) doc.getData().get("streak")).intValue();
 
                                 habitDataList.add(new HabitModel(ID, title, reason, startDate, null, streak));
-//                                String location = (String) doc.getData().get("location");
-//                                String comment = (String) doc.getData().get("comment");
-//                                Image image = (Image) doc.getData().get("image");
-//                                habitEventDataList.add(new HabitEventModel(id, location, date, comment, image, habitID));
-
-//                                habitDataList.add(doc.toObject(HabitModel.class));
                             }
                             hbLstCallback.onCallback(habitDataList);
                         } else {

@@ -1,13 +1,11 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -16,6 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.cmput301f21t09.budgetprojectname.models.HabitModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class DailyHabitFragment extends Fragment {
     /**
      * Controller for fetching habit events
      */
-    private HabitListController habitListController = new HabitListController();
+    private final HabitListController habitListController = new HabitListController();
 
 
     @Nullable
@@ -86,13 +86,10 @@ public class DailyHabitFragment extends Fragment {
         habitList.setAdapter(habitAdapter);
 
         // Fetches the habits related to the current habit from Firestore 
-        habitListController.readHabitList(new HabitListController.HabitListCallback() {
-            @Override
-            public void onCallback(ArrayList<HabitModel> hbLst) {
-                habitDataList.clear();
-                habitDataList.addAll(hbLst);
-                habitAdapter.notifyDataSetChanged();
-            }
+        habitListController.readHabitList(hbLst -> {
+            habitDataList.clear();
+            habitDataList.addAll(hbLst);
+            habitAdapter.notifyDataSetChanged();
         });
 
         habitList.setOnItemClickListener((parent, view1, position, id) -> {

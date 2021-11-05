@@ -1,15 +1,11 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import org.junit.Rule;
-
 import android.app.Activity;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
 
 import org.junit.*;
-
 import static org.junit.Assert.*;
 
 import androidx.annotation.NonNull;
@@ -18,7 +14,6 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -27,9 +22,10 @@ import com.robotium.solo.Solo;
 
 
 /**
- * Test class for currentUserProfileFragment
+ * Tests for DefineHabitActivity
  */
-public class CurrentUserProfileTest {
+
+public class DefineHabitActivityTest {
     private Solo solo;
     @Rule
     public ActivityTestRule<MainActivity> rule =
@@ -66,45 +62,63 @@ public class CurrentUserProfileTest {
     }
 
     /**
-     * Navigates to personal profile fragment
+     * Test for navigating to add habit screen
      */
-    private void navigateToPersonalProfile() {
-        solo.clickOnView(solo.getView(R.id.profile));
-        assertTrue(solo.waitForView(R.id.current_user_habit_listview));
+    @Test
+    public void testNavigateToAddHabit() {
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+        solo.clickOnView(solo.getView(R.id.add));
+        solo.waitForText("Create Habit");
     }
 
     /**
-     * Test for logging out
+     * Test for creating habit without title
      */
     @Test
-    public void testSignOut() {
-        navigateToPersonalProfile();
-        solo.clickOnView(solo.getView(R.id.logout_button));
-        assertTrue(solo.waitForView(R.id.login_label));
+    public void testNoTitleHabitCreation() {
+        testNavigateToAddHabit();
+        solo.clickOnView(solo.getView(R.id.menu_commit_changes));
+        solo.waitForText("Create Habit");
     }
 
     /**
-     * Test for checking profile list
+     * Test for creating new habit (and then deleting it from firebase)
      */
     @Test
-    public void testAllHabitList() {
-        navigateToPersonalProfile();
-        ListView listView = (ListView)solo.getView(R.id.current_user_habit_listview);
+    public void testCreateNewHabit() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        testNavigateToAddHabit();
+        String titleText = "Heyheyheyheyhey";
+        String reasonText = "A very good reason";
+        solo.enterText((EditText) solo.getView(R.id.adh_editHabitTitle), titleText);
+        solo.enterText((EditText) solo.getView(R.id.adh_editHabitReason), reasonText);
+        solo.clickOnView(solo.getView(R.id.menu_commit_changes));
+
         CollectionReference collectionReference = db.collection("habits");
         collectionReference
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        int listViewCount = listView.getCount();
                         if (task.isSuccessful()) {
-                            int yeet = task.getResult().size();
-                            assertEquals(yeet, listViewCount);
+                            boolean hasNewHabitInDatabase = false;
+                            String documentID = "";
+                            // Append every document into habitEventDataList
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                String ID = (String) doc.getId();
+                                String title = (String) doc.getData().get("title");
+                                String reason = (String) doc.getData().get("reason");
+                                if (reasonText.equals(reason) && titleText.equals(title)) {
+                                    hasNewHabitInDatabase = true;
+                                    documentID = ID;
+                                    collectionReference.document(ID).delete();
+
+                                }
+                            }
+                            assertTrue(hasNewHabitInDatabase);
                         }
                     }
                 });
     }
 
-    //TODO: Add intent tests for user name being pulled correctly
 }

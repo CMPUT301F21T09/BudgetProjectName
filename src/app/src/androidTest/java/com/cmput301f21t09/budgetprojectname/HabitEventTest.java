@@ -1,10 +1,11 @@
 package com.cmput301f21t09.budgetprojectname;
 
+import static org.junit.Assert.assertEquals;
+
 import android.app.Activity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
-import static org.junit.Assert.assertEquals;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -18,12 +19,12 @@ import org.junit.Test;
 
 import java.util.Date;
 
-public class ViewHabitEventTest {
+public class HabitEventTest {
     private Solo solo;
-
+    private String habitEventID_DELETE = "";
     @Rule
-    public ActivityTestRule<MainActivity> rule =
-            new ActivityTestRule<>(MainActivity.class, true, true);
+    public ActivityTestRule<ExampleActivity> rule =
+            new ActivityTestRule<>(ExampleActivity.class, true, true);
 
     /**
      * Runs before all tests and creates solo instance.
@@ -41,6 +42,8 @@ public class ViewHabitEventTest {
         habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
             @Override
             public void onCallback(String habitEventID) {
+                System.out.println("habitevent id " + habitEventID);
+                habitEventID_DELETE = habitEventID;
             }
         });
     }
@@ -72,9 +75,7 @@ public class ViewHabitEventTest {
      */
     @Test
     public void testDeleteHabitEvent(){
-        solo.waitForText("Today", 1, 3000);
-        // click on a habit
-        solo.clickOnText("Test"); // OUR TEST HABIT
+        solo.clickOnView(solo.getView(R.id.viewHabitDetailsBtn));
 
         // check that list contains newly created habitevent
         solo.waitForActivity("ViewHabitActivity");
@@ -109,9 +110,8 @@ public class ViewHabitEventTest {
      */
     @Test
     public void testUpdateHabitEvent(){
-        solo.waitForText("Today", 1, 3000);
-        // click on a habit
-        solo.clickOnText("Test"); // OUR TEST HABIT
+        // TODO: add test
+        solo.clickOnView(solo.getView(R.id.viewHabitDetailsBtn));
 
         // check that list contains newly created habitevent
         solo.waitForActivity("ViewHabitActivity");
@@ -140,7 +140,7 @@ public class ViewHabitEventTest {
         solo.enterText((EditText)solo.getView(R.id.comment), "updated comment");
 
         // click checkmark to confirm changes
-        solo.clickOnView(solo.getView(R.id.view_habit_event_habit_event_edit_button));
+        solo.clickOnView(solo.getView(R.id.menu_commit_changes));
 
         // wait for habit event to load
         solo.waitForActivity("ViewHabitEventActivity");
@@ -156,4 +156,5 @@ public class ViewHabitEventTest {
 
 
     }
+
 }

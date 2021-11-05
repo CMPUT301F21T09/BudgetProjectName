@@ -1,11 +1,10 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import android.app.Activity;
-import android.media.Image;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;

@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
+import com.cmput301f21t09.budgetprojectname.models.HabitModel;
 
 import java.util.ArrayList;
 
@@ -58,13 +59,10 @@ public class CurrentUserProfileFragment extends Fragment {
         habitList.setAdapter(habitAdapter);
 
         // Fetches the habits related to the current habit from Firestore
-        habitListController.readHabitList(new HabitListController.HabitListCallback() {
-            @Override
-            public void onCallback(ArrayList<HabitModel> hbLst) {
-                habitDataList.clear();
-                habitDataList.addAll(hbLst);
-                habitAdapter.notifyDataSetChanged();
-            }
+        habitListController.readHabitList(hbLst -> {
+            habitDataList.clear();
+            habitDataList.addAll(hbLst);
+            habitAdapter.notifyDataSetChanged();
         });
 
         habitList.setOnItemClickListener((parent, view1, position, id) -> {

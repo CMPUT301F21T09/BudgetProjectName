@@ -1,21 +1,16 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import android.media.Image;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.firebase.firestore.DocumentId;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Represents the habit event model containing fields like habit event ID, location, comment, date,
  * image, and habit ID
  */
-public class HabitEventModel{
+public class HabitEventModel {
 
     /**
      * HabitEvent ID
@@ -50,12 +45,13 @@ public class HabitEventModel{
 
     /**
      * Constructor for creating a habitevent model
-     * @param ID id of habitevent
+     *
+     * @param ID       id of habitevent
      * @param location location of habitevent completion (optional)
-     * @param date completion date of habitevent
-     * @param comment comment for habitevent (optional)
-     * @param image image for habitevent (optional)
-     * @param habitID ID of habit
+     * @param date     completion date of habitevent
+     * @param comment  comment for habitevent (optional)
+     * @param image    image for habitevent (optional)
+     * @param habitID  ID of habit
      */
     HabitEventModel(String ID, String location, Date date, String comment, Image image, String habitID) {
         this.ID = ID;
@@ -67,7 +63,7 @@ public class HabitEventModel{
     }
 
     // need to declare an empty constructor for serialization purposes
-    HabitEventModel(){
+    HabitEventModel() {
         this.ID = null;
         this.location = null;
         this.comment = null;
@@ -78,86 +74,97 @@ public class HabitEventModel{
 
     /**
      * Get the id of the habitevent
+     *
      * @return habitevent id
      */
-    public String getID(){
+    public String getID() {
         return ID;
     }
 
     /**
      * Sets the id of the habitevent
+     *
      * @param ID
      */
-    public void setID(String ID){
+    public void setID(String ID) {
         this.ID = ID;
     }
 
     /**
      * Get the location of habitevent completion
+     *
      * @return location
      */
-    public String getLocation(){
+    public String getLocation() {
         return location;
     }
 
     /**
      * Sets the location of the habitevent
+     *
      * @param location of habit event completion
      */
-    public void setLocation(String location){
+    public void setLocation(String location) {
         this.location = location;
     }
 
     /**
      * Get the comment of the habitevent
+     *
      * @return habitevent comment
      */
-    public String getComment(){
+    public String getComment() {
         return comment;
     }
 
     /**
      * Sets the comment of the habitevent
+     *
      * @param comment of habit event
      */
-    public void setComment(String comment){
+    public void setComment(String comment) {
         this.comment = comment;
     }
 
     /**
      * Gets the date of habitevent completion
+     *
      * @return date of completion
      */
-    public Date getDate(){
+    public Date getDate() {
         return date;
     }
 
     /**
      * Sets the date of the habitevent completion
+     *
      * @param date of habit event
      */
-    public void setDate(Date date){
+    public void setDate(Date date) {
         this.date = date;
     }
 
     /**
      * Gets the image of habitevent
+     *
      * @return
      */
-    public Image getImage(){
+    public Image getImage() {
         return image;
     }
 
     /**
      * Sets the image of habitevent
+     *
      * @param image to set
      */
-    public void setImage(Image image){
+    public void setImage(Image image) {
         this.image = image;
     }
 
     /**
      * Gets the habitid of habit the event is referencing
+     *
      * @return
      */
     public String getHabitID() {
@@ -166,9 +173,10 @@ public class HabitEventModel{
 
     /**
      * Sets the id of habit
+     *
      * @param habitID to set as habitid
      */
-    public void setHabitID(String habitID){
+    public void setHabitID(String habitID) {
         this.habitID = habitID;
 
     }

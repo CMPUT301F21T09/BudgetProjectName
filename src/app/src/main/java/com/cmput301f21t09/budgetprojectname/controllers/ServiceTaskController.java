@@ -7,6 +7,7 @@ import java.util.Map;
 
 /**
  * Controller for tracking multiple service tasks
+ *
  * @param <U> key type for distinguishing between service tasks
  */
 public abstract class ServiceTaskController<U> extends BaseController {
@@ -18,18 +19,21 @@ public abstract class ServiceTaskController<U> extends BaseController {
 
     /**
      * Run when a given task is complete
-     *
+     * <p>
      * Meant to be overridden by subclasses if necessary
+     *
      * @param key of the task that completed
      */
-    protected void onTaskComplete(U key) {}
+    protected void onTaskComplete(U key) {
+    }
 
     /**
      * Register a given task to a specified key, replacing a given task if one already exists
-     *
+     * <p>
      * If a replaced task completes it will not call onTaskComplete of the controller,
      * the previous task is effectively forgotten.
-     * @param key to register task under
+     *
+     * @param key  to register task under
      * @param task to register
      */
     protected final void registerTask(U key, ServiceTask<?> task) {
@@ -42,6 +46,7 @@ public abstract class ServiceTaskController<U> extends BaseController {
 
     /**
      * Check if the controller has a task registered under the given key
+     *
      * @param key to check
      * @return true if there is a task registered under the key
      */
@@ -51,8 +56,9 @@ public abstract class ServiceTaskController<U> extends BaseController {
 
     /**
      * Get the result of the task registered under the given key
-     *
+     * <p>
      * If no task is registered will return null
+     *
      * @param key of service task
      * @return result of the service
      */
@@ -62,8 +68,9 @@ public abstract class ServiceTaskController<U> extends BaseController {
 
     /**
      * Get the exception of the task registered under the given key
-     *
+     * <p>
      * If no task is registered will return null
+     *
      * @param key of service task
      * @return exception of the service
      */
@@ -104,7 +111,7 @@ public abstract class ServiceTaskController<U> extends BaseController {
     /**
      * Listener to provide to tasks
      *
-     * @param key known registration of task
+     * @param key  known registration of task
      * @param task actual task registered at key
      */
     private void onTaskUpdate(U key, ServiceTask<?> task) {

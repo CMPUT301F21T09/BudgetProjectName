@@ -28,6 +28,7 @@ public class AuthorizationService {
 
     /**
      * Get authorization service
+     *
      * @return Authorization service
      */
     public static AuthorizationService getInstance() {
@@ -40,7 +41,8 @@ public class AuthorizationService {
 
     /**
      * Sign in with given email and password
-     * @param email The email to sign in with
+     *
+     * @param email    The email to sign in with
      * @param password The password to sign in with
      * @return `Task` of `AuthResult` with the result of the sign in attempt
      */
@@ -50,7 +52,8 @@ public class AuthorizationService {
 
     /**
      * Register with given email and password
-     * @param email The email to register
+     *
+     * @param email    The email to register
      * @param password The password to register
      * @return `Task` of `AuthResult` with the result of the registration attempt
      */
@@ -74,6 +77,7 @@ public class AuthorizationService {
 
     /**
      * Get current signed in user's id
+     *
      * @return The current signed in user's id. Return empty string if user doesn't exist
      */
     public String getCurrentUserId() {

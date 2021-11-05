@@ -39,7 +39,7 @@ public interface IWeeklyHabitScheduleModel extends IHabitScheduleModel {
     /**
      * Names of each weekday as found in the database
      */
-    String[] NAMES_OF_WEEKDAYS = { "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" };
+    String[] NAMES_OF_WEEKDAYS = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
 
     /**
      * Number of days in a week
@@ -48,6 +48,7 @@ public interface IWeeklyHabitScheduleModel extends IHabitScheduleModel {
 
     /**
      * Get if the habit is scheduled for that day of the week
+     *
      * @param day to check
      * @return true if habit is scheduled for completion on that day
      */
@@ -55,6 +56,7 @@ public interface IWeeklyHabitScheduleModel extends IHabitScheduleModel {
 
     /**
      * Return all days as an array indexable using the same values as getDay
+     *
      * @return array representing all days of the week
      */
     boolean[] getAllDays();

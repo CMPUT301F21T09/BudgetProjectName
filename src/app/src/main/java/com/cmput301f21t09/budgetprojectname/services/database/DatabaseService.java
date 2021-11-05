@@ -6,11 +6,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * Service for accessing database backend
- *
+ * <p>
  * This service accomplishes two things:
  * 1. Abstraction of the database backend
  * 2. Enforce a moderate structure of the database
- *
+ * <p>
  * DO NOT USE IN GLOBAL SCOPE.
  * A new instance of this service should be created only if being used within an activity.
  * (Or an object that is only to be used within an activity or fragment)
@@ -23,6 +23,7 @@ public class DatabaseService {
 
     /**
      * Get an instance of the database service
+     *
      * @return instance of database service
      */
     public static DatabaseService getInstance() {
@@ -32,12 +33,14 @@ public class DatabaseService {
     /**
      * Private constructor
      */
-    private DatabaseService() {}
+    private DatabaseService() {
+    }
 
     /**
      * Get a handle for a given collection
+     *
      * @param collection specifier for the given collection
-     * @param <T> base data type the collection holds
+     * @param <T>        base data type the collection holds
      * @return handle that points to the specified collection
      */
     public <T> CollectionHandle<T> getCollection(@NonNull CollectionSpecifier<T> collection) {

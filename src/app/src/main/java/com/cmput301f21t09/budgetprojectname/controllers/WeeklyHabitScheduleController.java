@@ -11,10 +11,11 @@ public class WeeklyHabitScheduleController extends BaseController {
     /**
      * Model for controller
      */
-    private WeeklyHabitScheduleModel model;
+    private final WeeklyHabitScheduleModel model;
 
     /**
      * Private constructor to create controller with model
+     *
      * @param model to provide controller
      */
     private WeeklyHabitScheduleController(WeeklyHabitScheduleModel model) {
@@ -23,6 +24,7 @@ public class WeeklyHabitScheduleController extends BaseController {
 
     /**
      * Get an instance of the controller using a boolean array representation of each day of the week
+     *
      * @param days array of days per week
      * @return controller initialized with data from the provided array
      */
@@ -41,6 +43,7 @@ public class WeeklyHabitScheduleController extends BaseController {
 
     /**
      * Toggle the state for a day
+     *
      * @param day to toggle
      */
     public void toggleDay(int day) {
@@ -50,6 +53,7 @@ public class WeeklyHabitScheduleController extends BaseController {
 
     /**
      * Get the model this controller handles
+     *
      * @return model
      */
     public IWeeklyHabitScheduleModel getModel() {

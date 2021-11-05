@@ -1,12 +1,10 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -17,16 +15,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.cmput301f21t09.budgetprojectname.views.fragments.HabitScheduleFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.w3c.dom.Text;
-
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -38,10 +32,10 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     private EditText location;
     private EditText comment;
     private ImageView image;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "DefineHabitEventActivity";
     private boolean isNewHabitEvent;
-    private HabitEventController habitEventController = new HabitEventController();
+    private final HabitEventController habitEventController = new HabitEventController();
     private String habitID;
     private String habitEventID;
 
@@ -65,7 +59,6 @@ public class DefineHabitEventActivity extends AppCompatActivity {
             // sets existing habitEvent fields
             setHabitEventFields(habitEventID);
         }
-
 
 
         // update title according to mode selected: "add" or "edit"

@@ -1,7 +1,6 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import android.media.Image;
-
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -24,10 +23,9 @@ import java.util.Date;
 /**
  * Represents a Habit Event Controller that interfaces with FirestoreDB to
  * create, read, update, and delete HabitEvents.
- *
  */
 public class HabitEventController {
-    private FirebaseFirestore dbStore = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore dbStore = FirebaseFirestore.getInstance();
     private static final String TAG = "HabitEventController";
 //    // Apply Singleton Design Pattern
 //    private static HabitEventController habitEventStore = new HabitEventController();
@@ -36,13 +34,14 @@ public class HabitEventController {
 //        return habitEventStore;
 //    }
 
-    public HabitEventController(){}
+    public HabitEventController() {
+    }
 
-    public interface HabitEventCallback{
+    public interface HabitEventCallback {
         void onCallback(HabitEventModel habitEvent);
     }
 
-    public interface HabitEventIDCallback{
+    public interface HabitEventIDCallback {
         void onCallback(String habitEventID);
     }
 
@@ -112,9 +111,10 @@ public class HabitEventController {
 
     /**
      * Deletes habit event from Firestore DB
+     *
      * @param habitEventID id of habit event to be deleted
      */
-    public void deleteHabitEvent(String habitEventID){
+    public void deleteHabitEvent(String habitEventID) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("habit_events").document(habitEventID)
                 .delete()
@@ -148,7 +148,7 @@ public class HabitEventController {
                     if (doc.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
                         String id = (String) doc.getId();
-                        Date date  = ((Timestamp) doc.getData().get("date")).toDate();
+                        Date date = ((Timestamp) doc.getData().get("date")).toDate();
                         String location = (String) doc.getData().get("location");
                         String comment = (String) doc.getData().get("comment");
                         Image image = (Image) doc.getData().get("image");
@@ -167,8 +167,7 @@ public class HabitEventController {
     }
 
     /**
-     *
-     * @param habitID habitID is used to query all the corresponding habit events
+     * @param habitID          habitID is used to query all the corresponding habit events
      * @param hbEvtLstCallback Callback function
      */
     public void readHabitEvents(String habitID, HabitEventListCallback hbEvtLstCallback) {

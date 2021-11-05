@@ -10,6 +10,7 @@ public interface IHabitScheduleModel {
 
     /**
      * Check if the habit is meant to be completed on the given date
+     *
      * @param date to check
      * @return true if the habit should be completed on the given date
      */
@@ -17,6 +18,7 @@ public interface IHabitScheduleModel {
 
     /**
      * Check if the are missing days if the habit was last completed on the given date
+     *
      * @param date to check
      * @return true if there are missing days in the schedule
      */
@@ -24,6 +26,7 @@ public interface IHabitScheduleModel {
 
     /**
      * Serialize the model to a map
+     *
      * @return serialized version of model
      */
     Map<String, Object> toMap();

@@ -16,58 +16,7 @@
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text=""
-            android:textColor="@color/white"
-            android:textSize="24sp" />
-
-        <ImageButton
-            android:id="@+id/done"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginLeft="16sp"
-            android:layout_marginRight="16sp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:paddingRight="16sp"
-            android:text=""
-            android:hint="Location"/>
-
-        <TextView
-            android:id="@+id/commentLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="16sp"
-            android:paddingTop="10sp"
-            android:paddingRight="16sp"
-            android:text="Comment"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/comment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16sp"
-            android:layout_marginRight="16sp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:text=""
-            android:hint="Comment"/>
-            android:layout_gravity="end"
-            android:layout_marginEnd="33dp"
-            android:background="@null"
-            android:src="@drawable/ic_done" />
-
-    </androidx.appcompat.widget.Toolbar>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/habitName"
@@ -100,7 +49,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="24dp"
         android:background="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/descriptionLabel"
+        app:layout_constraintBottom_toTopOf="@id/commentLabel"
         app:layout_constraintDimensionRatio="8.97:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/locationLabel"
@@ -135,7 +84,7 @@
         app:layout_constraintTop_toTopOf="@id/location_background" />
 
     <TextView
-        android:id="@+id/descriptionLabel"
+        android:id="@+id/commentLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -156,11 +105,11 @@
         app:layout_constraintDimensionRatio="8.97:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/locationLabel"
-        app:layout_constraintTop_toBottomOf="@id/descriptionLabel"
+        app:layout_constraintTop_toBottomOf="@id/commentLabel"
         app:shapeAppearanceOverlay="@style/roundedCorners" />
 
     <EditText
-        android:id="@+id/description"
+        android:id="@+id/comment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"

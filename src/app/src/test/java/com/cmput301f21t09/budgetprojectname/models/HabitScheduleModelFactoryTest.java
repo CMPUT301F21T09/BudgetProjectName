@@ -11,6 +11,9 @@ import org.junit.Test;
 
 import java.util.Map;
 
+/**
+ * Tests the HabitScheduleFactorModel
+ */
 public class HabitScheduleModelFactoryTest {
     private HabitScheduleModelFactory scheduleFactory;
     private IHabitScheduleModel newModel;

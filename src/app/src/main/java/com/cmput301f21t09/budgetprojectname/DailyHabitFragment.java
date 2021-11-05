@@ -85,13 +85,12 @@ public class DailyHabitFragment extends Fragment {
         ArrayAdapter<HabitModel> habitAdapter = new DailyHabitCustomList(getContext(), habitDataList);
         habitList.setAdapter(habitAdapter);
 
-        // Fetches the past habit events related to the current habit from Firestore using habitID
-        // and update the view
+        // Fetches the habits related to the current habit from Firestore 
         habitListController.readHabitList(new HabitListController.HabitListCallback() {
             @Override
-            public void onCallback(ArrayList<HabitModel> hbEvtLst) {
+            public void onCallback(ArrayList<HabitModel> hbLst) {
                 habitDataList.clear();
-                habitDataList.addAll(hbEvtLst);
+                habitDataList.addAll(hbLst);
                 habitAdapter.notifyDataSetChanged();
             }
         });
@@ -100,22 +99,5 @@ public class DailyHabitFragment extends Fragment {
             // TODO: Pass targeted Habit to ViewHabitActivity
             Log.v("TAG", "CLICKED row number: ");
         });
-
-        habitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-                                    long arg3) {
-                // TODO Auto-generated method stub
-                Log.v("TAG", "CLICKED row number: " + arg2);
-                HabitModel selectedHM = habitAdapter.getItem(arg2);
-                System.out.println("selected element id " + selectedHM.getID());
-
-            }
-
-        });
-
-
-
     }
 }

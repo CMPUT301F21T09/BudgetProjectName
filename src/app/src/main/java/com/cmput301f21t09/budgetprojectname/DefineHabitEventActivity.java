@@ -122,11 +122,6 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         imageView.setImageBitmap(image);
-
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                        byte[] byteArray = baos.toByteArray();
-                        imageData = Base64.encodeToString(byteArray, Base64.DEFAULT);
                     }
                 });
 
@@ -142,11 +137,6 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         imageView.setImageBitmap(image);
-
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                        byte[] byteArray = baos.toByteArray();
-                        imageData = Base64.encodeToString(byteArray, Base64.DEFAULT);
                     }
                 });
 
@@ -190,6 +180,16 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                         }).show();
             }
         }
+    }
+
+    private String encodeImage() {
+        if (imageData != null) {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            imageData = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
+        }
+
+        return imageData;
     }
 
     private void runCameraIntent() {
@@ -325,7 +325,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                     String descriptionStr = comment.getText().toString();
 
                     HabitEventModel habitEvent = new HabitEventModel(null, locationStr, new Date(),
-                            descriptionStr, imageData, habitID);
+                            descriptionStr, encodeImage(), habitID);
 
                     if (isNewHabitEvent) {
                         habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {

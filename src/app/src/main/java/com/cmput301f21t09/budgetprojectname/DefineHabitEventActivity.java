@@ -139,7 +139,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                     }
                 });
 
-        // Add or Replace Image by Clicking ImageView area
+        // Add, Replace or Delete Image by Clicking ImageView area
         // TODO: Detect orientation of photo, 1:1 Crop function
         imageView.setOnClickListener(v -> new MaterialAlertDialogBuilder(this, R.style.MyDialogTheme)
                 .setTitle("Select Image From")
@@ -185,6 +185,10 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Encode Image to base64 string
+     * @return encoded image string
+     */
     private String encodeImage() {
         if (image != null) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -195,6 +199,9 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         return imageData;
     }
 
+    /**
+     * Run camera
+     */
     private void runCameraIntent() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {

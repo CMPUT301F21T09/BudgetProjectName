@@ -1,13 +1,17 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import android.graphics.Bitmap;
 import android.media.Image;
+import android.text.format.DateUtils;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -20,22 +24,30 @@ public class HabitEventModelTest {
 
     @Before
     public void init() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(1, 1, 1);
+
         testHE = new HabitEventModel("habiteventid", "YEG",
-                new Date(1, 1, 1), "comment", null, "habitid");
+                calendar.getTime(), "comment", "ImageData", "habitid");
     }
 
     @Test
     public void testHabitEventModelConstructor() {
         String id = "habiteventid";
         String location = "YEG";
-        Date date = new Date(1, 1, 1);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(1, 1, 1);
+        Date date = calendar.getTime();
+
         String comment = "comment";
-        Image image = null;
+        String image = "ImageData";
         String habitID = "habitid";
 
         assertEquals(id, testHE.getID());
         assertEquals(location, testHE.getLocation());
-        assertEquals(date, testHE.getDate());
+        assertFalse(date.toInstant().isBefore(testHE.getDate().toInstant()));
+        assertFalse(date.toInstant().isBefore(testHE.getDate().toInstant()));
         assertEquals(comment, testHE.getComment());
         assertEquals(image, testHE.getImage());
         assertEquals(habitID, testHE.getHabitID());
@@ -45,9 +57,13 @@ public class HabitEventModelTest {
     public void testHabitEventModelSetters() {
         String id = "newhabiteventid";
         String location = "YYC";
-        Date date = new Date(2, 2, 2);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(1, 1, 1);
+        Date date = calendar.getTime();
+
         String comment = "newcomment";
-        String image = null;
+        String image = "newImageData";
         String habitID = "newhabitid";
 
         testHE.setID(id);

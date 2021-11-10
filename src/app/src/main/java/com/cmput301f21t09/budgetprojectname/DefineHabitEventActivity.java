@@ -131,6 +131,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                         image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                         byte[] byteArray = baos.toByteArray();
                         imageData = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                        Log.d("ImageData", imageData);
                     }
                 });
 

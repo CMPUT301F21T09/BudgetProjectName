@@ -11,10 +11,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -40,10 +40,15 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Activity that makes the user to add/edit a habit event
@@ -66,6 +71,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> CameraResultLauncher;
     String mPhotoPath;
     Bitmap image;
+    String imageData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,10 +122,15 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                         Uri selectedImage = result.getData().getData();
                         try {
                             image = BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage));
-                            imageView.setImageBitmap(image);
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
+                        imageView.setImageBitmap(image);
+
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        byte[] byteArray = baos.toByteArray();
+                        imageData = Base64.encodeToString(byteArray, Base64.DEFAULT);
                     }
                 });
 
@@ -135,6 +146,11 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         imageView.setImageBitmap(image);
+
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        byte[] byteArray = baos.toByteArray();
+                        imageData = Base64.encodeToString(byteArray, Base64.DEFAULT);
                     }
                 });
 
@@ -311,7 +327,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                     String descriptionStr = comment.getText().toString();
 
                     HabitEventModel habitEvent = new HabitEventModel(null, locationStr, new Date(),
-                            descriptionStr, null, habitID);
+                            descriptionStr, imageData, habitID);
 
                     if (isNewHabitEvent) {
                         habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {

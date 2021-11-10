@@ -1,10 +1,13 @@
 package com.cmput301f21t09.budgetprojectname;
 
+import android.graphics.Bitmap;
 import android.media.Image;
 
 import com.google.firebase.firestore.DocumentId;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Represents the habit event model containing fields like habit event ID, location, comment, date,
@@ -34,9 +37,9 @@ public class HabitEventModel {
     private Date date;
 
     /**
-     * Image of habit event (optional)
+     * Encoded Image string of habit event (optional)
      */
-    private Image image;
+    private String image;
 
     /**
      * Habit ID to reference completed habit
@@ -53,7 +56,7 @@ public class HabitEventModel {
      * @param image    image for habitevent (optional)
      * @param habitID  ID of habit
      */
-    HabitEventModel(String ID, String location, Date date, String comment, Image image, String habitID) {
+    HabitEventModel(String ID, String location, Date date, String comment, String image, String habitID) {
         this.ID = ID;
         this.location = location;
         this.comment = comment;
@@ -149,7 +152,7 @@ public class HabitEventModel {
      *
      * @return
      */
-    public Image getImage() {
+    public String getImage() {
         return image;
     }
 
@@ -158,7 +161,7 @@ public class HabitEventModel {
      *
      * @param image to set
      */
-    public void setImage(Image image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

@@ -1,5 +1,6 @@
 package com.cmput301f21t09.budgetprojectname;
 
+import android.graphics.Bitmap;
 import android.media.Image;
 import android.util.Log;
 
@@ -19,6 +20,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Represents a Habit Event Controller that interfaces with FirestoreDB to
@@ -152,7 +154,7 @@ public class HabitEventController {
                         Date date = ((Timestamp) doc.getData().get("date")).toDate();
                         String location = (String) doc.getData().get("location");
                         String comment = (String) doc.getData().get("comment");
-                        Image image = (Image) doc.getData().get("image");
+                        String image = (String) doc.getData().get("image");
                         String habitID = (String) doc.getData().get("habitID");
                         HabitEventModel retrievedHabitEventModel =
                                 new HabitEventModel(id, location, date, comment, image, habitID);

@@ -2,12 +2,14 @@ package com.cmput301f21t09.budgetprojectname;
 
 import static org.junit.Assert.assertEquals;
 
+import android.graphics.Bitmap;
 import android.media.Image;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Test class for the HabitEventModel.
@@ -45,7 +47,7 @@ public class HabitEventModelTest {
         String location = "YYC";
         Date date = new Date(2, 2, 2);
         String comment = "newcomment";
-        Image image = null;
+        String image = null;
         String habitID = "newhabitid";
 
         testHE.setID(id);

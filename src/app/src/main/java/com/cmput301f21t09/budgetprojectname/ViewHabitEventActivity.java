@@ -1,7 +1,9 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -36,6 +38,7 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         TextView habitEventLocation = findViewById(R.id.view_habit_event_habit_event_location);
         TextView habitEventDescription = findViewById(R.id.view_habit_event_habit_event_description);
         TextView habitEventDate = findViewById(R.id.view_habit_event_habit_event_date);
+        ImageView habitEventImage = findViewById(R.id.image);
 
         habitTitle.setText(habitTitleStr);
 
@@ -53,12 +56,16 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         // Set the Habit Event fields
         // TODO: move to a helper function
         HabitEventController habitEventController = new HabitEventController();
-        habitEventController.readHabitEvent(habitEventID, retrievedhabitEvent -> {
-            System.out.println("habitevent id " + retrievedhabitEvent.getID());
-            habitEventLocation.setText(retrievedhabitEvent.getLocation());
-            habitEventDescription.setText(retrievedhabitEvent.getComment());
+        habitEventController.readHabitEvent(habitEventID, retrievedHabitEvent -> {
+            System.out.println("habitevent id " + retrievedHabitEvent.getID());
+            habitEventLocation.setText(retrievedHabitEvent.getLocation());
+            habitEventDescription.setText(retrievedHabitEvent.getComment());
+            if (retrievedHabitEvent.getImage() != null) {
+                byte[] decodedString = Base64.decode(retrievedHabitEvent.getImage(), Base64.DEFAULT);
+                habitEventImage.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
+            }
             SimpleDateFormat format = new SimpleDateFormat("MMMM dd,yyyy");
-            String strDate = format.format(retrievedhabitEvent.getDate());
+            String strDate = format.format(retrievedHabitEvent.getDate());
             habitEventDate.setText(strDate);
         });
 
@@ -70,14 +77,10 @@ public class ViewHabitEventActivity extends AppCompatActivity {
             final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
             final String HABIT_ID = "HABIT_ID";
             editIntent.putExtra(HABIT_ID, habitID);
-            System.out.println("habit id "+ habitID);
+            System.out.println("habit id " + habitID);
             editIntent.putExtra(HABIT_EVENT_ID, habitEventID);
             startActivity(editIntent);
         });
-
-        ImageView imageHabitEvent = findViewById(R.id.image);
-        // TODO: Set Proper Image of Habit Event to the ImageView
-        // imageHabitEvent.setImageBitmap();
 
 
         Button deleteHabitEventBtn = findViewById(R.id.view_habit_event_habit_event_delete_button);

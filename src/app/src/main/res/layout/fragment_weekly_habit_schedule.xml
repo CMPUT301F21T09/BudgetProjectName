@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    tools:context=".views.fragments.WeeklyHabitScheduleFragment">
+
+    <ImageView
+        android:id="@+id/fwch_sunday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_weight="1"
+        android:src="@drawable/ic_sunday_negative" />
+
+    <ImageView
+        android:id="@+id/fchw_monday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_weight="1"
+        android:src="@drawable/ic_monday_negative" />
+
+    <ImageView
+        android:id="@+id/fchw_tuesday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_weight="1"
+        android:src="@drawable/ic_tuesday_negative" />
+
+    <ImageView
+        android:id="@+id/fchw_wednesday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_weight="1"
+        android:src="@drawable/ic_wednesday_negative" />
+
+    <ImageView
+        android:id="@+id/fchw_thursday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_weight="1"
+        android:src="@drawable/ic_thursday_negative" />
+
+    <ImageView
+        android:id="@+id/fchw_friday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_weight="1"
+        android:src="@drawable/ic_friday_negative" />
+
+    <ImageView
+        android:id="@+id/fchw_saturday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/ic_saturday_negative" />
+</LinearLayout>

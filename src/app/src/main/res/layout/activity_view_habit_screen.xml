@@ -1,193 +1,242 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F2F8FD"
     tools:context=".ViewHabitActivity">
 
-    <RelativeLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:layout_height="wrap_content"
+        android:background="#3C85B9"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:buttonGravity="center_vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/view_habit_back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="33dp"
+            android:background="@null"
+            android:src="@drawable/ic_back" />
 
         <TextView
-            android:id="@+id/details"
+            android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:text="Details"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+            android:layout_gravity="center"
+            android:ellipsize="marquee"
+            android:ems="7"
+            android:maxLines="1"
+            android:text="Name of Targeted Habit"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
 
-        <Button
-            android:id="@+id/editHabitButton"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="Edit" />
-
-        <RelativeLayout
+        <ImageButton
+            android:id="@+id/view_habit_remove_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:background="@color/white"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:layout_gravity="end"
+            android:layout_marginEnd="33dp"
+            android:background="@null"
+            android:src="@drawable/ic_trash_can" />
 
-            <TextView
-                android:id="@+id/habitTitle"
-                android:layout_width="146dp"
-                android:layout_height="46dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="10dp"
-                android:text="Habit Title"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+    </androidx.appcompat.widget.Toolbar>
 
-            <TextView
-                android:id="@+id/habitDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="40dp"
-                android:text="Habit Description"
-                android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/habitFrequencyLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="95dp"
-                android:text="Frequency"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+    <TextView
+        android:id="@+id/details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:text="Details"
+        android:textColor="#2B638B"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-            <ImageView
-                android:id="@+id/sunday_icon"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="125dp"
-                android:padding="5dp" />
+    <Button
+        android:id="@+id/editHabitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="32dp"
+        android:backgroundTint="#C8E2F4"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
+        android:text="Edit"
+        android:textAllCaps="false"
+        android:textColor="#3C85B9"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/details"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/details" />
 
-            <ImageView
-                android:id="@+id/monday_icon"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="67dp"
-                android:layout_marginTop="125dp"
-                android:padding="5dp" />
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/habit_details_background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="29dp"
+        android:background="@color/white"
+        app:layout_constraintDimensionRatio="1.824:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editHabitButton"
+        app:shapeAppearanceOverlay="@style/roundedCorners" />
 
-            <ImageView
-                android:id="@+id/tuesday_icon"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="109dp"
-                android:layout_marginTop="125dp"
-                android:padding="5dp" />
-
-            <ImageView
-                android:id="@+id/wednesday_icon"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="151dp"
-                android:layout_marginTop="125dp"
-                android:padding="5dp" />
-
-            <ImageView
-                android:id="@+id/thursday_icon"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="193dp"
-                android:layout_marginTop="125dp"
-                android:padding="5dp" />
-
-            <ImageView
-                android:id="@+id/friday_icon"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="235dp"
-                android:layout_marginTop="125dp"
-                android:padding="5dp" />
-
-            <ImageView
-                android:id="@+id/saturday_icon"
-                android:layout_width="43dp"
-                android:layout_height="43dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="277dp"
-                android:layout_marginTop="125dp"
-                android:padding="5dp" />
-
-            <TextView
-                android:id="@+id/habitDate"
-                android:layout_width="86dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="95dp"
-                android:layout_marginEnd="20dp"
-                android:text="Date"
-                android:textSize="14sp" />
-        </RelativeLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/habit_details_background"
+        app:layout_constraintEnd_toEndOf="@+id/habit_details_background"
+        app:layout_constraintStart_toStartOf="@+id/habit_details_background"
+        app:layout_constraintTop_toTopOf="@+id/habit_details_background">
 
         <TextView
-            android:id="@+id/pastHabitEvents"
+            android:id="@+id/habitTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="270dp"
-            android:text="Past habit events"
+            android:text="Habit Title"
+            android:textColor="#2B638B"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:layout_width="395dp"
-            android:layout_height="345dp"
+        <TextView
+            android:id="@+id/habitDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginBottom="4dp"
-            android:orientation="vertical">
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="3dp"
+            android:text="Habit Description"
+            android:textColor="#80B8DF"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/habitTitle"
+            app:layout_constraintTop_toBottomOf="@id/habitTitle" />
 
-            <ListView
-                android:id="@+id/past_habit_event_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="12.0sp"></ListView>
-        </LinearLayout>
+        <TextView
+            android:id="@+id/habitFrequencyLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="Frequency"
+            android:textColor="#2B638B"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="@id/habitTitle"
+            app:layout_constraintTop_toBottomOf="@id/habitDescription" />
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/habitDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:textColor="#80B8DF"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/habitFrequencyLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/habitFrequencyLabel" />
+
+        <ImageView
+            android:id="@+id/sunday_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:src="@drawable/ic_sunday_negative"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/habitFrequencyLabel" />
+
+        <ImageView
+            android:id="@+id/monday_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_monday_negative"
+            app:layout_constraintStart_toEndOf="@id/sunday_icon"
+            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
+
+        <ImageView
+            android:id="@+id/tuesday_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_tuesday_negative"
+            app:layout_constraintStart_toEndOf="@id/monday_icon"
+            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
+
+        <ImageView
+            android:id="@+id/wednesday_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_wednesday_negative"
+            app:layout_constraintStart_toEndOf="@id/tuesday_icon"
+            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
+
+        <ImageView
+            android:id="@+id/thursday_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_thursday_negative"
+            app:layout_constraintStart_toEndOf="@id/wednesday_icon"
+            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
+
+        <ImageView
+            android:id="@+id/friday_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_friday_negative"
+            app:layout_constraintStart_toEndOf="@id/thursday_icon"
+            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
+
+        <ImageView
+            android:id="@+id/saturday_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_saturday_negative"
+            app:layout_constraintStart_toEndOf="@id/friday_icon"
+            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/pastHabitEvents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="31dp"
+        android:text="Past habit events"
+        android:textColor="#2B638B"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@id/details"
+        app:layout_constraintTop_toBottomOf="@id/habit_details_background" />
+
+
+    <ListView
+        android:id="@+id/past_habit_event_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="24dp"
+        android:divider="@null"
+        android:dividerHeight="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/habit_details_background"
+        app:layout_constraintStart_toStartOf="@id/habit_details_background"
+        app:layout_constraintTop_toBottomOf="@+id/pastHabitEvents" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

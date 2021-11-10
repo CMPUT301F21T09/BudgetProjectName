@@ -12,16 +12,20 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -41,15 +45,22 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 
+/**
+ * Activity that makes the user to add/edit a habit event
+ */
 public class DefineHabitEventActivity extends AppCompatActivity {
 
-    private TextView toolbarTitle;
-    private TextView habitName;
+    private TextView habitEventName;
     private EditText location;
-    private EditText description;
+    private EditText comment;
     private ImageView imageView;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     private static final String TAG = "DefineHabitEventActivity";
+    private boolean isNewHabitEvent;
+    private final HabitEventController habitEventController = new HabitEventController();
+    private String habitID;
+    private String habitEventID;
 
     private ActivityResultLauncher<Intent> GalleryResultLauncher;
     private ActivityResultLauncher<Intent> CameraResultLauncher;
@@ -62,8 +73,11 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_define_habit_event);
 
         Intent intent = getIntent();
-        String habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
-        boolean isNewHabitEvent = (habitEventID == null);
+        habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
+        habitID = intent.getStringExtra("HABIT_ID");
+        System.out.println("*****habitID " + habitID);
+        System.out.println("****HE id" + habitEventID);
+        isNewHabitEvent = (habitEventID == null);
         String modeStr;
 
         if (isNewHabitEvent) {
@@ -75,29 +89,23 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         }
 
         // update title according to mode selected: "add" or "edit"
-        toolbarTitle = findViewById(R.id.toolbar_title);
-        toolbarTitle.setText(modeStr);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        habitName = findViewById(R.id.habitName);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        TextView tbTitle = findViewById(R.id.toolbar_title);
+        tbTitle.setText(modeStr);
+
+        habitEventName = findViewById(R.id.habitName);
         location = findViewById(R.id.location);
-        description = findViewById(R.id.description);
+        comment = findViewById(R.id.comment);
         imageView = findViewById(R.id.image);
 
-        ImageButton doneBtn = findViewById(R.id.done);
-        doneBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String locationStr = location.getText().toString();
-                String descriptionStr = description.getText().toString();
-                HabitEventModel habitEvent = new HabitEventModel(locationStr, new Date(), descriptionStr);
+        ImageButton back = findViewById(R.id.back);
 
-                if (isNewHabitEvent) {
-                    storeNewHabitEvent(habitEvent);
-                } else {
-                    storeEditedHabitEvent(habitEventID, habitEvent);
-                    setHabitEventFields(habitEventID);
-                }
-            }
+        back.setOnClickListener(v -> {
+            finish();
         });
 
         // Get Image from Launcher
@@ -129,7 +137,6 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                         imageView.setImageBitmap(image);
                     }
                 });
-
 
         // Add or Replace Image by Clicking ImageView area
         // TODO: Detect orientation of photo, 1:1 Crop function
@@ -226,7 +233,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     private void storeEditedHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
         DocumentReference habitEventRef = db.collection("habit_events")
                 .document(habitEventID);
-        habitEventRef.update("description", modifiedHabitEvent.getDescription(),
+        habitEventRef.update("description", modifiedHabitEvent.getComment(),
                 "location", modifiedHabitEvent.getLocation(),
                 "image", modifiedHabitEvent.getImage())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -243,6 +250,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 });
     }
 
+
     /**
      * Sets the fields with existing values from Firestore
      *
@@ -258,12 +266,12 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                        // TODO: Possible refactoring where document retrieval is
-                        //  separate from setting fields
+                        // TODO: Move to HabitEventController once async request handling is solved
 
                         // set fields in view
                         location.setText(document.getString("location"));
-                        description.setText(document.getString("description"));
+                        comment.setText(document.getString("comment"));
+
                         // TODO: set image
 
                     } else {
@@ -275,4 +283,60 @@ public class DefineHabitEventActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_define_habit, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Brings the user back to the previous activity if the back button on the app bar is pressed
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.menu_commit_changes:
+                String locationStr = location.getText().toString();
+                String commentStr = comment.getText().toString();
+                // error checking/handling for adding optional comment of up to 30 chars
+                if (commentStr.length() > 20) {
+                    comment.setError(getString(R.string.errorHabitEventComment));
+                    comment.requestFocus();
+                    Toast.makeText(getApplicationContext(), "ERROR: could not save habit event",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+
+                    String descriptionStr = comment.getText().toString();
+
+                    HabitEventModel habitEvent = new HabitEventModel(null, locationStr, new Date(),
+                            descriptionStr, null, habitID);
+
+                    if (isNewHabitEvent) {
+                        habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
+                            @Override
+                            public void onCallback(String habitEventID) {
+                                // TODO: figure out what to add here
+                                System.out.println("habitevent id " + habitEventID);
+                                // return back to main habit list
+                                finish();
+
+                            }
+                        });
+                    } else {
+                        habitEventController.updateHabitEvent(habitEventID, habitEvent);
+                        // return back to habit detail page
+                        Intent i = new Intent(getApplicationContext(), ViewHabitActivity.class);
+                        i.putExtra("HABIT_ID", habitID);
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
+                    }
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }

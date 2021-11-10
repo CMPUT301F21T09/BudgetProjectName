@@ -11,9 +11,11 @@ import android.text.format.DateUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Test class for the HabitEventModel.
@@ -33,6 +35,8 @@ public class HabitEventModelTest {
 
     @Test
     public void testHabitEventModelConstructor() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
         String id = "habiteventid";
         String location = "YEG";
 
@@ -46,8 +50,7 @@ public class HabitEventModelTest {
 
         assertEquals(id, testHE.getID());
         assertEquals(location, testHE.getLocation());
-        assertFalse(date.toInstant().isBefore(testHE.getDate().toInstant()));
-        assertFalse(date.toInstant().isBefore(testHE.getDate().toInstant()));
+        assertEquals(dateFormat.format(date) , dateFormat.format(testHE.getDate()));
         assertEquals(comment, testHE.getComment());
         assertEquals(image, testHE.getImage());
         assertEquals(habitID, testHE.getHabitID());

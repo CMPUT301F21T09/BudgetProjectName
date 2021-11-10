@@ -44,11 +44,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Activity that makes the user to add/edit a habit event
@@ -131,7 +127,6 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                         image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                         byte[] byteArray = baos.toByteArray();
                         imageData = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                        Log.d("ImageData", imageData);
                     }
                 });
 
@@ -288,9 +283,11 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                         // set fields in view
                         location.setText(document.getString("location"));
                         comment.setText(document.getString("comment"));
-
-                        // TODO: set image
-
+                        imageData = document.getString("image");
+                        if (imageData != null) {
+                            byte[] byteArray = Base64.decode(imageData, Base64.DEFAULT);
+                            imageView.setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
+                        }
                     } else {
                         Log.d(TAG, "No such document");
                     }

@@ -56,7 +56,6 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     private EditText comment;
     private ImageView imageView;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     private static final String TAG = "DefineHabitEventActivity";
     private boolean isNewHabitEvent;
     private final HabitEventController habitEventController = new HabitEventController();
@@ -144,7 +143,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         // TODO: Detect orientation of photo, 1:1 Crop function
         imageView.setOnClickListener(v -> new MaterialAlertDialogBuilder(this, R.style.MyDialogTheme)
                 .setTitle("Select Image From")
-                .setItems(new String[]{"Gallery", "Take a Photo"}, (dialog, which) -> {
+                .setItems((imageData == null && image == null) ? new String[]{"Gallery", "Take a Photo"} : new String[]{"Gallery", "Take a Photo", "Delete"}, (dialog, which) -> {
                     if (which == 0) {
                         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).setType("image/*");
                         if (galleryIntent.resolveActivity(getPackageManager()) != null) {
@@ -157,6 +156,10 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                         } else {
                             runCameraIntent();
                         }
+                    } else if (which == 2) {
+                        imageView.setImageDrawable(null);
+                        imageData = null;
+                        image = null;
                     }
                 }).show());
     }
@@ -183,7 +186,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     }
 
     private String encodeImage() {
-        if (imageData != null) {
+        if (image != null) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
             imageData = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);

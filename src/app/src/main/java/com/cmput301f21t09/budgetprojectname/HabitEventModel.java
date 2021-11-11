@@ -1,13 +1,8 @@
 package com.cmput301f21t09.budgetprojectname;
 
-import android.graphics.Bitmap;
-import android.media.Image;
-
 import com.google.firebase.firestore.DocumentId;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Represents the habit event model containing fields like habit event ID, location, comment, date,

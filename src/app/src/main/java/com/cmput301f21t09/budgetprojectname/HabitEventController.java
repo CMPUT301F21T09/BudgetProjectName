@@ -1,7 +1,5 @@
 package com.cmput301f21t09.budgetprojectname;
 
-import android.graphics.Bitmap;
-import android.media.Image;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -20,7 +18,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Represents a Habit Event Controller that interfaces with FirestoreDB to

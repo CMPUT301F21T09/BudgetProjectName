@@ -15,7 +15,7 @@
     </style>
 
 
-    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="Dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:background">#F2F8FD</item>
     </style>
 </resources>

@@ -1,6 +1,6 @@
 package com.cmput301f21t09.budgetprojectname.services.database;
 
-import com.cmput301f21t09.budgetprojectname.HabitEventModel;
+import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
 import com.cmput301f21t09.budgetprojectname.models.IHabitModel;
 
 /**

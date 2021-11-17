@@ -87,6 +87,7 @@ public class ViewHabitEventActivity extends AppCompatActivity {
             Intent deleteIntent = new Intent(getApplicationContext(), ViewHabitActivity.class);
             final String HABIT_ID = "HABIT_ID";
             deleteIntent.putExtra(HABIT_ID, habitID);
+            deleteIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(deleteIntent);
         });
     }

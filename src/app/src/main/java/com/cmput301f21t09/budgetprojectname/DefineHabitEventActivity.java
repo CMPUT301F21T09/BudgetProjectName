@@ -1,10 +1,14 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import android.content.Intent;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -14,9 +18,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,10 +39,9 @@ import java.util.Date;
 /**
  * Activity that makes the user to add/edit a habit event
  */
-public class DefineHabitEventActivity extends AppCompatActivity {
+public class DefineHabitEventActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private TextView habitEventName;
-    private EditText location;
     private EditText comment;
     private ImageView image;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -38,6 +50,8 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     private final HabitEventController habitEventController = new HabitEventController();
     private String habitID;
     private String habitEventID;
+
+    GoogleMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +84,6 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         tbTitle.setText(modeStr);
 
         habitEventName = (TextView) findViewById(R.id.habitName);
-
-        location = (EditText) findViewById(R.id.location);
         comment = (EditText) findViewById(R.id.comment);
         image = (ImageView) findViewById(R.id.image);
 
@@ -85,6 +97,21 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         back.setOnClickListener(v -> {
             finish();
         });
+
+        // Show/Hide Map
+        ConstraintLayout locationContainer = findViewById(R.id.location_container);
+        SwitchMaterial locationSwitch = findViewById(R.id.location_switch);
+        locationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                locationContainer.setVisibility(View.VISIBLE);
+            } else {
+                locationContainer.setVisibility(View.GONE);
+            }
+        });
+
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
 
@@ -106,7 +133,6 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                         // TODO: Move to HabitEventController once async request handling is solved
 
                         // set fields in view
-                        location.setText(document.getString("location"));
                         comment.setText(document.getString("comment"));
 
                         // TODO: set image
@@ -135,7 +161,6 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.menu_commit_changes:
-                String locationStr = location.getText().toString();
                 String commentStr = comment.getText().toString();
                 // error checking/handling for adding optional comment of up to 30 chars
                 if (commentStr.length() > 20) {
@@ -147,7 +172,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
 
                     String descriptionStr = comment.getText().toString();
 
-                    HabitEventModel habitEvent = new HabitEventModel(null, locationStr, new Date(),
+                    HabitEventModel habitEvent = new HabitEventModel(null, null, new Date(),
                             descriptionStr, null, habitID);
 
                     if (isNewHabitEvent) {
@@ -176,4 +201,24 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
+
+        googleMap.setMyLocationEnabled(true);
+        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String provider = service.getBestProvider(criteria, false);
+        Location location = service.getLastKnownLocation(provider);
+        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 10));
+
+        googleMap.setOnMapClickListener(latLng -> {
+            googleMap.clear();
+            googleMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+        });
+    }
 }

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +31,7 @@ public class SearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ConstraintLayout background = view.findViewById(R.id.search_fragment_background);
+        ListView userList = view.findViewById(R.id.user_listview);
         ImageButton clearSearch = view.findViewById(R.id.clear_text);
         EditText searchUser = view.findViewById(R.id.search_friend_edittext);
         searchUser.addTextChangedListener(new TextWatcher() {
@@ -46,12 +48,14 @@ public class SearchFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 clearSearch.setVisibility(View.VISIBLE);
                 background.setVisibility(View.GONE);
+                userList.setVisibility(View.VISIBLE);
             }
         });
 
         clearSearch.setOnClickListener(v -> {
             searchUser.getText().clear();
             clearSearch.setVisibility(View.GONE);
+            userList.setVisibility(View.GONE);
             background.setVisibility(View.VISIBLE);
         });
 

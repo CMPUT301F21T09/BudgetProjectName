@@ -22,6 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 
+import com.cmput301f21t09.budgetprojectname.models.LatLngModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -54,7 +55,10 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     private String habitID;
     private String habitEventID;
 
+    SwitchMaterial locationSwitch;
+
     GoogleMap map;
+    LatLngModel marker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +107,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
 
         // Show/Hide Map
         ConstraintLayout locationContainer = findViewById(R.id.location_container);
-        SwitchMaterial locationSwitch = findViewById(R.id.location_switch);
+        locationSwitch = findViewById(R.id.location_switch);
         locationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 locationContainer.setVisibility(View.VISIBLE);
@@ -175,7 +179,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
 
                     String descriptionStr = comment.getText().toString();
 
-                    HabitEventModel habitEvent = new HabitEventModel(null, null, new Date(),
+                    HabitEventModel habitEvent = new HabitEventModel(null, locationSwitch.isChecked() ? marker : null, new Date(),
                             descriptionStr, null, habitID);
 
                     if (isNewHabitEvent) {
@@ -206,7 +210,10 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        map = googleMap;
+        marker = new LatLngModel();
         googleMap.getUiSettings().setMapToolbarEnabled(false);
+        MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(205.0f));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -222,17 +229,20 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
             Location location = getLastKnownLocation();
             LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
+            googleMap.addMarker(markerOptions.position(userLocation));
+            marker.setLatitude(userLocation.latitude);
+            marker.setLongitude(userLocation.longitude);
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 10));
         }
 
         googleMap.setOnMapClickListener(latLng -> {
             googleMap.clear();
-            googleMap.addMarker(new MarkerOptions()
-                    .position(latLng)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+            googleMap.addMarker(markerOptions.position(latLng));
+            marker.setLatitude(latLng.latitude);
+            marker.setLongitude(latLng.longitude);
         });
 
-        googleMap.getUiSettings().setScrollGesturesEnabled(false);
+        //googleMap.getUiSettings().setScrollGesturesEnabled(false);
     }
 
     private Location getLastKnownLocation() {

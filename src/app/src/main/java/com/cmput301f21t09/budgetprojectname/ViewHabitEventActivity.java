@@ -55,7 +55,7 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         HabitEventController habitEventController = new HabitEventController();
         habitEventController.readHabitEvent(habitEventID, retrievedhabitEvent -> {
             System.out.println("habitevent id " + retrievedhabitEvent.getID());
-            habitEventLocation.setText(retrievedhabitEvent.getLocation());
+            //habitEventLocation.setText(retrievedhabitEvent.getLocation());
             habitEventDescription.setText(retrievedhabitEvent.getComment());
             SimpleDateFormat format = new SimpleDateFormat("MMMM dd,yyyy");
             String strDate = format.format(retrievedhabitEvent.getDate());

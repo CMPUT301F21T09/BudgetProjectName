@@ -35,7 +35,7 @@ public class ViewHabitEventTest {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
         // create a habitevent to delete and update
         HabitEventController habitEventController = new HabitEventController();
-        HabitEventModel habitEvent = new HabitEventModel(null, "YEG",
+        HabitEventModel habitEvent = new HabitEventModel(null, null,
                 new Date(1,1,1),"comment",
                 null, "IdninLJ01WM1PD8e4NzX");
         habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
@@ -134,9 +134,9 @@ public class ViewHabitEventTest {
         solo.assertCurrentActivity("Wrong Activity", DefineHabitEventActivity.class);
 
         // update fields
-        solo.clearEditText((EditText) solo.getView(R.id.location)); // Clear edittext
+//        solo.clearEditText((EditText) solo.getView(R.id.location)); // Clear edittext
         solo.clearEditText((EditText) solo.getView(R.id.comment)); // Clear edittext
-        solo.enterText((EditText)solo.getView(R.id.location), "Edmonton");
+//        solo.enterText((EditText)solo.getView(R.id.location), "Edmonton");
         solo.enterText((EditText)solo.getView(R.id.comment), "updated comment");
 
         // click checkmark to confirm changes
@@ -147,8 +147,8 @@ public class ViewHabitEventTest {
         solo.waitForText("February", 1, 3000);
 
         // check that location is updated
-        String modLocation = ((EditText) solo.getView(R.id.location)).getText().toString();
-        assertEquals("Edmonton", modLocation);
+//        String modLocation = ((EditText) solo.getView(R.id.location)).getText().toString();
+//        assertEquals("Edmonton", modLocation);
 
         // check that comment is updated
         String modComment = ((EditText) solo.getView(R.id.comment)).getText().toString();

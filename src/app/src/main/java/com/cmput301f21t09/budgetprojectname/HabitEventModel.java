@@ -2,6 +2,7 @@ package com.cmput301f21t09.budgetprojectname;
 
 import android.media.Image;
 
+import com.cmput301f21t09.budgetprojectname.models.LatLngModel;
 import com.google.firebase.firestore.DocumentId;
 
 import java.util.Date;
@@ -21,7 +22,7 @@ public class HabitEventModel {
     /**
      * Location of habit event completion (optional)
      */
-    private String location; // TODO: change to Location type once this is implemented
+    private LatLngModel location; // TODO: change to Location type once this is implemented
 
     /**
      * Comment of habit event (optional)
@@ -53,7 +54,7 @@ public class HabitEventModel {
      * @param image    image for habitevent (optional)
      * @param habitID  ID of habit
      */
-    HabitEventModel(String ID, String location, Date date, String comment, Image image, String habitID) {
+    HabitEventModel(String ID, LatLngModel location, Date date, String comment, Image image, String habitID) {
         this.ID = ID;
         this.location = location;
         this.comment = comment;
@@ -64,12 +65,6 @@ public class HabitEventModel {
 
     // need to declare an empty constructor for serialization purposes
     HabitEventModel() {
-        this.ID = null;
-        this.location = null;
-        this.comment = null;
-        this.date = null;
-        this.image = null;
-        this.habitID = null;
     }
 
     /**
@@ -95,7 +90,7 @@ public class HabitEventModel {
      *
      * @return location
      */
-    public String getLocation() {
+    public LatLngModel getLocation() {
         return location;
     }
 
@@ -104,7 +99,7 @@ public class HabitEventModel {
      *
      * @param location of habit event completion
      */
-    public void setLocation(String location) {
+    public void setLocation(LatLngModel location) {
         this.location = location;
     }
 

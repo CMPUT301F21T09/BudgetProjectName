@@ -18,7 +18,7 @@ public class HabitEventModelTest {
 
     @Before
     public void init() {
-        testHE = new HabitEventModel("habiteventid", "YEG",
+        testHE = new HabitEventModel("habiteventid", null,
                 new Date(1, 1, 1), "comment", null, "habitid");
     }
 
@@ -32,7 +32,7 @@ public class HabitEventModelTest {
         String habitID = "habitid";
 
         assertEquals(id, testHE.getID());
-        assertEquals(location, testHE.getLocation());
+        //assertEquals(location, testHE.getLocation());
         assertEquals(date, testHE.getDate());
         assertEquals(comment, testHE.getComment());
         assertEquals(image, testHE.getImage());
@@ -49,7 +49,7 @@ public class HabitEventModelTest {
         String habitID = "newhabitid";
 
         testHE.setID(id);
-        testHE.setLocation(location);
+        //testHE.setLocation(location);
         testHE.setDate(date);
         testHE.setComment(comment);
         testHE.setImage(image);

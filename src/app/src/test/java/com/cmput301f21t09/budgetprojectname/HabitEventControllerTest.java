@@ -22,7 +22,7 @@ public class HabitEventControllerTest {
     public void testCreateHabitEvent() {
         ArrayList<HabitEventModel> habitEventList = new ArrayList<>();
         HabitEventModel habitEvent =
-                new HabitEventModel(null, "YEGtest", new Date(),
+                new HabitEventModel(null, null, new Date(),
                         "yeg test comment", null, "");
         habitEventList.add(habitEvent);
 
@@ -37,7 +37,7 @@ public class HabitEventControllerTest {
     public void testUpdateHabitEvent() {
         ArrayList<HabitEventModel> habitEventList = new ArrayList<>();
         HabitEventModel habitEvent =
-                new HabitEventModel(null, "YEGtest", new Date(),
+                new HabitEventModel(null, null, new Date(),
                         "yeg test comment", null, "");
         habitEventList.add(habitEvent);
         HabitEventModel toUpdateHE = habitEventList.get(0);
@@ -56,7 +56,7 @@ public class HabitEventControllerTest {
     public void testDeleteHabitEvent() {
         ArrayList<HabitEventModel> habitEventList = new ArrayList<>();
         HabitEventModel habitEvent =
-                new HabitEventModel(null, "YEGtest", new Date(),
+                new HabitEventModel(null, null, new Date(),
                         "yeg test comment", null, "");
         habitEventList.add(habitEvent);
         habitEventList.remove(0);
@@ -72,7 +72,7 @@ public class HabitEventControllerTest {
         ArrayList<HabitEventModel> habitEventList = new ArrayList<>();
 
         HabitEventModel habitEvent =
-                new HabitEventModel(null, "YEGtest", new Date(),
+                new HabitEventModel(null, null, new Date(),
                         "yeg test comment", null, "");
         habitEventList.add(habitEvent);
         HabitEventModel readHE = habitEventList.get(0);

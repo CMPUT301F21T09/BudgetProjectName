@@ -5,6 +5,7 @@ import java.util.Set;
 
 /**
  * Task listener for a given task
+ *
  * @param <T>
  */
 public class ServiceTask<T> {
@@ -28,8 +29,9 @@ public class ServiceTask<T> {
 
     /**
      * Complete the task with the given result
-     *
+     * <p>
      * Called by the task's manager
+     *
      * @param result of the task
      */
     void completeAsSuccess(T result) {
@@ -40,8 +42,9 @@ public class ServiceTask<T> {
 
     /**
      * Complete the task with the given exception
-     *
+     * <p>
      * Called by the task's manager
+     *
      * @param e exception of the task
      */
     void completeAsFailure(Exception e) {
@@ -52,28 +55,33 @@ public class ServiceTask<T> {
 
     /**
      * Return the result of the task
-     *
+     * <p>
      * Throws if the task is not marked as successful
+     *
      * @return task's result
      */
     public T getResult() {
-        if (!isSuccessful()) throw new IllegalStateException("Cannot get result on unsuccessful task");
+        if (!isSuccessful())
+            throw new IllegalStateException("Cannot get result on unsuccessful task");
         return result;
     }
 
     /**
      * Return the exception that describes why the task failed
-     *
+     * <p>
      * Throws if the task is not marked as failed
+     *
      * @return task's exception
      */
     public Exception getException() {
-        if (!isFailure()) throw new IllegalStateException("Cannot get exception of non-failed task");
+        if (!isFailure())
+            throw new IllegalStateException("Cannot get exception of non-failed task");
         return e;
     }
 
     /**
      * Whether or not the task has been completed
+     *
      * @return true if complete
      */
     public boolean isComplete() {
@@ -82,6 +90,7 @@ public class ServiceTask<T> {
 
     /**
      * Whether or not the task has been completed successfully
+     *
      * @return true if successful
      */
     public boolean isSuccessful() {
@@ -90,6 +99,7 @@ public class ServiceTask<T> {
 
     /**
      * Whether or not the task has been completed but did fail
+     *
      * @return true if failed
      */
     public boolean isFailure() {
@@ -98,6 +108,7 @@ public class ServiceTask<T> {
 
     /**
      * Add listener to run when task is complete
+     *
      * @param listener to run when task is complete
      */
     public void addTaskCompleteListener(ServiceTaskListener<T> listener) {
@@ -107,6 +118,7 @@ public class ServiceTask<T> {
 
     /**
      * Remove listener from the given task
+     *
      * @param listener to remove
      */
     public void removeTaskCompleteListener(ServiceTaskListener<T> listener) {

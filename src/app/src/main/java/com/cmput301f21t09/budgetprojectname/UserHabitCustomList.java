@@ -1,6 +1,7 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,9 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.cmput301f21t09.budgetprojectname.models.HabitModel;
+import com.google.android.material.imageview.ShapeableImageView;
+
 import java.util.ArrayList;
 
 /**
@@ -16,8 +20,8 @@ import java.util.ArrayList;
  * Show the habit's name, reason, and streak
  */
 public class UserHabitCustomList extends ArrayAdapter<HabitModel> {
-    private ArrayList<HabitModel> habits;
-    private Context context;
+    private final ArrayList<HabitModel> habits;
+    private final Context context;
 
 
     /**
@@ -37,15 +41,28 @@ public class UserHabitCustomList extends ArrayAdapter<HabitModel> {
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.user_habit_custom_list, parent, false);
         }
+
+        // Get the specific habit being interacted with
         HabitModel habit = habits.get(position);
 
+        // Get the views
         TextView habitName = view.findViewById(R.id.habit_name);
         TextView habitDescription = view.findViewById(R.id.habit_description);
         TextView streak = view.findViewById(R.id.streak_text);
 
+        // Set the views accordingly
         habitName.setText(habit.getTitle());
         habitDescription.setText(habit.getReason());
         streak.setText(String.valueOf(habit.getStreak()));
+
+        // Brings the user to the habit details screen
+        ShapeableImageView habitBackground = view.findViewById(R.id.habit_lists_background);
+        habitBackground.setOnClickListener(v -> {
+            // pass habit id to view the habit details for targeted habit
+            Intent intent = new Intent(context, ViewHabitActivity.class);
+            intent.putExtra("HABIT_ID", habit.getId());
+            context.startActivity(intent);
+        });
 
         return view;
     }

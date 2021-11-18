@@ -1,10 +1,12 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import org.junit.Rule;
+
 import android.app.Activity;
 import android.widget.EditText;
 
 import org.junit.*;
+
 import static org.junit.Assert.*;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -14,7 +16,7 @@ import com.robotium.solo.Solo;
 
 
 /**
- * Test class for the bottomNavigation which currently resides in MainActivity.
+ * Test class for user login action
  */
 public class LoginTest {
     private Solo solo;
@@ -24,28 +26,31 @@ public class LoginTest {
 
     /**
      * Runs before all tests and creates solo instance.
+     *
      * @throws Exception
      */
     @Before
-    public void setUp() throws Exception{
-        solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
+    public void setUp() throws Exception {
+        solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
     }
 
     /**
      * Closes the activity after each test
+     *
      * @throws Exception
      */
     @After
-    public void tearDown() throws Exception{
+    public void tearDown() throws Exception {
         solo.finishOpenedActivities();
     }
 
     /**
      * Gets the Activity
+     *
      * @throws Exception
      */
     @Test
-    public void start() throws Exception{
+    public void start() throws Exception {
         Activity activity = rule.getActivity();
     }
 
@@ -61,7 +66,7 @@ public class LoginTest {
      * Test for attempting valid login
      */
     @Test
-    public void testValidLogIn(){
+    public void testValidLogIn() {
         setToLoginScreen();
         solo.assertCurrentActivity("Wrong Activity", UserLoginActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_edittext), "bkong@ualberta.ca");
@@ -74,7 +79,7 @@ public class LoginTest {
      * Test for attempting invalid email login
      */
     @Test
-    public void testInvalidLogin(){
+    public void testInvalidLogin() {
         setToLoginScreen();
         solo.assertCurrentActivity("Wrong Activity", UserLoginActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_edittext), "abc");
@@ -87,7 +92,7 @@ public class LoginTest {
      * Test for attempting valid email but invalid password login
      */
     @Test
-    public void testInvalidPasswordLogin(){
+    public void testInvalidPasswordLogin() {
         setToLoginScreen();
         solo.assertCurrentActivity("Wrong Activity", UserLoginActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_edittext), "bkong@ualberta.ca");
@@ -100,7 +105,7 @@ public class LoginTest {
      * Test for empty fields
      */
     @Test
-    public void testEmptyFieldsLogin(){
+    public void testEmptyFieldsLogin() {
         setToLoginScreen();
         solo.assertCurrentActivity("Wrong Activity", UserLoginActivity.class);
         solo.clickOnButton("Sign in");

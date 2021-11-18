@@ -1,8 +1,5 @@
 package com.cmput301f21t09.budgetprojectname;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,14 +9,19 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.cmput301f21t09.budgetprojectname.controllers.HabitController;
 import com.cmput301f21t09.budgetprojectname.models.IHabitModel;
-
-import java.util.Calendar;
-
 import com.cmput301f21t09.budgetprojectname.views.fragments.HabitScheduleFragment;
 import com.cmput301f21t09.budgetprojectname.views.fragments.HabitScheduleViewSelector;
 
+import java.util.Calendar;
+
+/**
+ * Activity that makes the user to add/edit a habit
+ */
 public class DefineHabitActivity extends AppCompatActivity {
 
     /* Controllers */
@@ -146,6 +148,12 @@ public class DefineHabitActivity extends AppCompatActivity {
                     HabitScheduleFragment hsv = ((HabitScheduleFragment) getSupportFragmentManager().findFragmentById(R.id.adh_scheduleFragment));
                     controller.updateModel(habitTitle.getText().toString(), habitReason.getText().toString(), calendar.getTime(), hsv.getSchedule());
                 }
+
+                // Head back to the daily habit fragment
+                Intent i = new Intent(this, MainActivity.class);
+                i.putExtra("frgToLoad", "daily_habits");
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

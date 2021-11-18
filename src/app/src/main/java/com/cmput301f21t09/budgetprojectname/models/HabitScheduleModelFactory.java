@@ -9,10 +9,12 @@ public class HabitScheduleModelFactory {
     /**
      * Public Constructor for creating a new instance of the HabitScheduleFactory
      */
-    public HabitScheduleModelFactory() {}
+    public HabitScheduleModelFactory() {
+    }
 
     /**
      * Returns an instance of the model from the provided data
+     *
      * @param data to parse
      * @return instance of model based on provided data
      */
@@ -26,6 +28,7 @@ public class HabitScheduleModelFactory {
 
     /**
      * Returns an empty (default) instance of the weekly habit schedule
+     *
      * @return weekly habit schedule
      */
     IHabitScheduleModel getNewModelInstance() {

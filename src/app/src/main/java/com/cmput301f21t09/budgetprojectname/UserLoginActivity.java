@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
+
 /**
  * Handles sign-in page
  */
@@ -44,7 +46,7 @@ public class UserLoginActivity extends AppCompatActivity {
      * Verify login input.
      * Make notification on fields that have been filled out incorrectly.
      *
-     * @param email The email to check
+     * @param email    The email to check
      * @param password The password to check
      * @return Whether the input is valid
      */

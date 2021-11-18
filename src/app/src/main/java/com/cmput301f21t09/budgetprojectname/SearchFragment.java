@@ -15,7 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 /**
- * Fragment that allows to search and view other users
+ * Fragment that allows the user to search other user
  */
 public class SearchFragment extends Fragment {
 

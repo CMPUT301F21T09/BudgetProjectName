@@ -3,6 +3,7 @@ package com.cmput301f21t09.budgetprojectname;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -15,10 +16,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.cmput301f21t09.budgetprojectname.controllers.HabitController;
 import com.cmput301f21t09.budgetprojectname.models.IHabitModel;
 import com.cmput301f21t09.budgetprojectname.models.IWeeklyHabitScheduleModel;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+/**
+ * Activity that shows the detail of the habit
+ */
 public class ViewHabitActivity extends AppCompatActivity {
 
     /* Controllers */
@@ -31,7 +36,7 @@ public class ViewHabitActivity extends AppCompatActivity {
     /**
      * Controller for fetching habit events
      */
-    private HabitEventController habitEventController = new HabitEventController();
+    private final HabitEventController habitEventController = new HabitEventController();
 
     /* Views */
 
@@ -72,6 +77,8 @@ public class ViewHabitActivity extends AppCompatActivity {
 
     ArrayAdapter<HabitEventModel> habitEventAdapter;
     ArrayList<HabitEventModel> habitEventDataList;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static final String TAG = "ViewHabitActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,33 +114,48 @@ public class ViewHabitActivity extends AppCompatActivity {
 
         // Fetches the past habit events related to the current habit from Firestore using habitID
         // and update the view
-        habitEventController.readHabitEvent(habitID, new HabitEventController.HabitEventListCallback() {
+        habitEventController.readHabitEvents(habitID, new HabitEventController.HabitEventListCallback() {
             @Override
             public void onCallback(ArrayList<HabitEventModel> hbEvtLst) {
                 habitEventDataList.clear();
+                for (HabitEventModel hEM : habitEventDataList) {
+                    System.out.println(hEM.getDate());
+                }
                 habitEventDataList.addAll(hbEvtLst);
                 habitEventAdapter.notifyDataSetChanged();
             }
         });
 
-        // Go Back
+
+        // selection of past habit event item start habit event detail screen
+        habitEventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                HabitEventModel selectedHEM = habitEventAdapter.getItem(position);
+                System.out.println("selected element id " + selectedHEM.getID());
+
+                Intent intent = new Intent(getApplicationContext(), ViewHabitEventActivity.class);
+                intent.putExtra("HABIT_EVENT_ID", selectedHEM.getID());
+                intent.putExtra("HABIT_ID", selectedHEM.getHabitID());
+                intent.putExtra("HABIT_TITLE", habitTitle.getText().toString());
+                startActivity(intent);
+            }
+
+        });
+
         ImageButton back = findViewById(R.id.view_habit_back_button);
         back.setOnClickListener(v -> {
             finish();
         });
 
-        // Edit habit
-        // Todo: Implement edit Habit function
+        // Brings the user to another activity to edit habit details
         final Button editHabitBtn = findViewById(R.id.editHabitButton);
         editHabitBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DefineHabitActivity.class);
+                final String HABIT_ID = "HABIT_ID";
+                intent.putExtra(HABIT_ID, habitID);
+                startActivity(intent);
             }
-        });
-
-        // Delete Habit
-        ImageButton remove = findViewById(R.id.view_habit_remove_button);
-        remove.setOnClickListener(v -> {
-            // TODO: Remove Targeted Habit. Dialog To Confirm?
         });
     }
 
@@ -153,7 +175,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         saturdayIcon = findViewById(R.id.saturday_icon);
 
         // Set the views of the habit details accordingly
-        if(controller.isTaskComplete(HabitController.HABIT_MODEL_LOAD)){
+        if (controller.isTaskComplete(HabitController.HABIT_MODEL_LOAD)) {
             // Set the toolbar title, habit tile, habit reason, and habit date view
             IHabitModel model = controller.getModel();
             habitTitleToolbar.setText(model.getTitle());

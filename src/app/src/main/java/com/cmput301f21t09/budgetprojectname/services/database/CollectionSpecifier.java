@@ -5,6 +5,7 @@ import com.cmput301f21t09.budgetprojectname.models.IHabitModel;
 
 /**
  * Database Collection Specifiers with ids and model types as defined in the database backend
+ *
  * @param <T> type of model that the collection references
  */
 public class CollectionSpecifier<T> {
@@ -30,6 +31,7 @@ public class CollectionSpecifier<T> {
 
     /**
      * Constructor for registering a specifier
+     *
      * @param id of the collection as defined in the database backend
      */
     private CollectionSpecifier(String id) {
@@ -38,6 +40,7 @@ public class CollectionSpecifier<T> {
 
     /**
      * The id of the collection as represented in the database
+     *
      * @return collection id
      */
     public String getId() {

@@ -23,14 +23,10 @@ import java.util.Date;
 /**
  * Represents a Habit Event Controller that interfaces with FirestoreDB to
  * create, read, update, and delete HabitEvents.
- *
  */
 public class HabitEventController {
-    private FirebaseFirestore dbStore = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore dbStore = FirebaseFirestore.getInstance();
     private static final String TAG = "HabitEventController";
-    public HabitEventModel retrievedHabitEventModel;
-
-
 //    // Apply Singleton Design Pattern
 //    private static HabitEventController habitEventStore = new HabitEventController();
 //
@@ -38,15 +34,17 @@ public class HabitEventController {
 //        return habitEventStore;
 //    }
 
-    public HabitEventController(){}
+    public HabitEventController() {
+    }
 
-    public interface HabitEventCallback{
+    public interface HabitEventCallback {
         void onCallback(HabitEventModel habitEvent);
     }
 
-    public interface HabitEventIDCallback{
+    public interface HabitEventIDCallback {
         void onCallback(String habitEventID);
     }
+
 
     /**
      * HabitEventListCallback interface
@@ -62,6 +60,8 @@ public class HabitEventController {
      */
     public void createHabitEvent(HabitEventModel habitEvent, HabitEventIDCallback idCallback) {
         // db = FirebaseFirestore.getInstance();
+        System.out.println("store new habit");
+
         dbStore.collection("habit_events")
                 .add(habitEvent)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -88,12 +88,14 @@ public class HabitEventController {
      * @param modifiedHabitEvent habitEvent to be updated
      */
     public void updateHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
+        System.out.println("updated habit id" + modifiedHabitEvent.getHabitID());
         DocumentReference habitEventRef = dbStore.collection("habit_events")
                 .document(habitEventID);
         habitEventRef.update("comment", modifiedHabitEvent.getComment(),
                 "location", modifiedHabitEvent.getLocation(),
                 "image", modifiedHabitEvent.getImage(),
                 "habitID", modifiedHabitEvent.getHabitID())
+
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -107,20 +109,69 @@ public class HabitEventController {
                     }
                 });
     }
-    // updateLoc()
-    /**
-     * new HEModel(oldHE stuff, new loc)
-     * cachedModel = heModel
-     * notifyListeners()
-     * commit()
-     */
 
     /**
-     * Read habitEvent document in the habit_events collection
+     * Deletes habit event from Firestore DB
      *
-     * @param habitID habitID is used to query all the corresponding habit events
+     * @param habitEventID id of habit event to be deleted
      */
-    public void readHabitEvent(String habitID, HabitEventListCallback hbEvtLstCallback) {
+    public void deleteHabitEvent(String habitEventID) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("habit_events").document(habitEventID)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+    }
+
+    /**
+     * Gets existing habitevent from Firestore Db
+     *
+     * @param habitEventID ID of habitEvent to be retrieved
+     */
+    public void readHabitEvent(String habitEventID, HabitEventCallback habitEventCallback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("habit_events").document(habitEventID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
+                        String id = (String) doc.getId();
+                        Date date = ((Timestamp) doc.getData().get("date")).toDate();
+                        String location = (String) doc.getData().get("location");
+                        String comment = (String) doc.getData().get("comment");
+                        Image image = (Image) doc.getData().get("image");
+                        String habitID = (String) doc.getData().get("habitID");
+                        HabitEventModel retrievedHabitEventModel =
+                                new HabitEventModel(id, location, date, comment, image, habitID);
+                        habitEventCallback.onCallback(retrievedHabitEventModel);
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    /**
+     * @param habitID          habitID is used to query all the corresponding habit events
+     * @param hbEvtLstCallback Callback function
+     */
+    public void readHabitEvents(String habitID, HabitEventListCallback hbEvtLstCallback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         ArrayList<HabitEventModel> habitEventDataList = new ArrayList<>();
         CollectionReference collectionReference = db.collection("habit_events");
@@ -143,5 +194,7 @@ public class HabitEventController {
                 });
     }
 
-    // TODO: add delete scenario
 }
+
+
+

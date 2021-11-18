@@ -14,13 +14,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.cmput301f21t09.budgetprojectname.models.HabitModel;
+import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
+
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Fragment that shows user's profile with their name, username, and habits
  */
 public class CurrentUserProfileFragment extends Fragment {
+
+    /**
+     * Controller for fetching habit events
+     */
+    private final HabitListController habitListController = new HabitListController();
+
     /**
      * Sign out.
      * Tells authorization service to sign out and
@@ -45,15 +53,17 @@ public class CurrentUserProfileFragment extends Fragment {
         // ListView setup
         ListView habitList = view.findViewById(R.id.current_user_habit_listview);
 
+        // Set up the list and send an empty list to the view
         ArrayList<HabitModel> habitDataList = new ArrayList<>();
-
-        // This is mock data
-        for (int i = 0; i < 10; i++) {
-            habitDataList.add(new HabitModel("TestID", "TestString" + 1, "TestReason", new Date(), new Date(), i));
-        }
-
         ArrayAdapter<HabitModel> habitAdapter = new UserHabitCustomList(getContext(), habitDataList);
         habitList.setAdapter(habitAdapter);
+
+        // Fetches the habits related to the current habit from Firestore
+        habitListController.readHabitList(hbLst -> {
+            habitDataList.clear();
+            habitDataList.addAll(hbLst);
+            habitAdapter.notifyDataSetChanged();
+        });
 
         habitList.setOnItemClickListener((parent, view1, position, id) -> {
             // TODO: Pass targeted Habit to ViewHabitActivity

@@ -1,7 +1,9 @@
 package com.cmput301f21t09.budgetprojectname.models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -11,12 +13,25 @@ public class WeeklyHabitScheduleModel implements IWeeklyHabitScheduleModel {
     /**
      * Identifier as found in database for a weekly habit schedule
      */
-    public static String WEEKLY_HABIT_SCHEDULE_IDENTIFIER = "weekly";
+    public static String WEEKLY_HABIT_SCHEDULE_IDENTIFIER = "doWeekly";
 
     /**
      * Table for holding the "to complete on" state for each day
      */
     private final boolean[] days = new boolean[IWeeklyHabitScheduleModel.DAYS_IN_WEEK];
+
+    /**
+     * Names of each weekday as found in the database
+     */
+    private static final String[] WEEKDAY_IDENTIFIERS = {
+            "doWeeklyMonday",
+            "doWeeklyTuesday",
+            "doWeeklyWednesday",
+            "doWeeklyThursday",
+            "doWeeklyFriday",
+            "doWeeklySaturday",
+            "doWeeklySunday"
+    };
 
     /**
      * Empty constructor for default model instances
@@ -27,15 +42,20 @@ public class WeeklyHabitScheduleModel implements IWeeklyHabitScheduleModel {
     }
 
     /**
-     * Return an instance of a WeeklyHabitScheduleModel with data from a map
+     * Return an instance of a WeeklyHabitScheduleModel with data from a list
      *
-     * @param map to parse
+     * @param list to parse
      * @return model with data set from the given map
      */
-    public static WeeklyHabitScheduleModel parseMap(Map<String, Object> map) {
+    public static WeeklyHabitScheduleModel parseList(List<String> list) {
         WeeklyHabitScheduleModel model = new WeeklyHabitScheduleModel();
-        for (int i = 0; i < IWeeklyHabitScheduleModel.DAYS_IN_WEEK; i++) {
-            model.setDay(i, map.get(IWeeklyHabitScheduleModel.NAMES_OF_WEEKDAYS[i]) != null && (Boolean) map.get(IWeeklyHabitScheduleModel.NAMES_OF_WEEKDAYS[i]));
+        for (String identifier : list) {
+            for (int i = 0; i < WEEKDAY_IDENTIFIERS.length; i++) {
+                if (identifier.equals(WEEKDAY_IDENTIFIERS[i])) {
+                    model.setDay(i, true);
+                    break;
+                }
+            }
         }
         return model;
     }
@@ -51,14 +71,12 @@ public class WeeklyHabitScheduleModel implements IWeeklyHabitScheduleModel {
     }
 
     @Override
-    public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>();
-        for (int i = 0; i < IWeeklyHabitScheduleModel.DAYS_IN_WEEK; i++) {
-            map.put(IWeeklyHabitScheduleModel.NAMES_OF_WEEKDAYS[i], getDay(i));
+    public List<String> toList() {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < WEEKDAY_IDENTIFIERS.length; i++) {
+            if (getDay(i)) list.add(WEEKDAY_IDENTIFIERS[i]);
         }
-        Map<String, Object> outerMap = new HashMap<>();
-        outerMap.put(WEEKLY_HABIT_SCHEDULE_IDENTIFIER, map);
-        return outerMap;
+        return list;
     }
 
     /**

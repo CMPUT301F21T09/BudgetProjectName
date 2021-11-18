@@ -1,6 +1,7 @@
 package com.cmput301f21t09.budgetprojectname.models;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,5 +30,5 @@ public interface IHabitScheduleModel {
      *
      * @return serialized version of model
      */
-    Map<String, Object> toMap();
+    List<String> toList();
 }

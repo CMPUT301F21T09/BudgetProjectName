@@ -55,6 +55,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     private String habitID;
     private String habitEventID;
 
+    SupportMapFragment mapFragment;
     SwitchMaterial locationSwitch;
 
     GoogleMap map;
@@ -79,6 +80,12 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
             modeStr = getString(R.string.editHabitEventMode);
             // sets existing habitEvent fields
             setHabitEventFields(habitEventID);
+
+            if (marker != null) {
+                LatLng markerLocation = new LatLng(marker.getLatitude(), marker.getLongitude());
+                map.addMarker(new MarkerOptions().position(markerLocation).icon(BitmapDescriptorFactory.defaultMarker(205.0f)));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLocation, 10));
+            }
         }
 
         // update title according to mode selected: "add" or "edit"
@@ -105,6 +112,9 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
             finish();
         });
 
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
         // Show/Hide Map
         ConstraintLayout locationContainer = findViewById(R.id.location_container);
         locationSwitch = findViewById(R.id.location_switch);
@@ -115,10 +125,6 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                 locationContainer.setVisibility(View.GONE);
             }
         });
-
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
     }
 
 
@@ -139,8 +145,19 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         // TODO: Move to HabitEventController once async request handling is solved
 
+                        HabitEventModel habitEventModel = document.toObject(HabitEventModel.class);
+
                         // set fields in view
-                        comment.setText(document.getString("comment"));
+                        if (habitEventModel.getLocation() != null) {
+                            locationSwitch.setChecked(true);
+                            marker = habitEventModel.getLocation();
+                            mapFragment.getMapAsync(googleMap -> {
+                                LatLng markerLocation = new LatLng(marker.getLatitude(), marker.getLongitude());
+                                googleMap.addMarker(new MarkerOptions().position(markerLocation).icon(BitmapDescriptorFactory.defaultMarker(205.0f)));
+                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLocation, 10));
+                            });
+                        }
+                        comment.setText(habitEventModel.getComment());
 
                         // TODO: set image
 
@@ -211,7 +228,6 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
-        marker = new LatLngModel();
         googleMap.getUiSettings().setMapToolbarEnabled(false);
         MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(205.0f));
 
@@ -226,13 +242,15 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
             return;
         } else {
             googleMap.setMyLocationEnabled(true);
-            Location location = getLastKnownLocation();
-            LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+            if (isNewHabitEvent) {
+                Location location = getLastKnownLocation();
+                LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-            googleMap.addMarker(markerOptions.position(userLocation));
-            marker.setLatitude(userLocation.latitude);
-            marker.setLongitude(userLocation.longitude);
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 10));
+                googleMap.addMarker(markerOptions.position(userLocation));
+                marker = new LatLngModel(userLocation.latitude, userLocation.longitude);
+
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 10));
+            }
         }
 
         googleMap.setOnMapClickListener(latLng -> {
@@ -241,8 +259,6 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
             marker.setLatitude(latLng.latitude);
             marker.setLongitude(latLng.longitude);
         });
-
-        //googleMap.getUiSettings().setScrollGesturesEnabled(false);
     }
 
     private Location getLastKnownLocation() {

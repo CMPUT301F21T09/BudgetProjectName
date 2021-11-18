@@ -11,8 +11,12 @@ import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+/**
+ * Fragment that allows to search and view other users
+ */
 public class SearchFragment extends Fragment {
 
     @Nullable
@@ -25,6 +29,7 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ConstraintLayout background = view.findViewById(R.id.search_fragment_background);
         ImageButton clearSearch = view.findViewById(R.id.clear_text);
         EditText searchUser = view.findViewById(R.id.search_friend_edittext);
         searchUser.addTextChangedListener(new TextWatcher() {
@@ -40,12 +45,14 @@ public class SearchFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 clearSearch.setVisibility(View.VISIBLE);
+                background.setVisibility(View.GONE);
             }
         });
 
         clearSearch.setOnClickListener(v -> {
             searchUser.getText().clear();
             clearSearch.setVisibility(View.GONE);
+            background.setVisibility(View.VISIBLE);
         });
 
     }

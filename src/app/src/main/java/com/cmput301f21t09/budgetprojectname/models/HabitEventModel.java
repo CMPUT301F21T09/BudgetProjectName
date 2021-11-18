@@ -1,4 +1,4 @@
-package com.cmput301f21t09.budgetprojectname;
+package com.cmput301f21t09.budgetprojectname.models;
 
 import android.media.Image;
 
@@ -53,7 +53,7 @@ public class HabitEventModel {
      * @param image    image for habitevent (optional)
      * @param habitID  ID of habit
      */
-    HabitEventModel(String ID, String location, Date date, String comment, Image image, String habitID) {
+    public HabitEventModel(String ID, String location, Date date, String comment, Image image, String habitID) {
         this.ID = ID;
         this.location = location;
         this.comment = comment;
@@ -63,7 +63,7 @@ public class HabitEventModel {
     }
 
     // need to declare an empty constructor for serialization purposes
-    HabitEventModel() {
+    public HabitEventModel() {
         this.ID = null;
         this.location = null;
         this.comment = null;

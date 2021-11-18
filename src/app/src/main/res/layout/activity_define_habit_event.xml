@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#F2F8FD"
     android:textAlignment="center"
-    tools:context=".DefineHabitEventActivity">
+    tools:context=".views.activities.DefineHabitEventActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

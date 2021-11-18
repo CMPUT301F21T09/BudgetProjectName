@@ -12,16 +12,16 @@ import android.widget.TextView;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.cmput301f21t09.budgetprojectname.views.activities.DefineHabitActivity;
 import com.cmput301f21t09.budgetprojectname.controllers.HabitController;
-import com.cmput301f21t09.budgetprojectname.models.HabitModel;
+import com.cmput301f21t09.budgetprojectname.views.activities.ViewHabitActivity;
+import com.cmput301f21t09.budgetprojectname.views.activities.ViewHabitEventActivity;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.util.Date;
 
 public class ViewHabitTest {
     private Solo solo;

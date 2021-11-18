@@ -1,4 +1,4 @@
-package com.cmput301f21t09.budgetprojectname;
+package com.cmput301f21t09.budgetprojectname.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cmput301f21t09.budgetprojectname.MainActivity;
+import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 
 /**

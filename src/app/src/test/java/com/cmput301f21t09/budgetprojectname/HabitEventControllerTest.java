@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
+import com.cmput301f21t09.budgetprojectname.models.LatLngModel;
 
 import org.junit.Test;
 
@@ -72,11 +73,11 @@ public class HabitEventControllerTest {
         ArrayList<HabitEventModel> habitEventList = new ArrayList<>();
 
         HabitEventModel habitEvent =
-                new HabitEventModel(null, null, new Date(),
+                new HabitEventModel(null, new LatLngModel(0.0, 0.0), new Date(),
                         "yeg test comment", null, "");
         habitEventList.add(habitEvent);
         HabitEventModel readHE = habitEventList.get(0);
-        assertEquals("YEGtest", readHE.getLocation());
+        assertEquals(new LatLngModel(0.0, 0.0), readHE.getLocation());
         assertEquals("yeg test comment", readHE.getComment());
     }
 

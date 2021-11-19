@@ -1,5 +1,7 @@
 package com.cmput301f21t09.budgetprojectname.models;
 
+import androidx.annotation.Nullable;
+
 /**
  * Custom Latitude Longitude Class to make HabitEventModelClass serializable
  */
@@ -32,5 +34,15 @@ public class LatLngModel {
         this.longitude = longitude;
     }
 
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        LatLngModel latLngModel = (LatLngModel) obj;
 
+        if (this.getLatitude().equals(latLngModel.getLatitude())
+                && this.getLongitude().equals(latLngModel.getLongitude())) {
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import android.media.Image;
 
 import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
+import com.cmput301f21t09.budgetprojectname.models.LatLngModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,21 +21,21 @@ public class HabitEventModelTest {
 
     @Before
     public void init() {
-        testHE = new HabitEventModel("habiteventid", null,
+        testHE = new HabitEventModel("habiteventid", new LatLngModel(0.0, 0.0),
                 new Date(1, 1, 1), "comment", null, "habitid");
     }
 
     @Test
     public void testHabitEventModelConstructor() {
         String id = "habiteventid";
-        String location = "YEG";
+        LatLngModel location = new LatLngModel(0.0, 0.0);
         Date date = new Date(1, 1, 1);
         String comment = "comment";
         Image image = null;
         String habitID = "habitid";
 
         assertEquals(id, testHE.getID());
-        //assertEquals(location, testHE.getLocation());
+        assertEquals(location, testHE.getLocation());
         assertEquals(date, testHE.getDate());
         assertEquals(comment, testHE.getComment());
         assertEquals(image, testHE.getImage());
@@ -44,14 +45,14 @@ public class HabitEventModelTest {
     @Test
     public void testHabitEventModelSetters() {
         String id = "newhabiteventid";
-        String location = "YYC";
+        LatLngModel location = new LatLngModel(1.0, 1.0);
         Date date = new Date(2, 2, 2);
         String comment = "newcomment";
         Image image = null;
         String habitID = "newhabitid";
 
         testHE.setID(id);
-        //testHE.setLocation(location);
+        testHE.setLocation(location);
         testHE.setDate(date);
         testHE.setComment(comment);
         testHE.setImage(image);

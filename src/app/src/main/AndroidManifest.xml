@@ -13,26 +13,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BudgetProjectName">
         <activity
-            android:name=".DefineHabitActivity"
+            android:name=".views.activities.DefineHabitActivity"
             android:exported="true" />
         <activity
-            android:name=".ViewHabitActivity"
+            android:name=".views.activities.ViewHabitActivity"
             android:exported="true"
             android:label="@string/viewHabitActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".UserRegisterActivity"
+            android:name=".views.activities.UserRegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".DefineHabitEventActivity"
+            android:name=".views.activities.DefineHabitEventActivity"
             android:exported="false" />
         <activity
-            android:name=".ViewHabitEventActivity"
+            android:name=".views.activities.ViewHabitEventActivity"
             android:exported="false" />
         <activity
-            android:name=".UserLoginActivity"
+            android:name=".views.activities.UserLoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

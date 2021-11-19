@@ -3,7 +3,7 @@ package com.cmput301f21t09.budgetprojectname;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.cmput301f21t09.budgetprojectname.models.HabitModel;
+import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
 
 import org.junit.Test;
 

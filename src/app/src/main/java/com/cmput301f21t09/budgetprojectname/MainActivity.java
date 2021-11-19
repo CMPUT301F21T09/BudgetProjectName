@@ -6,7 +6,11 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
+import com.cmput301f21t09.budgetprojectname.views.activities.DefineHabitActivity;
+import com.cmput301f21t09.budgetprojectname.views.fragments.CurrentUserProfileFragment;
+import com.cmput301f21t09.budgetprojectname.views.fragments.DailyHabitFragment;
+import com.cmput301f21t09.budgetprojectname.views.fragments.FollowingFragment;
+import com.cmput301f21t09.budgetprojectname.views.fragments.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /**

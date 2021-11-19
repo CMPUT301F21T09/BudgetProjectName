@@ -9,6 +9,10 @@ import static org.junit.Assert.assertEquals;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
+import com.cmput301f21t09.budgetprojectname.views.activities.DefineHabitEventActivity;
+import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
+import com.cmput301f21t09.budgetprojectname.views.activities.ViewHabitActivity;
 import com.robotium.solo.Solo;
 
 import org.junit.After;

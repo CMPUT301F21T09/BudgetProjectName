@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import android.media.Image;
 
+import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
+
 import org.junit.Before;
 import org.junit.Test;
 

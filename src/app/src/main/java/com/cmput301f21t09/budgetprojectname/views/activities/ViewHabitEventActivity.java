@@ -1,4 +1,4 @@
-package com.cmput301f21t09.budgetprojectname;
+package com.cmput301f21t09.budgetprojectname.views.activities;
 
 import android.content.Intent;
 import android.location.Address;
@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cmput301f21t09.budgetprojectname.R;
+import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
 import com.cmput301f21t09.budgetprojectname.models.LatLngModel;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -107,6 +109,7 @@ public class ViewHabitEventActivity extends AppCompatActivity {
             Intent deleteIntent = new Intent(getApplicationContext(), ViewHabitActivity.class);
             final String HABIT_ID = "HABIT_ID";
             deleteIntent.putExtra(HABIT_ID, habitID);
+            deleteIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(deleteIntent);
         });
     }

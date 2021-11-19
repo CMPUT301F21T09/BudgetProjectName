@@ -1,9 +1,10 @@
-package com.cmput301f21t09.budgetprojectname;
+package com.cmput301f21t09.budgetprojectname.controllers;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

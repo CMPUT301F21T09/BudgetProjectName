@@ -1,4 +1,4 @@
-package com.cmput301f21t09.budgetprojectname;
+package com.cmput301f21t09.budgetprojectname.views.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.cmput301f21t09.budgetprojectname.controllers.HabitListController;
+import com.cmput301f21t09.budgetprojectname.R;
+import com.cmput301f21t09.budgetprojectname.views.lists.UserHabitCustomList;
+import com.cmput301f21t09.budgetprojectname.views.activities.UserLoginActivity;
 import com.cmput301f21t09.budgetprojectname.models.HabitModel;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 
@@ -23,11 +27,6 @@ import java.util.ArrayList;
  * Fragment that shows user's profile with their name, username, and habits
  */
 public class CurrentUserProfileFragment extends Fragment {
-
-    /**
-     * Controller for fetching habit events
-     */
-    private final HabitListController habitListController = new HabitListController();
 
     /**
      * Sign out.
@@ -58,10 +57,11 @@ public class CurrentUserProfileFragment extends Fragment {
         ArrayAdapter<HabitModel> habitAdapter = new UserHabitCustomList(getContext(), habitDataList);
         habitList.setAdapter(habitAdapter);
 
-        // Fetches the habits related to the current habit from Firestore
-        habitListController.readHabitList(hbLst -> {
+        HabitModel.getAllForCurrentUser().addTaskCompleteListener(task -> {
             habitDataList.clear();
-            habitDataList.addAll(hbLst);
+            if (task.isSuccessful()) {
+                habitDataList.addAll(task.getResult());
+            }
             habitAdapter.notifyDataSetChanged();
         });
 

@@ -1,4 +1,4 @@
-package com.cmput301f21t09.budgetprojectname;
+package com.cmput301f21t09.budgetprojectname.views.activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -24,6 +24,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 
+import com.cmput301f21t09.budgetprojectname.R;
+import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
+import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
 import com.cmput301f21t09.budgetprojectname.models.LatLngModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -60,6 +63,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
 
     SupportMapFragment mapFragment;
     SwitchMaterial locationSwitch;
+    ConstraintLayout locationContainer;
 
     GoogleMap map;
     LatLngModel marker;
@@ -119,11 +123,18 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         mapFragment.getMapAsync(this);
 
         // Show/Hide Map
-        ConstraintLayout locationContainer = findViewById(R.id.location_container);
+        locationContainer = findViewById(R.id.location_container);
         locationSwitch = findViewById(R.id.location_switch);
         locationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                locationContainer.setVisibility(View.VISIBLE);
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                } else {
+                    if (isNewHabitEvent) {
+                        mapMarkCurrentLocation();
+                    }
+                    locationContainer.setVisibility(View.VISIBLE);
+                }
             } else {
                 locationContainer.setVisibility(View.GONE);
             }
@@ -157,7 +168,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                             mapFragment.getMapAsync(googleMap -> {
                                 LatLng markerLocation = new LatLng(marker.getLatitude(), marker.getLongitude());
                                 googleMap.addMarker(new MarkerOptions().position(markerLocation).icon(BitmapDescriptorFactory.defaultMarker(205.0f)));
-                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLocation, 10));
+                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLocation, 13));
                             });
                         }
                         comment.setText(habitEventModel.getComment());
@@ -196,11 +207,8 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                     Toast.makeText(getApplicationContext(), "ERROR: could not save habit event",
                             Toast.LENGTH_SHORT).show();
                 } else {
-
-                    String descriptionStr = comment.getText().toString();
-
                     HabitEventModel habitEvent = new HabitEventModel(null, locationSwitch.isChecked() ? marker : null, new Date(),
-                            descriptionStr, null, habitID);
+                            commentStr, null, habitID);
 
                     if (isNewHabitEvent) {
                         habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
@@ -210,7 +218,6 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                                 System.out.println("habitevent id " + habitEventID);
                                 // return back to main habit list
                                 finish();
-
                             }
                         });
                     } else {
@@ -232,13 +239,16 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+            if (grantResults.length > 0 &&
+                    (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+                mapMarkCurrentLocation();
+                locationContainer.setVisibility(View.VISIBLE);
             } else {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                locationSwitch.setChecked(false);
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     Snackbar.make(getWindow().getDecorView().getRootView(), "This action requires\nlocation permission", Snackbar.LENGTH_INDEFINITE)
                             .setAction("Grant Permission", v1 -> {
-                                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+                                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
                             }).show();
                 } else {
                     Snackbar.make(getWindow().getDecorView().getRootView(), "This action requires\nlocation permission.", Snackbar.LENGTH_INDEFINITE)
@@ -257,27 +267,26 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         googleMap.getUiSettings().setMapToolbarEnabled(false);
         MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(205.0f));
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-        } else {
-            googleMap.setMyLocationEnabled(true);
-            if (isNewHabitEvent) {
-                Location location = getLastKnownLocation();
-                LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
-                googleMap.addMarker(markerOptions.position(userLocation));
-                marker = new LatLngModel(userLocation.latitude, userLocation.longitude);
-
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 10));
-            }
-        }
-
         googleMap.setOnMapClickListener(latLng -> {
             googleMap.clear();
             googleMap.addMarker(markerOptions.position(latLng));
             marker.setLatitude(latLng.latitude);
             marker.setLongitude(latLng.longitude);
         });
+    }
+
+    private void mapMarkCurrentLocation() {
+        map.setMyLocationEnabled(true);
+
+        MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(205.0f));
+
+        Location location = getLastKnownLocation();
+        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+        map.addMarker(markerOptions.position(userLocation));
+        marker = new LatLngModel(userLocation.latitude, userLocation.longitude);
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 10));
     }
 
     private Location getLastKnownLocation() {

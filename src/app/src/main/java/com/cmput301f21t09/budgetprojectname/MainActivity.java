@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /**

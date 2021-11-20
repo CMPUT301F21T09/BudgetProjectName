@@ -1,11 +1,19 @@
 package com.cmput301f21t09.budgetprojectname.models;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.cmput301f21t09.budgetprojectname.services.ServiceTask;
 import com.cmput301f21t09.budgetprojectname.services.ServiceTaskManager;
 import com.cmput301f21t09.budgetprojectname.services.database.CollectionSpecifier;
 import com.cmput301f21t09.budgetprojectname.services.database.DatabaseService;
 import com.cmput301f21t09.budgetprojectname.services.database.serializers.DocumentModelSerializer;
 import com.cmput301f21t09.budgetprojectname.services.database.serializers.ModelMapParser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.Transaction;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -229,6 +237,45 @@ public class HabitModel implements IHabitModel {
         return DatabaseService.getInstance().getCollection(CollectionSpecifier.HABITS)
                 .getDocument(this.id)
                 .save(this, serializer);
+    }
+
+    /**
+     * Delete the habit model from the database
+     *
+     * @return task representing status of delete
+     */
+    public ServiceTask<Void> delete() {
+        // TODO: prevent multiple deletes at the same time through the same model
+        // TODO: throw if user is not logged in
+        ServiceTaskManager<Void> tman = new ServiceTaskManager<>();
+        if (this.id != null) {
+            // Only delete if it is in the database,
+            // this would be better invoked as a cloud function
+            FirebaseFirestore.getInstance()
+                    .collection("habits")
+                    .document(this.id)
+                    .delete()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            tman.setSuccess(null);
+                            // Delete all the habit events
+                            FirebaseFirestore.getInstance()
+                                    .collection("habit_events")
+                                    .whereEqualTo("habitID", this.id)
+                                    .get()
+                                    .addOnSuccessListener(snapshot -> {
+                                        for (QueryDocumentSnapshot queryDocumentSnapshot : snapshot) {
+                                            queryDocumentSnapshot.getReference().delete();
+                                        }
+                            });
+                        }
+                        else
+                            tman.setFailure(task.getException());
+                    }
+
+            );
+        }
+        return tman.getTask();
     }
 
     /**

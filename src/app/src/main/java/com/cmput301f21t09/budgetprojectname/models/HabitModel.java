@@ -7,8 +7,13 @@ import com.cmput301f21t09.budgetprojectname.services.database.CollectionSpecifie
 import com.cmput301f21t09.budgetprojectname.services.database.DatabaseService;
 import com.cmput301f21t09.budgetprojectname.services.database.serializers.DocumentModelSerializer;
 import com.cmput301f21t09.budgetprojectname.services.database.serializers.ModelMapParser;
+
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -108,37 +113,40 @@ public class HabitModel implements IHabitModel {
     }
 
     /**
-     * Get an instance of a habit that exists in the database as specified by the given id
+     * Get all the current user's habits
      *
      * @return load task for all user's habits
      */
     public static ServiceTask<List<HabitModel>> getAllForCurrentUser() {
         ServiceTaskManager<List<HabitModel>> taskManager = new ServiceTaskManager<>();
-        FirebaseFirestore.getInstance().collection(HABIT_COLLECTION_ID).whereEqualTo("uid", AuthorizationService.getInstance().getCurrentUserId()).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                List<HabitModel> models = new ArrayList<>();
-                HabitModelMapParser parser = new HabitModelMapParser();
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    models.add(parser.parseMap(document.getData(), document.getId()));
-                }
-                taskManager.setSuccess(models);
-            } else {
-                taskManager.setFailure(task.getException());
-            }
-        });
+        FirebaseFirestore.getInstance().collection(HABIT_COLLECTION_ID)
+                .whereEqualTo("uid", AuthorizationService.getInstance().getCurrentUserId())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<HabitModel> models = new ArrayList<>();
+                        HabitModelMapParser parser = new HabitModelMapParser();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            models.add(parser.parseMap(document.getData(), document.getId()));
+                        }
+                        taskManager.setSuccess(models);
+                    } else {
+                        taskManager.setFailure(task.getException());
+                    }
+                });
         return taskManager.getTask();
     }
 
     /**
-     * Get an instance of a habit that exists in the database as specified by the given id
+     * Get all habits that the current user needs to do for the day
      *
-     * @return load task for all user's habits
+     * @return load task for all user's habits they need to do
      */
     public static ServiceTask<List<HabitModel>> getTodoForCurrentUser() {
         ServiceTaskManager<List<HabitModel>> taskManager = new ServiceTaskManager<>();
         FirebaseFirestore.getInstance().collection(HABIT_COLLECTION_ID)
                 .whereEqualTo("uid", AuthorizationService.getInstance().getCurrentUserId())
-                .whereArrayContainsAny("schedule", new HabitScheduleModelFactory().getQueryForToday()) // TODO: This should get grabbed from the schedule factory
+                .whereArrayContainsAny("schedule", new HabitScheduleModelFactory().getQueryForToday())
                 .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<HabitModel> models = new ArrayList<>();
@@ -300,6 +308,45 @@ public class HabitModel implements IHabitModel {
                     tman.setSuccess(null);
                 } else tman.setFailure(task.getException());
             });
+        }
+        return tman.getTask();
+    }
+
+    /**
+     * Delete the habit model from the database
+     *
+     * @return task representing status of delete
+     */
+    public ServiceTask<Void> delete() {
+        // TODO: prevent multiple deletes at the same time through the same model
+        // TODO: throw if user is not logged in
+        ServiceTaskManager<Void> tman = new ServiceTaskManager<>();
+        if (this.id != null) {
+            // Only delete if it is in the database,
+            // this would be better invoked as a cloud function
+            FirebaseFirestore.getInstance()
+                    .collection("habits")
+                    .document(this.id)
+                    .delete()
+                    .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    tman.setSuccess(null);
+                                    // Delete all the habit events
+                                    FirebaseFirestore.getInstance()
+                                            .collection("habit_events")
+                                            .whereEqualTo("habitID", this.id)
+                                            .get()
+                                            .addOnSuccessListener(snapshot -> {
+                                                for (QueryDocumentSnapshot queryDocumentSnapshot : snapshot) {
+                                                    queryDocumentSnapshot.getReference().delete();
+                                                }
+                                            });
+                                }
+                                else
+                                    tman.setFailure(task.getException());
+                            }
+
+                    );
         }
         return tman.getTask();
     }

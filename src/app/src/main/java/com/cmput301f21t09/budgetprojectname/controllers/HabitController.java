@@ -21,6 +21,10 @@ public class HabitController extends ServiceTaskController<String> {
      * Key for getting information on the model save task
      */
     public static final String HABIT_MODEL_SAVE = "HABIT_MODEL_SAVE";
+    /**
+     * Key for getting information on the model save task
+     */
+    public static final String HABIT_MODEL_DELETE= "HABIT_MODEL_DELETE";
 
     /**
      * The currently loaded model instance
@@ -98,6 +102,14 @@ public class HabitController extends ServiceTaskController<String> {
 
         // Commit changes
         registerTask(HABIT_MODEL_SAVE, model.commit());
+        notifyListener();
+    }
+
+    /**
+     * Delete the model
+     */
+    public void deleteModel() {
+        registerTask(HABIT_MODEL_DELETE, model.delete());
         notifyListener();
     }
 

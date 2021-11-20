@@ -17,7 +17,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/menu_define_habit" />
+        app:menu="@menu/menu_define_habit">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
+    </androidx.appcompat.widget.Toolbar>
 
     <ProgressBar
         android:id="@+id/adh_loading_bar"
@@ -53,35 +64,40 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/adh_titleBackground"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginTop="4dp"
             android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="8.97:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/adh_titleLabel">
+            app:layout_constraintTop_toBottomOf="@+id/adh_titleLabel"
+            app:shapeAppearanceOverlay="@style/roundedCorners" />
 
-            <EditText
-                android:id="@+id/adh_editHabitTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginBottom="4dp"
-                android:background="@null"
-                android:ems="20"
-                android:importantForAutofill="no"
-                android:inputType="textNoSuggestions"
-                android:maxLength="20"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="SpeakableTextPresentCheck" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <EditText
+            android:id="@+id/adh_editHabitTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="4dp"
+            android:background="@null"
+            android:ems="20"
+            android:importantForAutofill="no"
+            android:inputType="textNoSuggestions"
+            android:maxLength="20"
+            android:textColor="@color/secondary_dark"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/adh_titleBackground"
+            app:layout_constraintEnd_toEndOf="@id/adh_titleBackground"
+            app:layout_constraintStart_toStartOf="@id/adh_titleBackground"
+            app:layout_constraintTop_toTopOf="@id/adh_titleBackground"
+            tools:ignore="SpeakableTextPresentCheck" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -108,36 +124,40 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/adh_reasonBackground"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginTop="4dp"
             android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="8.97:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/adh_reasonLabel">
+            app:layout_constraintTop_toBottomOf="@+id/adh_reasonLabel"
+            app:shapeAppearanceOverlay="@style/roundedCorners" />
 
-            <EditText
-                android:id="@+id/adh_editHabitReason"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginBottom="4dp"
-                android:background="@null"
-                android:ems="20"
-                android:importantForAutofill="no"
-                android:inputType="textNoSuggestions"
-                android:maxLength="30"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="SpeakableTextPresentCheck" />
+        <EditText
+            android:id="@+id/adh_editHabitReason"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="4dp"
+            android:background="@null"
+            android:ems="20"
+            android:importantForAutofill="no"
+            android:inputType="textNoSuggestions"
+            android:maxLength="30"
+            android:textColor="@color/secondary_dark"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/adh_reasonBackground"
+            app:layout_constraintEnd_toEndOf="@id/adh_reasonBackground"
+            app:layout_constraintStart_toStartOf="@id/adh_reasonBackground"
+            app:layout_constraintTop_toTopOf="@id/adh_reasonBackground"
+            tools:ignore="SpeakableTextPresentCheck" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -163,30 +183,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/adh_scheduleBackground"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginTop="4dp"
             android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/adh_scheduleLabel">
+            app:layout_constraintTop_toBottomOf="@+id/adh_scheduleLabel"
+            app:shapeAppearanceOverlay="@style/roundedCorners" />
 
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/adh_scheduleFragment"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/adh_scheduleFragment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="31dp"
+            android:layout_marginTop="22dp"
+            android:layout_marginEnd="31dp"
+            android:layout_marginBottom="22dp"
+            app:layout_constraintBottom_toBottomOf="@id/adh_scheduleBackground"
+            app:layout_constraintEnd_toEndOf="@id/adh_scheduleBackground"
+            app:layout_constraintStart_toStartOf="@id/adh_scheduleBackground"
+            app:layout_constraintTop_toTopOf="@id/adh_scheduleBackground" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -211,27 +232,29 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/adh_datePickerBackground"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginTop="4dp"
             android:background="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/adh_startDateLabel">
+            app:layout_constraintTop_toBottomOf="@+id/adh_startDateLabel"
+            app:shapeAppearanceOverlay="@style/roundedCorners" />
 
-            <DatePicker
-                android:id="@+id/adh_editStartDate"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:calendarViewShown="false"
-                android:datePickerMode="spinner"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <DatePicker
+            android:id="@+id/adh_editStartDate"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner"
+            app:layout_constraintBottom_toBottomOf="@id/adh_datePickerBackground"
+            app:layout_constraintEnd_toEndOf="@id/adh_datePickerBackground"
+            app:layout_constraintStart_toStartOf="@id/adh_datePickerBackground"
+            app:layout_constraintTop_toTopOf="@id/adh_datePickerBackground" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

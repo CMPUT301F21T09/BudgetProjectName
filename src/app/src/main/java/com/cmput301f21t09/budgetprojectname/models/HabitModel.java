@@ -1,28 +1,37 @@
 package com.cmput301f21t09.budgetprojectname.models;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
+import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.services.ServiceTask;
 import com.cmput301f21t09.budgetprojectname.services.ServiceTaskManager;
 import com.cmput301f21t09.budgetprojectname.services.database.CollectionSpecifier;
 import com.cmput301f21t09.budgetprojectname.services.database.DatabaseService;
 import com.cmput301f21t09.budgetprojectname.services.database.serializers.DocumentModelSerializer;
 import com.cmput301f21t09.budgetprojectname.services.database.serializers.ModelMapParser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.Transaction;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Transaction;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Model class for user habits
  */
 public class HabitModel implements IHabitModel {
+
+    /**
+     * Collection ID for habits as represented in backend
+     */
+    public static final String HABIT_COLLECTION_ID = "habits";
+
     /**
      * Habit title
      */
@@ -91,9 +100,66 @@ public class HabitModel implements IHabitModel {
      * @return load task for habit
      */
     public static ServiceTask<HabitModel> getInstanceById(String id) {
-        return DatabaseService.getInstance().getCollection(CollectionSpecifier.HABITS)
-                .getDocument(id)
-                .retrieve(DocumentModelSerializer.getInstance(new HabitModelMapParser()));
+        ServiceTaskManager<HabitModel> taskManager = new ServiceTaskManager<>();
+        FirebaseFirestore.getInstance().collection(HABIT_COLLECTION_ID).document(id).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                HabitModel data = new HabitModelMapParser().parseMap(task.getResult().getData(), id);
+                taskManager.setSuccess(data);
+            } else {
+                taskManager.setFailure(task.getException());
+            }
+        });
+        return taskManager.getTask();
+    }
+
+    /**
+     * Get all the current user's habits
+     *
+     * @return load task for all user's habits
+     */
+    public static ServiceTask<List<HabitModel>> getAllForCurrentUser() {
+        ServiceTaskManager<List<HabitModel>> taskManager = new ServiceTaskManager<>();
+        FirebaseFirestore.getInstance().collection(HABIT_COLLECTION_ID)
+                .whereEqualTo("uid", AuthorizationService.getInstance().getCurrentUserId())
+                .get()
+                .addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<HabitModel> models = new ArrayList<>();
+                HabitModelMapParser parser = new HabitModelMapParser();
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    models.add(parser.parseMap(document.getData(), document.getId()));
+                }
+                taskManager.setSuccess(models);
+            } else {
+                taskManager.setFailure(task.getException());
+            }
+        });
+        return taskManager.getTask();
+    }
+
+    /**
+     * Get all habits that the current user needs to do for the day
+     *
+     * @return load task for all user's habits they need to do
+     */
+    public static ServiceTask<List<HabitModel>> getTodoForCurrentUser() {
+        ServiceTaskManager<List<HabitModel>> taskManager = new ServiceTaskManager<>();
+        FirebaseFirestore.getInstance().collection(HABIT_COLLECTION_ID)
+                .whereEqualTo("uid", AuthorizationService.getInstance().getCurrentUserId())
+                .whereArrayContainsAny("schedule", new HabitScheduleModelFactory().getQueryForToday())
+                .get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<HabitModel> models = new ArrayList<>();
+                HabitModelMapParser parser = new HabitModelMapParser();
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    models.add(parser.parseMap(document.getData(), document.getId()));
+                }
+                taskManager.setSuccess(models);
+            } else {
+                taskManager.setFailure(task.getException());
+            }
+        });
+        return taskManager.getTask();
     }
 
     /**
@@ -222,21 +288,28 @@ public class HabitModel implements IHabitModel {
      */
     public ServiceTask<Void> commit() {
         // TODO: prevent multiple commits at the same time through the same model
-        DocumentModelSerializer<HabitModel> serializer = DocumentModelSerializer.getInstance(new HabitModelMapParser());
+        // TODO: throw if user is not logged in
+        ServiceTaskManager<Void> tman = new ServiceTaskManager<>();
         // If this was a new habit model we push a new entry to the database
         if (this.id == null) {
-            ServiceTask<String> saveTask = DatabaseService.getInstance().getCollection(CollectionSpecifier.HABITS).push(this, serializer);
-            saveTask.addTaskCompleteListener(task -> {
+            FirebaseFirestore.getInstance().collection(HABIT_COLLECTION_ID).add(
+                    new HabitModelMapParser().parseModel(this)
+            ).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    this.id = task.getResult();
-                }
+                    this.id = task.getResult().getId();
+                    tman.setSuccess(null);
+                } else tman.setFailure(task.getException());
             });
-            return ServiceTaskManager.fromTask(saveTask, s -> null, e -> e);
+        } else {
+            // Otherwise we just set the new model info
+            FirebaseFirestore.getInstance().collection(HABIT_COLLECTION_ID)
+                    .document(this.id).set(new HabitModelMapParser().parseModel(this)).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    tman.setSuccess(null);
+                } else tman.setFailure(task.getException());
+            });
         }
-        // Otherwise we just set the new model info
-        return DatabaseService.getInstance().getCollection(CollectionSpecifier.HABITS)
-                .getDocument(this.id)
-                .save(this, serializer);
+        return tman.getTask();
     }
 
     /**
@@ -293,7 +366,7 @@ public class HabitModel implements IHabitModel {
                     DocumentModelSerializer.parseAsDate(map.get("start_date")),
                     DocumentModelSerializer.parseAsDate(map.get("last_completed")),
                     map.get("streak") != null ? (Long) map.get("streak") : 0,
-                    scheduleFactory.getModelInstanceFromData((Map<String, Object>) map.get("schedule"))
+                    scheduleFactory.getModelInstanceFromData((List<String>) map.get("schedule"))
             );
         }
 
@@ -305,7 +378,8 @@ public class HabitModel implements IHabitModel {
             map.put("start_date", model.getStartDate());
             map.put("last_completed", model.getLastCompleted());
             map.put("streak", model.getStreak());
-            map.put("schedule", model.getSchedule().toMap());
+            map.put("schedule", model.getSchedule().toList());
+            map.put("uid", AuthorizationService.getInstance().getCurrentUserId());
             return map;
         }
     }

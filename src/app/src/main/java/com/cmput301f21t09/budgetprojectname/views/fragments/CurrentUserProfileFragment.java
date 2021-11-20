@@ -29,11 +29,6 @@ import java.util.ArrayList;
 public class CurrentUserProfileFragment extends Fragment {
 
     /**
-     * Controller for fetching habit events
-     */
-    private final HabitListController habitListController = new HabitListController();
-
-    /**
      * Sign out.
      * Tells authorization service to sign out and
      * takes user to login screen.
@@ -62,10 +57,11 @@ public class CurrentUserProfileFragment extends Fragment {
         ArrayAdapter<HabitModel> habitAdapter = new UserHabitCustomList(getContext(), habitDataList);
         habitList.setAdapter(habitAdapter);
 
-        // Fetches the habits related to the current habit from Firestore
-        habitListController.readHabitList(hbLst -> {
+        HabitModel.getAllForCurrentUser().addTaskCompleteListener(task -> {
             habitDataList.clear();
-            habitDataList.addAll(hbLst);
+            if (task.isSuccessful()) {
+                habitDataList.addAll(task.getResult());
+            }
             habitAdapter.notifyDataSetChanged();
         });
 

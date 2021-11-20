@@ -88,10 +88,12 @@ public class DailyHabitFragment extends Fragment {
         ArrayAdapter<HabitModel> habitAdapter = new DailyHabitCustomList(getContext(), habitDataList);
         habitList.setAdapter(habitAdapter);
 
-        // Fetches the habits related to the current habit from Firestore 
-        habitListController.readHabitList(hbLst -> {
+        // Fetches the habits related to the current day from Firestore
+        HabitModel.getTodoForCurrentUser().addTaskCompleteListener(task -> {
             habitDataList.clear();
-            habitDataList.addAll(hbLst);
+            if (task.isSuccessful()) {
+                habitDataList.addAll(task.getResult());
+            }
             habitAdapter.notifyDataSetChanged();
         });
 

@@ -10,9 +10,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cmput301f21t09.budgetprojectname.MainActivity;
 import com.cmput301f21t09.budgetprojectname.views.lists.HabitEventCustomList;
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
@@ -161,6 +163,11 @@ public class ViewHabitActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        ImageButton removeHabitBtn = findViewById(R.id.view_habit_remove_button);
+        removeHabitBtn.setOnClickListener(view -> {
+            controller.deleteModel();
+        });
     }
 
     /**
@@ -177,6 +184,21 @@ public class ViewHabitActivity extends AppCompatActivity {
         thursdayIcon = findViewById(R.id.thursday_icon);
         fridayIcon = findViewById(R.id.friday_icon);
         saturdayIcon = findViewById(R.id.saturday_icon);
+
+        if (controller.isTaskComplete(HabitController.HABIT_MODEL_DELETE)) {
+            if (controller.isTaskSuccessful(HabitController.HABIT_MODEL_DELETE)) {
+                Toast t = new Toast(this);
+                t.setText("Habit deleted");
+                t.show();
+                Intent deleteIntent = new Intent(getApplicationContext(), MainActivity.class);
+                deleteIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(deleteIntent);
+            } else {
+                Toast t = new Toast(this);
+                t.setText("Unable to delete");
+                t.show();
+            }
+        }
 
         // Set the views of the habit details accordingly
         if (controller.isTaskComplete(HabitController.HABIT_MODEL_LOAD)) {

@@ -108,13 +108,16 @@ public class HabitModel implements IHabitModel {
     }
 
     /**
-     * Get an instance of a habit that exists in the database as specified by the given id
+     * Get all the current user's habits
      *
      * @return load task for all user's habits
      */
     public static ServiceTask<List<HabitModel>> getAllForCurrentUser() {
         ServiceTaskManager<List<HabitModel>> taskManager = new ServiceTaskManager<>();
-        FirebaseFirestore.getInstance().collection(HABIT_COLLECTION_ID).whereEqualTo("uid", AuthorizationService.getInstance().getCurrentUserId()).get().addOnCompleteListener(task -> {
+        FirebaseFirestore.getInstance().collection(HABIT_COLLECTION_ID)
+                .whereEqualTo("uid", AuthorizationService.getInstance().getCurrentUserId())
+                .get()
+                .addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<HabitModel> models = new ArrayList<>();
                 HabitModelMapParser parser = new HabitModelMapParser();
@@ -130,15 +133,15 @@ public class HabitModel implements IHabitModel {
     }
 
     /**
-     * Get an instance of a habit that exists in the database as specified by the given id
+     * Get all habits that the current user needs to do for the day
      *
-     * @return load task for all user's habits
+     * @return load task for all user's habits they need to do
      */
     public static ServiceTask<List<HabitModel>> getTodoForCurrentUser() {
         ServiceTaskManager<List<HabitModel>> taskManager = new ServiceTaskManager<>();
         FirebaseFirestore.getInstance().collection(HABIT_COLLECTION_ID)
                 .whereEqualTo("uid", AuthorizationService.getInstance().getCurrentUserId())
-                .whereArrayContainsAny("schedule", new HabitScheduleModelFactory().getQueryForToday()) // TODO: This should get grabbed from the schedule factory
+                .whereArrayContainsAny("schedule", new HabitScheduleModelFactory().getQueryForToday())
                 .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<HabitModel> models = new ArrayList<>();

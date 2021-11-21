@@ -88,12 +88,6 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
             modeStr = getString(R.string.editHabitEventMode);
             // sets existing habitEvent fields
             setHabitEventFields(habitEventID);
-
-            if (marker != null) {
-                LatLng markerLocation = new LatLng(marker.getLatitude(), marker.getLongitude());
-                map.addMarker(markerOptions.position(markerLocation));
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLocation, 10));
-            }
         }
 
         // update title according to mode selected: "add" or "edit"
@@ -135,6 +129,8 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                 } else {
                     if (isNewHabitEvent) {
                         mapMarkCurrentLocation();
+                    } else {
+                        map.setMyLocationEnabled(true);
                     }
                     locationContainer.setVisibility(View.VISIBLE);
                 }
@@ -272,8 +268,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         googleMap.setOnMapClickListener(latLng -> {
             googleMap.clear();
             googleMap.addMarker(markerOptions.position(latLng));
-            marker.setLatitude(latLng.latitude);
-            marker.setLongitude(latLng.longitude);
+            marker.setLocation(latLng.latitude, latLng.longitude);
         });
     }
 
@@ -281,13 +276,12 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         map.setMyLocationEnabled(true);
 
         Location location = getLocation();
-        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-        map.addMarker(markerOptions.position(userLocation));
-        marker.setLatitude(userLocation.latitude);
-        marker.setLongitude(userLocation.longitude);
+        map.addMarker(markerOptions.position(latLng));
+        marker.setLocation(latLng.latitude, latLng.longitude);
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 10));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
     }
 
     private final LocationListener mLocationListener = location -> {

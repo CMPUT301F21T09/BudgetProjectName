@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,7 +45,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Activity that makes the user to add/edit a habit event
@@ -121,6 +121,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        marker = new LatLngModel();
 
         // Show/Hide Map
         locationContainer = findViewById(R.id.location_container);
@@ -242,9 +243,8 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
             if (grantResults.length > 0 &&
                     (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
                 mapMarkCurrentLocation();
-                locationContainer.setVisibility(View.VISIBLE);
             } else {
-                locationSwitch.setChecked(false);
+                map.setMyLocationEnabled(false);
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     Snackbar.make(getWindow().getDecorView().getRootView(), "This action requires\nlocation permission", Snackbar.LENGTH_INDEFINITE)
                             .setAction("Grant Permission", v1 -> {
@@ -258,6 +258,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                             }).show();
                 }
             }
+            locationContainer.setVisibility(View.VISIBLE);
         }
     }
 
@@ -280,7 +281,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
 
         MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(205.0f));
 
-        Location location = getLastKnownLocation();
+        Location location = getLocation();
         LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
         map.addMarker(markerOptions.position(userLocation));
@@ -289,20 +290,28 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 10));
     }
 
-    private Location getLastKnownLocation() {
+    private final LocationListener mLocationListener = location -> {
+        //your code here
+    };
+
+    private Location getLocation() {
         LocationManager mLocationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-        List<String> providers = mLocationManager.getProviders(true);
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000L, 500.0f, mLocationListener);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 500.0f, mLocationListener);
+
         Location bestLocation = null;
-        for (String provider : providers) {
+        for (String provider : mLocationManager.getProviders(true)) {
+            mLocationManager.requestLocationUpdates(provider, 1000L, 500.0f, mLocationListener);
             Location l = mLocationManager.getLastKnownLocation(provider);
+
             if (l == null) {
                 continue;
             }
             if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
-                // Found best last known location: %s", l);
                 bestLocation = l;
             }
         }
+
         return bestLocation;
     }
 }

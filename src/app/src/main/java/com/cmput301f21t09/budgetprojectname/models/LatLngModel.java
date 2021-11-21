@@ -34,13 +34,18 @@ public class LatLngModel {
         this.longitude = longitude;
     }
 
+    public void setLocation(Double latitude, Double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
-        LatLngModel latLngModel = (LatLngModel) obj;
+        if (obj.getClass().isInstance(LatLngModel.class)) {
+            LatLngModel latLngModel = (LatLngModel) obj;
 
-        if (this.getLatitude().equals(latLngModel.getLatitude())
-                && this.getLongitude().equals(latLngModel.getLongitude())) {
-            return true;
+            return this.getLatitude().equals(latLngModel.getLatitude())
+                    && this.getLongitude().equals(latLngModel.getLongitude());
         }
 
         return false;

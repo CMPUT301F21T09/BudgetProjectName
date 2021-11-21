@@ -67,6 +67,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
 
     GoogleMap map;
     LatLngModel marker;
+    MarkerOptions markerOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +91,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
 
             if (marker != null) {
                 LatLng markerLocation = new LatLng(marker.getLatitude(), marker.getLongitude());
-                map.addMarker(new MarkerOptions().position(markerLocation).icon(BitmapDescriptorFactory.defaultMarker(205.0f)));
+                map.addMarker(markerOptions.position(markerLocation));
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLocation, 10));
             }
         }
@@ -122,6 +123,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         marker = new LatLngModel();
+        markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(205.0f));
 
         // Show/Hide Map
         locationContainer = findViewById(R.id.location_container);
@@ -168,7 +170,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                             marker = habitEventModel.getLocation();
                             mapFragment.getMapAsync(googleMap -> {
                                 LatLng markerLocation = new LatLng(marker.getLatitude(), marker.getLongitude());
-                                googleMap.addMarker(new MarkerOptions().position(markerLocation).icon(BitmapDescriptorFactory.defaultMarker(205.0f)));
+                                googleMap.addMarker(markerOptions.position(markerLocation));
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLocation, 13));
                             });
                         }
@@ -266,7 +268,6 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
         googleMap.getUiSettings().setMapToolbarEnabled(false);
-        MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(205.0f));
 
         googleMap.setOnMapClickListener(latLng -> {
             googleMap.clear();
@@ -279,13 +280,12 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     private void mapMarkCurrentLocation() {
         map.setMyLocationEnabled(true);
 
-        MarkerOptions markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(205.0f));
-
         Location location = getLocation();
         LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
         map.addMarker(markerOptions.position(userLocation));
-        marker = new LatLngModel(userLocation.latitude, userLocation.longitude);
+        marker.setLatitude(userLocation.latitude);
+        marker.setLongitude(userLocation.longitude);
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 10));
     }
@@ -298,7 +298,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
 
         Location bestLocation = null;
         for (String provider : mLocationManager.getProviders(true)) {
-            mLocationManager.requestLocationUpdates(provider, 1000L, 500.0f, mLocationListener);
+            mLocationManager.requestLocationUpdates(provider, 1000L, 0, mLocationListener);
             Location l = mLocationManager.getLastKnownLocation(provider);
 
             if (l == null) {

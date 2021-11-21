@@ -291,13 +291,10 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     }
 
     private final LocationListener mLocationListener = location -> {
-        //your code here
     };
 
     private Location getLocation() {
         LocationManager mLocationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000L, 500.0f, mLocationListener);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 500.0f, mLocationListener);
 
         Location bestLocation = null;
         for (String provider : mLocationManager.getProviders(true)) {

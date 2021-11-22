@@ -1,12 +1,15 @@
 package com.cmput301f21t09.budgetprojectname.views.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +17,9 @@ import androidx.fragment.app.Fragment;
 
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.models.HabitModel;
+import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
+import com.cmput301f21t09.budgetprojectname.views.activities.FollowerRequestActivity;
+import com.cmput301f21t09.budgetprojectname.views.activities.UserLoginActivity;
 import com.cmput301f21t09.budgetprojectname.views.lists.UserHabitCustomList;
 
 import java.util.ArrayList;
@@ -22,6 +28,16 @@ import java.util.ArrayList;
  * Fragment that shows the user's following user list and makes accepting/rejecting the follower request from other user
  */
 public class FollowingFragment extends Fragment {
+
+    /**
+     * Sign out.
+     * Tells authorization service to sign out and
+     * takes user to login screen.
+     */
+    private void seeRequests() {
+        // TODO: send userid in intent
+        startActivity(new Intent(getActivity(), FollowerRequestActivity.class));
+    }
 
     @Nullable
     @Override
@@ -32,6 +48,9 @@ public class FollowingFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        Button requests_btn = (Button) view.findViewById(R.id.requests_button);
+        requests_btn.setOnClickListener(v -> seeRequests());
 
         // TODO: replace with users following instead of habit
         // ListView setup

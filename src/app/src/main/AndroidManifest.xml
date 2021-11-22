@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BudgetProjectName">
         <activity
+            android:name=".views.activities.FollowerRequestActivity"
+            android:exported="true" />
+        <activity
             android:name=".views.activities.DefineHabitActivity"
             android:exported="true" />
         <activity
@@ -33,6 +36,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.cmput301f21t09.budgetprojectname.R;
-import com.cmput301f21t09.budgetprojectname.models.HabitModel;
 import com.cmput301f21t09.budgetprojectname.models.UserModel;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
     private final Context context;
 
     /**
-     * Constructor for DailyHabitCustomList
+     * Constructor for FollowRequestCustomList
      *
      * @param context a current context of application
      * @param users   a arrayList of users who wish to follow a given user

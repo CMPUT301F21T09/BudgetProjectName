@@ -10,6 +10,7 @@ import static org.junit.Assert.*;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.cmput301f21t09.budgetprojectname.views.activities.UserRegisterActivity;
 import com.google.firebase.auth.FirebaseUser;
 import com.robotium.solo.Solo;
 import com.google.firebase.auth.FirebaseAuth;

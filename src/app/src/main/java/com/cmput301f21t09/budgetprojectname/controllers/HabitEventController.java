@@ -1,14 +1,14 @@
-package com.cmput301f21t09.budgetprojectname;
+package com.cmput301f21t09.budgetprojectname.controllers;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -17,7 +17,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Represents a Habit Event Controller that interfaces with FirestoreDB to
@@ -147,14 +146,8 @@ public class HabitEventController {
                     DocumentSnapshot doc = task.getResult();
                     if (doc.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
-                        String id = (String) doc.getId();
-                        Date date = ((Timestamp) doc.getData().get("date")).toDate();
-                        String location = (String) doc.getData().get("location");
-                        String comment = (String) doc.getData().get("comment");
-                        String image = (String) doc.getData().get("image");
-                        String habitID = (String) doc.getData().get("habitID");
                         HabitEventModel retrievedHabitEventModel =
-                                new HabitEventModel(id, location, date, comment, image, habitID);
+                                doc.toObject(HabitEventModel.class);
                         habitEventCallback.onCallback(retrievedHabitEventModel);
                     } else {
                         Log.d(TAG, "No such document");

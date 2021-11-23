@@ -1,4 +1,4 @@
-package com.cmput301f21t09.budgetprojectname;
+package com.cmput301f21t09.budgetprojectname.views.activities;
 
 import android.Manifest;
 import android.app.Activity;
@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,6 +18,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -26,16 +30,27 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import com.cmput301f21t09.budgetprojectname.R;
+import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
+import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
+import com.cmput301f21t09.budgetprojectname.models.LatLngModel;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -49,10 +64,9 @@ import java.util.Date;
 /**
  * Activity that makes the user to add/edit a habit event
  */
-public class DefineHabitEventActivity extends AppCompatActivity {
+public class DefineHabitEventActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private TextView habitEventName;
-    private EditText location;
     private EditText comment;
     private ImageView imageView;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -61,6 +75,14 @@ public class DefineHabitEventActivity extends AppCompatActivity {
     private final HabitEventController habitEventController = new HabitEventController();
     private String habitID;
     private String habitEventID;
+
+    SupportMapFragment mapFragment;
+    SwitchMaterial locationSwitch;
+    ConstraintLayout locationContainer;
+
+    GoogleMap map;
+    LatLngModel markerLocation;
+    MarkerOptions markerOptions;
 
     private ActivityResultLauncher<Intent> GalleryResultLauncher;
     private ActivityResultLauncher<Intent> CameraResultLauncher;
@@ -99,7 +121,6 @@ public class DefineHabitEventActivity extends AppCompatActivity {
         tbTitle.setText(modeStr);
 
         habitEventName = findViewById(R.id.habitName);
-        location = findViewById(R.id.location);
         comment = findViewById(R.id.comment);
         imageView = findViewById(R.id.image);
 
@@ -109,7 +130,31 @@ public class DefineHabitEventActivity extends AppCompatActivity {
             finish();
         });
 
-        // Get Image from Launcher
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        markerLocation = new LatLngModel();
+        markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(205.0f));
+
+        // Show/Hide Map
+        locationContainer = findViewById(R.id.location_container);
+        locationSwitch = findViewById(R.id.location_switch);
+        locationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+                } else {
+                    if (isNewHabitEvent) {
+                        mapMarkCurrentLocation();
+                    } else {
+                        map.setMyLocationEnabled(true);
+                    }
+                    locationContainer.setVisibility(View.VISIBLE);
+                }
+            } else {
+                locationContainer.setVisibility(View.GONE);
+            }
+        });
+
         GalleryResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -152,7 +197,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                     } else if (which == 1) {
                         // Check if Corresponding Permissions are granted
                         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                            requestPermissions(new String[]{Manifest.permission.CAMERA}, 0);
+                            requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
                         } else {
                             runCameraIntent();
                         }
@@ -164,29 +209,204 @@ public class DefineHabitEventActivity extends AppCompatActivity {
                 }).show());
     }
 
+
+    /**
+     * Sets the fields with existing values from Firestore
+     *
+     * @param habitEventID ID of habitEvent to be retrieved
+     */
+    private void setHabitEventFields(String habitEventID) {
+        DocumentReference docRef = db.collection("habit_events").document(habitEventID);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        // TODO: Move to HabitEventController once async request handling is solved
+
+                        HabitEventModel habitEventModel = document.toObject(HabitEventModel.class);
+
+                        // set fields in view
+                        if (habitEventModel.getLocation() != null) {
+                            locationSwitch.setChecked(true);
+                            markerLocation = habitEventModel.getLocation();
+                            mapFragment.getMapAsync(googleMap -> {
+                                LatLng markerLocation = new LatLng(DefineHabitEventActivity.this.markerLocation.getLatitude(), DefineHabitEventActivity.this.markerLocation.getLongitude());
+                                googleMap.addMarker(markerOptions.position(markerLocation));
+                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLocation, 13));
+                            });
+                        }
+                        comment.setText(habitEventModel.getComment());
+
+                        imageData = habitEventModel.getImage();
+                        if (imageData != null) {
+                            byte[] byteArray = Base64.decode(imageData, Base64.DEFAULT);
+                            imageView.setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
+                        }
+
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_define_habit, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Brings the user back to the previous activity if the back button on the app bar is pressed
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.menu_commit_changes:
+                String commentStr = comment.getText().toString();
+                // error checking/handling for adding optional comment of up to 30 chars
+                if (commentStr.length() > 20) {
+                    comment.setError(getString(R.string.errorHabitEventComment));
+                    comment.requestFocus();
+                    Toast.makeText(getApplicationContext(), "ERROR: could not save habit event",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    HabitEventModel habitEvent = new HabitEventModel(null,
+                            locationSwitch.isChecked() && (markerLocation.getLatitude() != null) ? markerLocation : null,
+                            new Date(), commentStr, encodeImage(), habitID);
+
+                    if (isNewHabitEvent) {
+                        habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
+                            @Override
+                            public void onCallback(String habitEventID) {
+                                // TODO: figure out what to add here
+                                System.out.println("habitevent id " + habitEventID);
+                                // return back to main habit list
+                                finish();
+                            }
+                        });
+                    } else {
+                        habitEventController.updateHabitEvent(habitEventID, habitEvent);
+                        // return back to habit detail page
+                        Intent i = new Intent(getApplicationContext(), ViewHabitActivity.class);
+                        i.putExtra("HABIT_ID", habitID);
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
+                    }
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            runCameraIntent();
-        } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-                Snackbar.make(getWindow().getDecorView().getRootView(), "This action requires\ncamera permission", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("Grant Permission", v1 -> {
-                            requestPermissions(new String[]{Manifest.permission.CAMERA}, 0);
-                        }).show();
+        if (requestCode == 0) {
+            if (grantResults.length > 0 &&
+                    (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+                mapMarkCurrentLocation();
             } else {
-                Snackbar.make(getWindow().getDecorView().getRootView(), "This action requires\ncamera permission.", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("Go to Settings", v1 -> {
-                            Uri uri = Uri.fromParts("package", getPackageName(), null);
-                            startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(uri));
-                        }).show();
+                map.setMyLocationEnabled(false);
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    Snackbar.make(getWindow().getDecorView().getRootView(), "Grant location permission to show current location", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Grant Permission", v1 -> {
+                                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+                            }).show();
+                } else {
+                    Snackbar.make(getWindow().getDecorView().getRootView(), "Grant location permission to show current location", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Go to Settings", v1 -> {
+                                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                                startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(uri));
+                            }).show();
+                }
+            }
+            locationContainer.setVisibility(View.VISIBLE);
+        } else if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                runCameraIntent();
+            } else {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+                    Snackbar.make(getWindow().getDecorView().getRootView(), "This action requires\ncamera permission", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Grant Permission", v1 -> {
+                                requestPermissions(new String[]{Manifest.permission.CAMERA}, 0);
+                            }).show();
+                } else {
+                    Snackbar.make(getWindow().getDecorView().getRootView(), "This action requires\ncamera permission.", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Go to Settings", v1 -> {
+                                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                                startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(uri));
+                            }).show();
+                }
             }
         }
     }
 
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        map = googleMap;
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
+
+        googleMap.setOnMapClickListener(latLng -> {
+            googleMap.clear();
+            googleMap.addMarker(markerOptions.position(latLng));
+            markerLocation.setLocation(latLng.latitude, latLng.longitude);
+        });
+    }
+
+    /**
+     * Enable my location function on Google map and mark current location
+     */
+    private void mapMarkCurrentLocation() {
+        map.setMyLocationEnabled(true);
+
+        Location location = getCurrentLocation();
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+        map.addMarker(markerOptions.position(latLng));
+        markerLocation.setLocation(latLng.latitude, latLng.longitude);
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+    }
+
+    /**
+     * Update and return current Location
+     *
+     * @return Location
+     */
+    private Location getCurrentLocation() {
+        LocationManager mLocationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+        LocationListener mLocationListener = location -> {
+        };
+
+        Location bestLocation = null;
+        for (String provider : mLocationManager.getProviders(true)) {
+            mLocationManager.requestLocationUpdates(provider, 1000L, 0, mLocationListener);
+            Location l = mLocationManager.getLastKnownLocation(provider);
+
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                bestLocation = l;
+            }
+        }
+
+        return bestLocation;
+    }
+
     /**
      * Encode Image to base64 string
+     *
      * @return encoded image string
      */
     private String encodeImage() {
@@ -220,147 +440,4 @@ public class DefineHabitEventActivity extends AppCompatActivity {
             CameraResultLauncher.launch(cameraIntent);
         }
     }
-
-    /**
-     * Stores newly created habitEvent document in the habit_events collection
-     *
-     * @param habitEvent habitEvent to be added
-     */
-    private void storeNewHabitEvent(HabitEventModel habitEvent) {
-        System.out.println("store new habit");
-        db.collection("habit_events")
-                .add(habitEvent)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        String docID = documentReference.getId();
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + docID);
-                        System.out.println(docID);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
-    }
-
-    /**
-     * Stores modified habitEvent document in the habit_events collection
-     *
-     * @param habitEventID       ID of habitEvent to be updated
-     * @param modifiedHabitEvent habitEvent to be updated
-     */
-    private void storeEditedHabitEvent(String habitEventID, HabitEventModel modifiedHabitEvent) {
-        DocumentReference habitEventRef = db.collection("habit_events")
-                .document(habitEventID);
-        habitEventRef.update("description", modifiedHabitEvent.getComment(),
-                "location", modifiedHabitEvent.getLocation(),
-                "image", modifiedHabitEvent.getImage())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully updated!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error updating document", e);
-                    }
-                });
-    }
-
-
-    /**
-     * Sets the fields with existing values from Firestore
-     *
-     * @param habitEventID ID of habitEvent to be retrieved
-     */
-    private void setHabitEventFields(String habitEventID) {
-        DocumentReference docRef = db.collection("habit_events").document(habitEventID);
-
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                        // TODO: Move to HabitEventController once async request handling is solved
-
-                        // set fields in view
-                        location.setText(document.getString("location"));
-                        comment.setText(document.getString("comment"));
-                        imageData = document.getString("image");
-                        if (imageData != null) {
-                            byte[] byteArray = Base64.decode(imageData, Base64.DEFAULT);
-                            imageView.setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
-                        }
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_define_habit, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Brings the user back to the previous activity if the back button on the app bar is pressed
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.menu_commit_changes:
-                String locationStr = location.getText().toString();
-                String commentStr = comment.getText().toString();
-                // error checking/handling for adding optional comment of up to 30 chars
-                if (commentStr.length() > 20) {
-                    comment.setError(getString(R.string.errorHabitEventComment));
-                    comment.requestFocus();
-                    Toast.makeText(getApplicationContext(), "ERROR: could not save habit event",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-
-                    String descriptionStr = comment.getText().toString();
-
-                    HabitEventModel habitEvent = new HabitEventModel(null, locationStr, new Date(),
-                            descriptionStr, encodeImage(), habitID);
-
-                    if (isNewHabitEvent) {
-                        habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
-                            @Override
-                            public void onCallback(String habitEventID) {
-                                // TODO: figure out what to add here
-                                System.out.println("habitevent id " + habitEventID);
-                                // return back to main habit list
-                                finish();
-
-                            }
-                        });
-                    } else {
-                        habitEventController.updateHabitEvent(habitEventID, habitEvent);
-                        // return back to habit detail page
-                        Intent i = new Intent(getApplicationContext(), ViewHabitActivity.class);
-                        i.putExtra("HABIT_ID", habitID);
-                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
-                    }
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
 }

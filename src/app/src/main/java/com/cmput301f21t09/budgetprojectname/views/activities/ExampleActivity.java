@@ -1,4 +1,4 @@
-package com.cmput301f21t09.budgetprojectname;
+package com.cmput301f21t09.budgetprojectname.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.cmput301f21t09.budgetprojectname.R;
 
 /**
  * This is an activity to be used for testing.

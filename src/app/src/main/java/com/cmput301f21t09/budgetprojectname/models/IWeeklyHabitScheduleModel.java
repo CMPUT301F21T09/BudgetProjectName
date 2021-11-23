@@ -37,11 +37,6 @@ public interface IWeeklyHabitScheduleModel extends IHabitScheduleModel {
     int SUNDAY = 6;
 
     /**
-     * Names of each weekday as found in the database
-     */
-    String[] NAMES_OF_WEEKDAYS = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"};
-
-    /**
      * Number of days in a week
      */
     int DAYS_IN_WEEK = 7;

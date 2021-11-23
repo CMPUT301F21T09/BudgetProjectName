@@ -33,5 +33,11 @@
         android:layout_height="wrap_content"
         android:text="User Login" />
 
+    <Button
+        android:id="@+id/another_user_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Another User's profile" />
+
 
 </LinearLayout>

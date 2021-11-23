@@ -27,10 +27,6 @@ public class UserController {
         void onCallback(UserModel user);
     }
 
-//    public interface HabitEventIDCallback {
-//        void onCallback(String habitEventID);
-//    }
-
     /**
      * Gets existing user from Firestore Db
      *
@@ -72,12 +68,12 @@ public class UserController {
     }
 
     /**
-     * Updates user document in the users collection
+     * Updates user document's Social map in the users collection
      *
      * @param userID       ID of user to be updated
      * @param follow       isFollow to be updated
      */
-    public void updateUser(String userID, HashMap<String, Integer> follow) {
+    public void updateUserSocialMap(String userID, HashMap<String, Integer> follow) {
         DocumentReference habitEventRef = dbStore.collection("users")
                 .document(userID);
         habitEventRef.update("social", follow)

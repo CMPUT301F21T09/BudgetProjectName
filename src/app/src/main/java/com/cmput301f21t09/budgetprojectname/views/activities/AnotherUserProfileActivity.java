@@ -180,6 +180,13 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
      * Change the display to the Following state
      */
     private void changeDisplayToFollowingState() {
+        // Set the views accordingly
+        followBtn.setVisibility(View.INVISIBLE);
+        followingLabel.setVisibility(View.VISIBLE);
+        followThisAccountLabel.setVisibility(View.INVISIBLE);
+        allHabitsLabel.setVisibility(View.VISIBLE);
+        habitList.setVisibility(View.VISIBLE);
+
         // Set up the list and send an empty list to the view
         ArrayList<HabitModel> habitDataList = new ArrayList<>();
         ArrayAdapter<HabitModel> habitAdapter = new UserHabitCustomList(this, habitDataList);

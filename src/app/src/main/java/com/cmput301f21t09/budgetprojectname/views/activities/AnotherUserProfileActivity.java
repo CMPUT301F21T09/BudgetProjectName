@@ -1,5 +1,8 @@
 package com.cmput301f21t09.budgetprojectname.views.activities;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -67,6 +70,9 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
      */
     private ListView habitList;
 
+    /**
+     * Class which handles viewing and following another user
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,75 +110,32 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
             username.setText("@" + retrievedAnotherUser.getUsername());
         });
 
-        // Set the display according to the relationship between the logged-in user and the user on screen
+        // Display (Not following and hasn't requested, Requested, or Following) scenarios based on Social Map values of current user and user on screen
         userController.readUser(currentUserId, retrievedCurrentUser -> {
-            // Check if the logged-in user is following the user on screen
-            if (retrievedCurrentUser.getSocial().containsKey(anotherUserID)) {
-                // Retrieve the value of user on screen in the logged-in user's Social map
-                int valueOfAnotherUserInCurrentUserSocialMap = ((Number) retrievedCurrentUser.getSocial().get(anotherUserID)).intValue();
+            userController.readUser(anotherUserID, retrievedAnotherUser -> {
+                // Get the Social Map values accordingly and set it to null if it doesn't exist
+                Integer valueOfAnotherUserInCurrentUserSocialMap = retrievedCurrentUser.getSocial().get(anotherUserID) == null ? null : ((Number) retrievedCurrentUser.getSocial().get(anotherUserID)).intValue();
+                Integer valueOfCurrentUserInAnotherUserSocialMap = retrievedAnotherUser.getSocial().get(currentUserId) == null ? null : ((Number) retrievedAnotherUser.getSocial().get(currentUserId)).intValue();
 
-                if (valueOfAnotherUserInCurrentUserSocialMap == 1 || valueOfAnotherUserInCurrentUserSocialMap == 2) {
-                    // Case: The logged-in user is following the user on screen
 
-                    // Set to the "Following" scenario with a list of this user's public habits
+                if ((isNull(valueOfAnotherUserInCurrentUserSocialMap) || valueOfAnotherUserInCurrentUserSocialMap == 0) && isNull(valueOfCurrentUserInAnotherUserSocialMap)) {
+                    // Not Following and hasn't requested Screen is shown and the Follow button is presented (Additionally, user on screen is not following the logged-in user)
+
+                    // If the user clicks on the Follow button, increase the user on screen's Social Map's value of current user from None to 0
+                    requestToFollow(currentUserId, anotherUserID, 0);
+                } else if ((isNull(valueOfAnotherUserInCurrentUserSocialMap) || valueOfAnotherUserInCurrentUserSocialMap == 0) && valueOfCurrentUserInAnotherUserSocialMap == 1) {
+                    // Not Following and hasn't requested Screen is shown and the Follow button is presented (Additionally, user on screen is following the logged-in user)
+
+                    // If the user clicks on the Follow button, increase the user on screen's Social Map's value of current user from 1 to 2
+                    requestToFollow(currentUserId, anotherUserID, 2);
+                } else if ((isNull(valueOfAnotherUserInCurrentUserSocialMap) || valueOfAnotherUserInCurrentUserSocialMap == 0) && (valueOfCurrentUserInAnotherUserSocialMap == 0 || valueOfCurrentUserInAnotherUserSocialMap == 2)) {
+                    // Requested Screen is shown
+                    changeDisplayToRequestedState();
+                } else if ((valueOfAnotherUserInCurrentUserSocialMap == 1 || valueOfAnotherUserInCurrentUserSocialMap == 2) && (isNull(valueOfCurrentUserInAnotherUserSocialMap) || valueOfCurrentUserInAnotherUserSocialMap == 0 || valueOfCurrentUserInAnotherUserSocialMap == 1 || valueOfCurrentUserInAnotherUserSocialMap == 2)) {
+                    // Following screen is shown
                     changeDisplayToFollowingState();
-                } else {
-                    // Case: The logged-in user is not currently following the user on screen
-                    // Check if the logged-in user has sent a follow request to the user on screen
-                    userController.readUser(anotherUserID, retrievedAnotherUser -> {
-                        if (retrievedAnotherUser.getSocial().containsKey(currentUserId)) {
-                            // Retrieve the value of the logged-in user in user on screen's Social map
-                            int valueOfCurrentUserInAnotherUserSocialMap = ((Number) retrievedAnotherUser.getSocial().get(currentUserId)).intValue();
-
-                            if (valueOfCurrentUserInAnotherUserSocialMap == 0 || valueOfCurrentUserInAnotherUserSocialMap == 2) {
-                                // The logged-in user has sent a follow request to this user
-                                changeDisplayToRequestedState();
-                            } else if (valueOfCurrentUserInAnotherUserSocialMap == 1) {
-                                // User on screen is following the logged-in user but the logged-in
-                                // user hasn't sent the user on screen a follow request
-
-                                followBtn.setOnClickListener(new View.OnClickListener() {
-                                    public void onClick(View v) {
-                                        requestToFollow(currentUserId, anotherUserID, 2);
-                                    }
-                                });
-                            }
-                        } else {
-                            // Case: The logged-in user is not following the user on screen and has not sent the
-                            // user on screen a follow request. The user on screen is not following the logged-in
-                            // user as well.
-                            followBtn.setOnClickListener(new View.OnClickListener() {
-                                public void onClick(View v) {
-                                    requestToFollow(currentUserId, anotherUserID, 0);
-                                }
-                            });
-                        }
-                    });
                 }
-            } else {
-                // Case: The logged-in user is not currently following the user on screen and the
-                // user on screen hasn't sent a follow request to the logged-in user
-                // Check if the logged-in user has sent a follow request to the user on screen.
-                userController.readUser(anotherUserID, retrievedAnotherUser -> {
-                    if (retrievedAnotherUser.getSocial().containsKey(currentUserId)) {
-                        // Retrieve the value of the logged-in user in another user's Social map
-                        int valueOfCurrentUserInAnotherUserSocialMap = ((Number) retrievedAnotherUser.getSocial().get(currentUserId)).intValue();
-
-                        if (valueOfCurrentUserInAnotherUserSocialMap == 0 || valueOfCurrentUserInAnotherUserSocialMap == 2) {
-                            // Case: The logged-in user has sent a follow request to this user
-                            changeDisplayToRequestedState();
-                        }
-                    } else {
-                        // Case: The logged-in user is not following the user on screen and has not sent the
-                        // user on screen a follow request.
-                        followBtn.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                requestToFollow(currentUserId, anotherUserID, 0);
-                            }
-                        });
-                    }
-                });
-            }
+            });
         });
     }
 
@@ -210,13 +173,17 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
      * @param newValue      new value to be used
      */
     private void requestToFollow(String currentUserId, String anotherUserID, Integer newValue) {
-        // Update the value of the currentUserId in anotherUserID's document
-        HashMap<String, Integer> incomingFollowRequest = new HashMap<String, Integer>();
-        incomingFollowRequest.put(currentUserId, newValue);
-        userController.updateUserSocialMap(anotherUserID, incomingFollowRequest);
+        followBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Update the value of the currentUserId in anotherUserID's document
+                HashMap<String, Integer> incomingFollowRequest = new HashMap<String, Integer>();
+                incomingFollowRequest.put(currentUserId, newValue);
+                userController.updateUserSocialMap(anotherUserID, incomingFollowRequest);
 
-        // Change the display to Requested State
-        changeDisplayToRequestedState();
+                // Change the display to Requested State
+                changeDisplayToRequestedState();
+            }
+        });
     }
 
     /**

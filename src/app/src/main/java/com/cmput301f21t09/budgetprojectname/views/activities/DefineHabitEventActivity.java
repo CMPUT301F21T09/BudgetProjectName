@@ -245,12 +245,12 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
             } else {
                 map.setMyLocationEnabled(false);
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    Snackbar.make(getWindow().getDecorView().getRootView(), "This action requires\nlocation permission", Snackbar.LENGTH_INDEFINITE)
+                    Snackbar.make(getWindow().getDecorView().getRootView(), "Grant location permission to show current location", Snackbar.LENGTH_INDEFINITE)
                             .setAction("Grant Permission", v1 -> {
                                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
                             }).show();
                 } else {
-                    Snackbar.make(getWindow().getDecorView().getRootView(), "This action requires\nlocation permission.", Snackbar.LENGTH_INDEFINITE)
+                    Snackbar.make(getWindow().getDecorView().getRootView(), "Grant location permission to show current location", Snackbar.LENGTH_INDEFINITE)
                             .setAction("Go to Settings", v1 -> {
                                 Uri uri = Uri.fromParts("package", getPackageName(), null);
                                 startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(uri));

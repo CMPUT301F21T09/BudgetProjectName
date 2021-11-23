@@ -116,7 +116,8 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
                 // Get the Social Map values accordingly and set it to null if it doesn't exist
                 Integer valueOfAnotherUserInCurrentUserSocialMap = retrievedCurrentUser.getSocial().get(anotherUserID) == null ? null : ((Number) retrievedCurrentUser.getSocial().get(anotherUserID)).intValue();
                 Integer valueOfCurrentUserInAnotherUserSocialMap = retrievedAnotherUser.getSocial().get(currentUserId) == null ? null : ((Number) retrievedAnotherUser.getSocial().get(currentUserId)).intValue();
-                
+
+                // The conditional statements below would render the correct screen accordingly based on the fact that (0==incoming_request, 1==following, 2==incoming_request and following)
                 if ((isNull(valueOfAnotherUserInCurrentUserSocialMap) || valueOfAnotherUserInCurrentUserSocialMap == 0) && isNull(valueOfCurrentUserInAnotherUserSocialMap)) {
                     // Not Following and hasn't requested Screen is shown and the Follow button is presented (Additionally, user on screen is not following the logged-in user)
 

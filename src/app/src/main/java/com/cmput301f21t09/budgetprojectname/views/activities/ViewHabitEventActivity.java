@@ -76,6 +76,8 @@ public class ViewHabitEventActivity extends AppCompatActivity {
                 } catch (IOException ex) {
                     habitEventLocation.setText("No Address");
                 }
+            } else {
+                habitEventLocation.setText("No Location");
             }
 
             habitEventDescription.setText(retrievedhabitEvent.getComment());

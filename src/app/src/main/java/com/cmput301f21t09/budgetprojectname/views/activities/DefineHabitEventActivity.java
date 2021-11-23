@@ -66,7 +66,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     ConstraintLayout locationContainer;
 
     GoogleMap map;
-    LatLngModel marker;
+    LatLngModel markerLocation;
     MarkerOptions markerOptions;
 
     @Override
@@ -116,7 +116,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        marker = new LatLngModel();
+        markerLocation = new LatLngModel();
         markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(205.0f));
 
         // Show/Hide Map
@@ -163,9 +163,9 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                         // set fields in view
                         if (habitEventModel.getLocation() != null) {
                             locationSwitch.setChecked(true);
-                            marker = habitEventModel.getLocation();
+                            markerLocation = habitEventModel.getLocation();
                             mapFragment.getMapAsync(googleMap -> {
-                                LatLng markerLocation = new LatLng(marker.getLatitude(), marker.getLongitude());
+                                LatLng markerLocation = new LatLng(DefineHabitEventActivity.this.markerLocation.getLatitude(), DefineHabitEventActivity.this.markerLocation.getLongitude());
                                 googleMap.addMarker(markerOptions.position(markerLocation));
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLocation, 13));
                             });
@@ -206,8 +206,9 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                     Toast.makeText(getApplicationContext(), "ERROR: could not save habit event",
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    HabitEventModel habitEvent = new HabitEventModel(null, locationSwitch.isChecked() ? marker : null, new Date(),
-                            commentStr, null, habitID);
+                    HabitEventModel habitEvent = new HabitEventModel(null,
+                            locationSwitch.isChecked() && (markerLocation.getLatitude() != null) ? markerLocation : null,
+                            new Date(), commentStr, null, habitID);
 
                     if (isNewHabitEvent) {
                         habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
@@ -268,27 +269,34 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         googleMap.setOnMapClickListener(latLng -> {
             googleMap.clear();
             googleMap.addMarker(markerOptions.position(latLng));
-            marker.setLocation(latLng.latitude, latLng.longitude);
+            markerLocation.setLocation(latLng.latitude, latLng.longitude);
         });
     }
 
+    /**
+     * Enable my location function on Google map and mark current location
+     */
     private void mapMarkCurrentLocation() {
         map.setMyLocationEnabled(true);
 
-        Location location = getLocation();
+        Location location = getCurrentLocation();
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
         map.addMarker(markerOptions.position(latLng));
-        marker.setLocation(latLng.latitude, latLng.longitude);
+        markerLocation.setLocation(latLng.latitude, latLng.longitude);
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
     }
 
-    private final LocationListener mLocationListener = location -> {
-    };
-
-    private Location getLocation() {
+    /**
+     * Update and return current Location
+     *
+     * @return Location
+     */
+    private Location getCurrentLocation() {
         LocationManager mLocationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+        LocationListener mLocationListener = location -> {
+        };
 
         Location bestLocation = null;
         for (String provider : mLocationManager.getProviders(true)) {

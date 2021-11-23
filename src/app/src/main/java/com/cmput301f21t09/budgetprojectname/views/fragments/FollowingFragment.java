@@ -7,9 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,15 +15,14 @@ import androidx.fragment.app.Fragment;
 
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.models.HabitModel;
-import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
-import com.cmput301f21t09.budgetprojectname.views.activities.FollowerRequestActivity;
-import com.cmput301f21t09.budgetprojectname.views.activities.UserLoginActivity;
+import com.cmput301f21t09.budgetprojectname.views.activities.FollowRequestActivity;
 import com.cmput301f21t09.budgetprojectname.views.lists.UserHabitCustomList;
 
 import java.util.ArrayList;
 
 /**
- * Fragment that shows the user's following user list and makes accepting/rejecting the follower request from other user
+ * Fragment that shows the user's following user list and makes accepting/rejecting the
+ * follower request from other user
  */
 public class FollowingFragment extends Fragment {
 
@@ -36,7 +33,7 @@ public class FollowingFragment extends Fragment {
      */
     private void seeRequests() {
         // TODO: send userid in intent
-        startActivity(new Intent(getActivity(), FollowerRequestActivity.class));
+        startActivity(new Intent(getActivity(), FollowRequestActivity.class));
     }
 
     @Nullable
@@ -58,7 +55,8 @@ public class FollowingFragment extends Fragment {
 
         // Set up the list and send an empty list to the view
         ArrayList<HabitModel> habitDataList = new ArrayList<>();
-        ArrayAdapter<HabitModel> habitAdapter = new UserHabitCustomList(getContext(), habitDataList);
+        ArrayAdapter<HabitModel> habitAdapter = new UserHabitCustomList(getContext(),
+                habitDataList);
         habitList.setAdapter(habitAdapter);
 
         HabitModel.getAllForCurrentUser().addTaskCompleteListener(task -> {

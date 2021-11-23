@@ -120,9 +120,6 @@ public class UserModel implements IUserModel {
         map.put("username", getUsername());
         map.put("firstname", getFirstName());
         map.put("lastname", getLastName());
-
-        // Todo: Change the lines below
-        social = new HashMap<>();
         map.put("social", getSocial());
 
         FirebaseFirestore.getInstance().collection(USER_COLLECTION_ID)

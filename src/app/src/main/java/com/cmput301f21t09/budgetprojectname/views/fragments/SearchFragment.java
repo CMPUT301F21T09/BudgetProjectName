@@ -1,4 +1,4 @@
-package com.cmput301f21t09.budgetprojectname;
+package com.cmput301f21t09.budgetprojectname.views.fragments;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+
+import com.cmput301f21t09.budgetprojectname.R;
 
 /**
  * Fragment that allows the user to search other user

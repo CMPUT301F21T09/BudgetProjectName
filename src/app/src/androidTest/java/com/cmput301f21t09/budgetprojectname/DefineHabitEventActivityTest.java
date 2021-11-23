@@ -7,6 +7,8 @@ import android.widget.EditText;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
+
+import com.cmput301f21t09.budgetprojectname.views.activities.DefineHabitEventActivity;
 import com.robotium.solo.Solo;
 
 import org.junit.Before;

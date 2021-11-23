@@ -1,4 +1,4 @@
-package com.cmput301f21t09.budgetprojectname;
+package com.cmput301f21t09.budgetprojectname.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cmput301f21t09.budgetprojectname.MainActivity;
+import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 
 /**
@@ -157,16 +159,6 @@ public class UserRegisterActivity extends AppCompatActivity {
     }
 
     /**
-     * Generate a user in the database with the given input.
-     * Input should be verified
-     *
-     * @param input The input
-     */
-    private void generateUser(RegistrationData input) {
-        // TODO: Create a new user in Firebase
-    }
-
-    /**
      * Attempt to create an account with what the user has currently entered in the fields
      */
     private void attemptCreateAccount() {
@@ -187,14 +179,11 @@ public class UserRegisterActivity extends AppCompatActivity {
         progressIndicator.setVisibility(View.VISIBLE);
 
         // Register with Firebase
-        AuthorizationService.getInstance().register(input.email, input.password).addOnCompleteListener(task -> {
+        AuthorizationService.getInstance().register(input.email, input.password, input.username, input.firstName, input.lastName).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 // Tell user account creation was successful
                 Toast.makeText(UserRegisterActivity.this, "Account creation successful",
                         Toast.LENGTH_SHORT).show();
-
-                // Generate the account in Firebase
-                generateUser(input);
 
                 // Bring to home screen
                 startActivity(new Intent(this, MainActivity.class));

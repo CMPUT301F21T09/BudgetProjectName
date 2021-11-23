@@ -1,4 +1,4 @@
-package com.cmput301f21t09.budgetprojectname;
+package com.cmput301f21t09.budgetprojectname.views.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -15,6 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.cmput301f21t09.budgetprojectname.views.lists.DailyHabitCustomList;
+import com.cmput301f21t09.budgetprojectname.controllers.HabitListController;
+import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.models.HabitModel;
 
 import java.text.SimpleDateFormat;
@@ -85,10 +88,12 @@ public class DailyHabitFragment extends Fragment {
         ArrayAdapter<HabitModel> habitAdapter = new DailyHabitCustomList(getContext(), habitDataList);
         habitList.setAdapter(habitAdapter);
 
-        // Fetches the habits related to the current habit from Firestore 
-        habitListController.readHabitList(hbLst -> {
+        // Fetches the habits related to the current day from Firestore
+        HabitModel.getTodoForCurrentUser().addTaskCompleteListener(task -> {
             habitDataList.clear();
-            habitDataList.addAll(hbLst);
+            if (task.isSuccessful()) {
+                habitDataList.addAll(task.getResult());
+            }
             habitAdapter.notifyDataSetChanged();
         });
 

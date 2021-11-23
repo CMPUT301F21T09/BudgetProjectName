@@ -1,9 +1,11 @@
 package com.cmput301f21t09.budgetprojectname.services;
 
+import com.cmput301f21t09.budgetprojectname.models.UserModel;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * Authorization service. Handles user sign in, sign out, and registration.
@@ -57,8 +59,20 @@ public class AuthorizationService {
      * @param password The password to register
      * @return `Task` of `AuthResult` with the result of the registration attempt
      */
-    public Task<AuthResult> register(String email, String password) {
-        return firebaseAuth.createUserWithEmailAndPassword(email, password);
+    public Task<AuthResult> register(String email, String password, String username,
+                                     String firstname, String lastname) {
+        return firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Publish user info to Database
+                UserModel user = new UserModel();
+                user.setUsername(username);
+                user.setUID(task.getResult().getUser().getUid());
+                user.setFirstName(firstname);
+                user.setLastName(lastname);
+                user.commit();
+            }
+        });
     }
 
     /**

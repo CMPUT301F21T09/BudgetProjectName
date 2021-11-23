@@ -27,9 +27,8 @@ import java.util.ArrayList;
 public class FollowingFragment extends Fragment {
 
     /**
-     * Sign out.
-     * Tells authorization service to sign out and
-     * takes user to login screen.
+     * Check on the follow requests sent to you
+     * by transitioning to the follow request screen
      */
     private void seeRequests() {
         // TODO: send userid in intent

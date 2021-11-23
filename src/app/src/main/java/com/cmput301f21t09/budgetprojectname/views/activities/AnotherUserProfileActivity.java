@@ -98,47 +98,28 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
         // Set up the controller
         userController = new UserController();
 
-        System.out.println("******Insert data into the screen");
-
         // Insert the name and the username
         userController.readUser(anotherUserID, retrievedAnotherUser -> {
-                name.setText(retrievedAnotherUser.getFirstName() + " " + retrievedAnotherUser.getLastName());
-                username.setText("@" + retrievedAnotherUser.getUsername());
+            name.setText(retrievedAnotherUser.getFirstName() + " " + retrievedAnotherUser.getLastName());
+            username.setText("@" + retrievedAnotherUser.getUsername());
         });
 
-        // We first check if the logged in user is following this user on screen
+        // Set the display according to the relationship between the logged in user and the user on screen
         userController.readUser(currentUserId, retrievedCurrentUser -> {
+            // Check if the logged in user is following this user on screen
             if (retrievedCurrentUser.getSocial().containsKey(anotherUserID)) {
-                System.out.println("************ Executed");
 
-                // Retrieve the value of another user in the logged in user's Social map
+                // Retrieve the value of user on screen in the logged in user's Social map
                 int currentUserSocialMapValueOfAnotherUser = ((Number) retrievedCurrentUser.getSocial().get(anotherUserID)).intValue();
 
                 if (currentUserSocialMapValueOfAnotherUser == 1 || currentUserSocialMapValueOfAnotherUser == 2) {
                     // Case: The logged in user is following this user
+
                     // Set to the "Following" scenario with a list of this user's public habits
-                    followBtn.setVisibility(View.INVISIBLE);
-                    followingLabel.setVisibility(View.VISIBLE);
-                    followThisAccountLabel.setVisibility(View.INVISIBLE);
-                    allHabitsLabel.setVisibility(View.VISIBLE);
-                    habitList.setVisibility(View.VISIBLE);
-
-                    // Set up the list and send an empty list to the view
-                    ArrayList<HabitModel> habitDataList = new ArrayList<>();
-                    ArrayAdapter<HabitModel> habitAdapter = new UserHabitCustomList(this, habitDataList);
-                    habitList.setAdapter(habitAdapter);
-
-                    // Display all the habits of another user
-                    HabitModel.getAllForCurrentUser().addTaskCompleteListener(task -> {
-                        habitDataList.clear();
-                        if (task.isSuccessful()) {
-                            habitDataList.addAll(task.getResult());
-                        }
-                        habitAdapter.notifyDataSetChanged();
-                    });
+                    changeDisplayToFollowingState();
                 } else {
-                    // The logged in user is not currently following the user on screen.
-                    // Let's check if the logged in user has sent a follow request to the user on screen.
+                    // Case: The logged in user is not currently following the user on screen.
+                    // Check if the logged in user has sent a follow request to the user on screen.
                     userController.readUser(anotherUserID, retrievedAnotherUser -> {
                         if (retrievedAnotherUser.getSocial().containsKey(currentUserId)) {
 
@@ -146,29 +127,15 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
                             int anotherUserSocialMapValueOfCurrentUser = ((Number) retrievedAnotherUser.getSocial().get(currentUserId)).intValue();
 
                             if (anotherUserSocialMapValueOfCurrentUser == 0 || anotherUserSocialMapValueOfCurrentUser == 2) {
-                                // Case: The logged in user has sent a follow request to this user
-                                followBtn.setVisibility(View.VISIBLE);
-                                followBtn.setText("Requested");
-                                followBtn.setBackgroundTintList(getResources().getColorStateList(R.color.requested_button_background_tint));
-                                followingLabel.setVisibility(View.INVISIBLE);
-                                followThisAccountLabel.setVisibility(View.VISIBLE);
-                                allHabitsLabel.setVisibility(View.INVISIBLE);
-                                habitList.setVisibility(View.INVISIBLE);
+                                // The logged in user has sent a follow request to this user
+                                changeDisplayToRequestedState();
                             } else if (anotherUserSocialMapValueOfCurrentUser == 1) {
-                                // Another user is following the logged in user
+                                // User on screen is following the logged in user but the logged in
+                                // user hasn't sent the user on screen a follow request
+
                                 followBtn.setOnClickListener(new View.OnClickListener() {
                                     public void onClick(View v) {
-                                        HashMap<String, Integer> incomingFollowRequest = new HashMap<String, Integer>();
-                                        incomingFollowRequest.put(currentUserId, 2);
-                                        userController.updateUser(anotherUserID, incomingFollowRequest);
-
-                                        followBtn.setVisibility(View.VISIBLE);
-                                        followBtn.setText("Requested");
-                                        followBtn.setBackgroundTintList(getResources().getColorStateList(R.color.requested_button_background_tint));
-                                        followingLabel.setVisibility(View.INVISIBLE);
-                                        followThisAccountLabel.setVisibility(View.VISIBLE);
-                                        allHabitsLabel.setVisibility(View.INVISIBLE);
-                                        habitList.setVisibility(View.INVISIBLE);
+                                        requestToFollow(currentUserId, anotherUserID, 2);
                                     }
                                 });
                             }
@@ -177,26 +144,15 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
                             // user on screen a follow request.
                             followBtn.setOnClickListener(new View.OnClickListener() {
                                 public void onClick(View v) {
-                                    HashMap<String, Integer> incomingFollowRequest = new HashMap<String, Integer>();
-                                    incomingFollowRequest.put(currentUserId, 0);
-                                    userController.updateUser(anotherUserID, incomingFollowRequest);
-
-                                    followBtn.setVisibility(View.VISIBLE);
-                                    followBtn.setText("Requested");
-                                    followBtn.setBackgroundTintList(getResources().getColorStateList(R.color.requested_button_background_tint));
-                                    followingLabel.setVisibility(View.INVISIBLE);
-                                    followThisAccountLabel.setVisibility(View.VISIBLE);
-                                    allHabitsLabel.setVisibility(View.INVISIBLE);
-                                    habitList.setVisibility(View.INVISIBLE);
+                                    requestToFollow(currentUserId, anotherUserID, 0);
                                 }
                             });
-
                         }
                     });
                 }
             } else {
-                // Since the logged in user is not following the user on screen, we check if the logged
-                // in user has sent a follow request to the user on screen.
+                // Case: The logged in user is not currently following the user on screen.
+                // Check if the logged in user has sent a follow request to the user on screen.
                 userController.readUser(anotherUserID, retrievedAnotherUser -> {
                     if (retrievedAnotherUser.getSocial().containsKey(currentUserId)) {
 
@@ -205,39 +161,70 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
 
                         if (anotherUserSocialMapValueOfCurrentUser == 0 || anotherUserSocialMapValueOfCurrentUser == 2) {
                             // Case: The logged in user has sent a follow request to this user
-                            followBtn.setVisibility(View.VISIBLE);
-                            followBtn.setText("Requested");
-                            followBtn.setBackgroundTintList(getResources().getColorStateList(R.color.requested_button_background_tint));
-                            followingLabel.setVisibility(View.INVISIBLE);
-                            followThisAccountLabel.setVisibility(View.VISIBLE);
-                            allHabitsLabel.setVisibility(View.INVISIBLE);
-                            habitList.setVisibility(View.INVISIBLE);
-                        } else if (anotherUserSocialMapValueOfCurrentUser == 1) {
-                            // Another user is following the logged in user
-
+                            changeDisplayToRequestedState();
                         }
                     } else {
-                        // The logged in user is not following the user on screen and has not sent the
+                        // Case: The logged in user is not following the user on screen and has not sent the
                         // user on screen a follow request.
                         followBtn.setOnClickListener(new View.OnClickListener() {
                             public void onClick(View v) {
-                                HashMap<String, Integer> incomingFollowRequest = new HashMap<String, Integer>();
-                                incomingFollowRequest.put(currentUserId, 0);
-                                userController.updateUser(anotherUserID, incomingFollowRequest);
-
-                                followBtn.setVisibility(View.VISIBLE);
-                                followBtn.setText("Requested");
-                                followBtn.setBackgroundTintList(getResources().getColorStateList(R.color.requested_button_background_tint));
-                                followingLabel.setVisibility(View.INVISIBLE);
-                                followThisAccountLabel.setVisibility(View.VISIBLE);
-                                allHabitsLabel.setVisibility(View.INVISIBLE);
-                                habitList.setVisibility(View.INVISIBLE);
+                                requestToFollow(currentUserId, anotherUserID, 0);
                             }
                         });
-
                     }
                 });
             }
         });
+    }
+
+    private void changeDisplayToFollowingState() {
+        followBtn.setVisibility(View.INVISIBLE);
+        followingLabel.setVisibility(View.VISIBLE);
+        followThisAccountLabel.setVisibility(View.INVISIBLE);
+        allHabitsLabel.setVisibility(View.VISIBLE);
+        habitList.setVisibility(View.VISIBLE);
+
+        // Set up the list and send an empty list to the view
+        ArrayList<HabitModel> habitDataList = new ArrayList<>();
+        ArrayAdapter<HabitModel> habitAdapter = new UserHabitCustomList(this, habitDataList);
+        habitList.setAdapter(habitAdapter);
+
+        // Display all the habits of another user
+        HabitModel.getAllForCurrentUser().addTaskCompleteListener(task -> {
+            habitDataList.clear();
+            if (task.isSuccessful()) {
+                habitDataList.addAll(task.getResult());
+            }
+            habitAdapter.notifyDataSetChanged();
+        });
+    }
+
+    /**
+     * Submit a request to follow another user
+     *
+     * @param currentUserId ID of the current user
+     * @param anotherUserID ID of the user that that the current user wants to follow
+     * @param newValue      new value to be used
+     */
+    private void requestToFollow(String currentUserId, String anotherUserID, Integer newValue) {
+        HashMap<String, Integer> incomingFollowRequest = new HashMap<String, Integer>();
+        incomingFollowRequest.put(currentUserId, newValue);
+        userController.updateUser(anotherUserID, incomingFollowRequest);
+
+        changeDisplayToRequestedState();
+    }
+
+    /**
+     * Change the display to Requested to Follow state
+     */
+    private void changeDisplayToRequestedState() {
+        // Set the views to Requested to Follow state
+        followBtn.setVisibility(View.VISIBLE);
+        followBtn.setText("Requested");
+        followBtn.setBackgroundTintList(getResources().getColorStateList(R.color.requested_button_background_tint));
+        followingLabel.setVisibility(View.INVISIBLE);
+        followThisAccountLabel.setVisibility(View.VISIBLE);
+        allHabitsLabel.setVisibility(View.INVISIBLE);
+        habitList.setVisibility(View.INVISIBLE);
     }
 }

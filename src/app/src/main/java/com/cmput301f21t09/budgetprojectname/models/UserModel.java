@@ -33,6 +33,7 @@ public class UserModel implements IUserModel {
 
     /**
      * User's social details
+     * key(user_id): value(0==incoming_request, 1==following, 2==incoming_request and following)
      */
     private HashMap<String, Integer> social;
 
@@ -61,6 +62,10 @@ public class UserModel implements IUserModel {
         return lastname;
     }
 
+    /**
+     * Get the Social HashMap
+     * @return social HashMap
+     */
     @Override
     public HashMap<String, Integer> getSocial() {
         return social;

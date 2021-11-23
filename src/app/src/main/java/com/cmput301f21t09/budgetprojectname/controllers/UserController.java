@@ -16,6 +16,9 @@ import com.google.firebase.firestore.auth.User;
 
 import java.util.HashMap;
 
+/**
+ * Controller which handles the interaction with the users collection in firestore
+ */
 public class UserController {
     private final FirebaseFirestore dbStore = FirebaseFirestore.getInstance();
     private static final String TAG = "UserController";
@@ -47,7 +50,7 @@ public class UserController {
                         String firstname = (String) doc.getData().get("firstname");
                         String lastname = (String) doc.getData().get("lastname");
                         HashMap<String, Integer> social = (HashMap<String, Integer>) doc.getData().get("social");
-                        System.out.println("****isFollowing: "+ social);
+
                         // Set up the UserModel
                         UserModel retrievedUserModel = new UserModel();
                         retrievedUserModel.setUsername(username);
@@ -71,13 +74,12 @@ public class UserController {
      * Updates user document's Social map in the users collection
      *
      * @param userID       ID of user to be updated
-     * @param follow       isFollow to be updated
+     * @param social       Social hashmap whose value is to be updated
      */
-    public void updateUserSocialMap(String userID, HashMap<String, Integer> follow) {
+    public void updateUserSocialMap(String userID, HashMap<String, Integer> social) {
         DocumentReference habitEventRef = dbStore.collection("users")
                 .document(userID);
-        habitEventRef.update("social", follow)
-
+        habitEventRef.update("social", social)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

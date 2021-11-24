@@ -76,19 +76,19 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     private String habitID;
     private String habitEventID;
 
-    SupportMapFragment mapFragment;
-    SwitchMaterial locationSwitch;
-    ConstraintLayout locationContainer;
+    private SupportMapFragment mapFragment;
+    private SwitchMaterial locationSwitch;
+    private ConstraintLayout locationContainer;
 
-    GoogleMap map;
-    LatLngModel markerLocation;
-    MarkerOptions markerOptions;
+    private GoogleMap map;
+    private LatLngModel markerLocation;
+    private MarkerOptions markerOptions;
 
     private ActivityResultLauncher<Intent> GalleryResultLauncher;
     private ActivityResultLauncher<Intent> CameraResultLauncher;
-    String mPhotoPath;
-    Bitmap image;
-    String imageData;
+    private String mPhotoPath;
+    private Bitmap image;
+    private String imageData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -21,7 +21,7 @@ public class HabitEventModel {
     /**
      * Location of habit event completion (optional)
      */
-    private LatLngModel location; // TODO: change to Location type once this is implemented
+    private LatLngModel location;
 
     /**
      * Comment of habit event (optional)

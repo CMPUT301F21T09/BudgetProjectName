@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BudgetProjectName">
         <activity
+            android:name=".views.activities.FollowRequestActivity"
+            android:exported="true" />
+        <activity
             android:name=".views.activities.DefineHabitActivity"
             android:exported="true" />
         <activity
@@ -32,10 +35,14 @@
             android:name=".views.activities.ViewHabitEventActivity"
             android:exported="false" />
         <activity
+            android:name=".views.activities.AnotherUserProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".views.activities.UserLoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

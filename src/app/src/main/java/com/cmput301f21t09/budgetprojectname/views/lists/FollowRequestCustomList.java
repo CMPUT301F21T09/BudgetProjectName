@@ -1,18 +1,24 @@
 package com.cmput301f21t09.budgetprojectname.views.lists;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
 import com.cmput301f21t09.budgetprojectname.R;
+import com.cmput301f21t09.budgetprojectname.controllers.UserController;
 import com.cmput301f21t09.budgetprojectname.models.UserModel;
+import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
+import com.cmput301f21t09.budgetprojectname.views.activities.DefineHabitEventActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Helper class to create a custom list for user follow request
@@ -58,6 +64,36 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
         followRequestName.setText(user.getFirstName());
         followRequestUsername.setText("@"+ user.getUsername());
 
+        // Brings the user to the create habit event screen
+        ImageButton acceptBtn = view.findViewById(R.id.accept_button);
+        acceptBtn.setOnClickListener(v -> {
+            // pass habit id to create habit event for targeted habit
+            // Intent intent = new Intent(context, DefineHabitEventActivity.class);
+            // intent.putExtra("HABIT_ID", habit.getId());
+            // context.startActivity(intent);
+            System.out.println("user that got accepted " + user.getUID() + "name " + user.getUsername());
+            acceptFollowRequest(user);
+        });
+
         return view;
+    }
+
+    private void acceptFollowRequest(UserModel anotherUser){
+        String currentUserID = AuthorizationService.getInstance().getCurrentUserId();
+        UserController userController = new UserController();
+
+        // modify current user's status with respect to the other user
+        HashMap<String, Integer> updatedOtherSocialMap = anotherUser.getSocial();
+        String anotherUserID = anotherUser.getUID();
+        updatedOtherSocialMap.put(currentUserID, 1); // current user is followed by anotherUser
+        userController.updateUserSocialMap(anotherUserID, updatedOtherSocialMap);
+
+        // modify other user's status with respect to current user
+        userController.readUser(currentUserID, currentUser -> {
+            HashMap<String, Integer> updatedCurrentSocialMap = currentUser.getSocial();
+            // remove the request from current user's social map
+            updatedCurrentSocialMap.remove(anotherUserID);
+            userController.updateUserSocialMap(currentUserID, updatedCurrentSocialMap);
+        });
     }
 }

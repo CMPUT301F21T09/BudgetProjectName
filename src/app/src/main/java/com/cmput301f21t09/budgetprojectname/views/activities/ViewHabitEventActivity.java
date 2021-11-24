@@ -89,14 +89,16 @@ public class ViewHabitEventActivity extends AppCompatActivity {
 
             habitEventDescription.setText(retrievedHabitEvent.getComment());
 
+            SimpleDateFormat format = new SimpleDateFormat("MMMM dd,yyyy");
+            String strDate = format.format(retrievedHabitEvent.getDate());
+            habitEventDate.setText(strDate);
+
+            // Check there is image data or not
+            // Decode image and set to the imageView if it exists
             if (retrievedHabitEvent.getImage() != null) {
                 byte[] decodedString = Base64.decode(retrievedHabitEvent.getImage(), Base64.DEFAULT);
                 habitEventImage.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
             }
-
-            SimpleDateFormat format = new SimpleDateFormat("MMMM dd,yyyy");
-            String strDate = format.format(retrievedHabitEvent.getDate());
-            habitEventDate.setText(strDate);
         });
 
         ImageButton editHabitEvent = findViewById(R.id.view_habit_event_habit_event_edit_button);

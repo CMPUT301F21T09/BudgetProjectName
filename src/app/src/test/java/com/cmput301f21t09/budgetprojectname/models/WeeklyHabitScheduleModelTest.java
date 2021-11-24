@@ -45,19 +45,19 @@ public class WeeklyHabitScheduleModelTest {
         }
     }
 
-//    /**
-//     * Test for toMap method
-//     */
-//    @Test
-//    public void testToMap() {
-//        boolean[] days = {true, false, true, false, false, false, false};
-//        for (int i = 0; i < days.length; i++) {
-//            model.setDay(i, days[i]);
-//        }
-//        Map<String, Object> map = model.toMap();
-//        Object innerMap = map.get("weekly");
-//        assertNotNull(innerMap);
-//    }
+    /**
+     * Test for toMap method
+     */
+    @Test
+    public void testToMap() {
+        boolean[] days = {true, false, true, false, false, false, false};
+        for (int i = 0; i < days.length; i++) {
+            model.setDay(i, days[i]);
+        }
+        Map<String, Object> map = model.toMap();
+        Object innerMap = map.get("weekly");
+        assertNotNull(innerMap);
+    }
     //TODO: Test isToBeCompletedOn and wasSkippedIfLastCompletedOn once implemented
 
 }

@@ -64,47 +64,50 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/habitName" />
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/location_background"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="24dp"
-        android:background="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/commentLabel"
-        app:layout_constraintDimensionRatio="8.97:1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/locationLabel"
-        app:layout_constraintTop_toBottomOf="@id/locationLabel"
-        app:shapeAppearanceOverlay="@style/roundedCorners" />
-
-    <ImageView
-        android:id="@+id/location_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="13dp"
-        android:layout_marginBottom="13dp"
-        android:src="@drawable/ic_edittext_location"
-        app:layout_constraintBottom_toBottomOf="@+id/location_background"
-        app:layout_constraintStart_toStartOf="@id/locationLabel"
-        app:layout_constraintTop_toTopOf="@id/location_background" />
-
-    <EditText
-        android:id="@+id/location"
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/location_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="14.67dp"
-        android:background="@null"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:textColor="#3C85B9"
-        android:textColorHint="#80B8DF"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@id/location_background"
-        app:layout_constraintStart_toEndOf="@id/location_icon"
-        app:layout_constraintTop_toTopOf="@id/location_background" />
+        android:layout_marginEnd="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/locationLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/locationLabel" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/location_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/commentLabel"
+        app:layout_constraintEnd_toEndOf="@id/location_switch"
+        app:layout_constraintStart_toStartOf="@id/locationLabel"
+        app:layout_constraintTop_toBottomOf="@id/locationLabel">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/location_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1.886:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/roundedCorners" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="9dp"
+            app:layout_constraintBottom_toBottomOf="@+id/location_background"
+            app:layout_constraintEnd_toEndOf="@+id/location_background"
+            app:layout_constraintStart_toStartOf="@+id/location_background"
+            app:layout_constraintTop_toTopOf="@+id/location_background" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/commentLabel"
@@ -115,7 +118,7 @@
         android:textColor="#2B638B"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@id/locationLabel"
-        app:layout_constraintTop_toBottomOf="@id/location_background" />
+        app:layout_constraintTop_toBottomOf="@id/location_container" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/description_background"
@@ -166,7 +169,7 @@
         android:layout_marginTop="9dp"
         android:background="@color/white"
         app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="@id/location_background"
+        app:layout_constraintEnd_toEndOf="@id/location_switch"
         app:layout_constraintStart_toStartOf="@id/locationLabel"
         app:layout_constraintTop_toBottomOf="@id/imageLabel"
         app:shapeAppearanceOverlay="@style/roundedCorners" />

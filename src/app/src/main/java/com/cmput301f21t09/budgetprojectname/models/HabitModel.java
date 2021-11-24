@@ -123,17 +123,17 @@ public class HabitModel implements IHabitModel {
                 .whereEqualTo("uid", AuthorizationService.getInstance().getCurrentUserId())
                 .get()
                 .addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                List<HabitModel> models = new ArrayList<>();
-                HabitModelMapParser parser = new HabitModelMapParser();
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    models.add(parser.parseMap(document.getData(), document.getId()));
-                }
-                taskManager.setSuccess(models);
-            } else {
-                taskManager.setFailure(task.getException());
-            }
-        });
+                    if (task.isSuccessful()) {
+                        List<HabitModel> models = new ArrayList<>();
+                        HabitModelMapParser parser = new HabitModelMapParser();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            models.add(parser.parseMap(document.getData(), document.getId()));
+                        }
+                        taskManager.setSuccess(models);
+                    } else {
+                        taskManager.setFailure(task.getException());
+                    }
+                });
         return taskManager.getTask();
     }
 
@@ -329,24 +329,23 @@ public class HabitModel implements IHabitModel {
                     .document(this.id)
                     .delete()
                     .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            tman.setSuccess(null);
-                            // Delete all the habit events
-                            FirebaseFirestore.getInstance()
-                                    .collection("habit_events")
-                                    .whereEqualTo("habitID", this.id)
-                                    .get()
-                                    .addOnSuccessListener(snapshot -> {
-                                        for (QueryDocumentSnapshot queryDocumentSnapshot : snapshot) {
-                                            queryDocumentSnapshot.getReference().delete();
-                                        }
-                            });
-                        }
-                        else
-                            tman.setFailure(task.getException());
-                    }
+                                if (task.isSuccessful()) {
+                                    tman.setSuccess(null);
+                                    // Delete all the habit events
+                                    FirebaseFirestore.getInstance()
+                                            .collection("habit_events")
+                                            .whereEqualTo("habitID", this.id)
+                                            .get()
+                                            .addOnSuccessListener(snapshot -> {
+                                                for (QueryDocumentSnapshot queryDocumentSnapshot : snapshot) {
+                                                    queryDocumentSnapshot.getReference().delete();
+                                                }
+                                            });
+                                } else
+                                    tman.setFailure(task.getException());
+                            }
 
-            );
+                    );
         }
         return tman.getTask();
     }

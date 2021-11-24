@@ -130,7 +130,9 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                     if (isNewHabitEvent) {
                         mapMarkCurrentLocation();
                     } else {
-                        map.setMyLocationEnabled(true);
+                        mapFragment.getMapAsync(googleMap -> {
+                            googleMap.setMyLocationEnabled(true);
+                        });
                     }
                     locationContainer.setVisibility(View.VISIBLE);
                 }
@@ -243,7 +245,9 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                     (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
                 mapMarkCurrentLocation();
             } else {
-                map.setMyLocationEnabled(false);
+                mapFragment.getMapAsync(googleMap -> {
+                    googleMap.setMyLocationEnabled(false);
+                });
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     Snackbar.make(getWindow().getDecorView().getRootView(), "Grant location permission to show current location", Snackbar.LENGTH_INDEFINITE)
                             .setAction("Grant Permission", v1 -> {
@@ -277,15 +281,17 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
      * Enable my location function on Google map and mark current location
      */
     private void mapMarkCurrentLocation() {
-        map.setMyLocationEnabled(true);
+        mapFragment.getMapAsync(googleMap -> {
+            googleMap.setMyLocationEnabled(true);
 
-        Location location = getCurrentLocation();
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            Location location = getCurrentLocation();
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-        map.addMarker(markerOptions.position(latLng));
-        markerLocation.setLocation(latLng.latitude, latLng.longitude);
+            googleMap.addMarker(markerOptions.position(latLng));
+            markerLocation.setLocation(latLng.latitude, latLng.longitude);
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+        });
     }
 
     /**

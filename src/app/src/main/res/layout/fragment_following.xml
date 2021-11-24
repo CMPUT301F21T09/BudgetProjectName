@@ -62,7 +62,7 @@
         android:layout_width="283dp"
         android:layout_height="71dp"
         android:backgroundTint="#C8E2F4"
-        android:text="Requests (1)    >"
+        android:text="Requests     >"
         android:textAllCaps="false"
         android:textColor="#3C85B9"
         android:textSize="20dp"

@@ -35,12 +35,21 @@ public class FollowingFragment extends Fragment {
     private UserController userController;
 
     /**
+     * TODO: REMOVE
+     * List of users requesting to follow current user
+     * Used in this activity to set the text in the request button
+     */
+    private ArrayList<UserModel> followRequestUsers = new ArrayList<>();
+
+    /**
      * Check on the follow requests sent to you
      * by transitioning to the follow request screen
      */
-    private void seeRequests() {
+    private void seeRequests(String userID) {
         // TODO: send userid in intent
-        startActivity(new Intent(getActivity(), FollowRequestActivity.class));
+        Intent intent = new Intent(getActivity(), FollowRequestActivity.class);
+        intent.putExtra("uid", userID);
+        startActivity(intent);
     }
 
     @Nullable
@@ -59,16 +68,29 @@ public class FollowingFragment extends Fragment {
         userController = new UserController();
         String currentUserId = AuthorizationService.getInstance().getCurrentUserId();
         System.out.println("curr user id " + currentUserId);
-        userController.readUserFollowRequests(currentUserId, followRequests -> {
-//            name.setText(retrievedAnotherUser.getFirstName() + " " + retrievedAnotherUser.getLastName());
-//            username.setText("@" + retrievedAnotherUser.getUsername());
-            for(UserModel followRequestUser: followRequests){
-                System.out.println("user who wants to follow you "
-                        + followRequestUser.getUsername());
-            }
-        });
+        // TODO: store list of follow requests
 
-        requests_btn.setOnClickListener(v -> seeRequests());
+//        userController.readUserFollowRequests(currentUserId, followRequests -> {
+////            name.setText(retrievedAnotherUser.getFirstName() + " " + retrievedAnotherUser.getLastName());
+////            username.setText("@" + retrievedAnotherUser.getUsername());
+//            for(String userID: followRequests){
+//                // get back the model using userID
+//                userController.readUser(userID, followRequestUser -> {
+//                    System.out.println("user who wants to follow you " +
+//                            followRequestUser.getFirstName() + " " + followRequestUser.getUID());
+//                    followRequestUsers.add(followRequestUser);
+//                    System.out.println("size of follow req inside loop" + followRequestUsers.size());
+//                    requests_btn.setText("Requests (" + followRequestUsers.size() +")    >");
+//                });
+//                // set number of requests
+//                System.out.println("size of follow req inside callback" + followRequestUsers.size());
+////                requests_btn.setText("Requests (" + followRequestUsers.size() +")    >");
+//            }
+//
+//
+//        });
+        System.out.println("size of follow req" + followRequestUsers.size());
+        requests_btn.setOnClickListener(v -> seeRequests(currentUserId));
 
         // TODO: replace with users following instead of habit
         // ListView setup
@@ -88,8 +110,12 @@ public class FollowingFragment extends Fragment {
             habitAdapter.notifyDataSetChanged();
         });
 
+        System.out.println("size of follow req later" + followRequestUsers.size());
+
         habitList.setOnItemClickListener((parent, view1, position, id) -> {
             // TODO: Pass targeted Habit to ViewHabitActivity
         });
+
+        // TODO: add back button
     }
 }

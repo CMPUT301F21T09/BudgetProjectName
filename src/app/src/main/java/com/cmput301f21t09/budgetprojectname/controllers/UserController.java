@@ -33,7 +33,7 @@ public class UserController {
     }
 
     public interface UsersCallback {
-        void onCallback(ArrayList<UserModel> users);
+        void onCallback(ArrayList<String> userIDs);
     }
 
     /**
@@ -109,8 +109,8 @@ public class UserController {
     public void readUserFollowRequests(String userID, UserController.UsersCallback usersCallback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(userID);
-        // arrayList of users who are requesting to follow us
-        ArrayList<UserModel> followRequests = new ArrayList<>();
+        // arrayList of userids of users who are requesting to follow us
+        ArrayList<String> followRequests = new ArrayList<>();
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -125,7 +125,6 @@ public class UserController {
                         HashMap<String, Integer> social =
                          (HashMap<String, Integer>) doc.getData().get("social");
 
-
                         // find all the users with "userid" : 0 meaning they
                         // are requesting to follow us or  "userid" : 2 meaning both of us are
                         // requesting to follow one another
@@ -134,17 +133,10 @@ public class UserController {
                             System.out.println("userid " + userid + "value " + value);
                             if(value == 0 || value == 2){
                                 System.out.println("This is a follow request!");
+                                followRequests.add(userid);
                             }
                         }
 
-                        // Set up the UserModel
-                        UserModel retrievedUserModel = new UserModel();
-                        retrievedUserModel.setUsername(username);
-                        retrievedUserModel.setUID(id);
-                        retrievedUserModel.setFirstName(firstname);
-                        retrievedUserModel.setLastName(lastname);
-                        retrievedUserModel.setSocial(social);
-                        followRequests.add(retrievedUserModel); // just add current user for now
                         usersCallback.onCallback(followRequests);
                     } else {
                         Log.d(TAG, "No such document");

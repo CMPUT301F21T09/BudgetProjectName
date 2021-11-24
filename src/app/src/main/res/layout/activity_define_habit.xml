@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -24,7 +23,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text=""
             android:textColor="@color/white"
             android:textSize="24sp" />
 
@@ -250,6 +248,7 @@
             android:layout_height="match_parent"
             android:calendarViewShown="false"
             android:datePickerMode="spinner"
+            android:theme="@style/DatePicker"
             app:layout_constraintBottom_toBottomOf="@id/adh_datePickerBackground"
             app:layout_constraintEnd_toEndOf="@id/adh_datePickerBackground"
             app:layout_constraintStart_toStartOf="@id/adh_datePickerBackground"

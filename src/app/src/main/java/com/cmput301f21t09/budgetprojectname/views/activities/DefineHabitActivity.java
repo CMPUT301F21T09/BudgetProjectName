@@ -75,6 +75,7 @@ public class DefineHabitActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
 
         // Retrieve the specific views
         habitTitle = findViewById(R.id.adh_editHabitTitle);

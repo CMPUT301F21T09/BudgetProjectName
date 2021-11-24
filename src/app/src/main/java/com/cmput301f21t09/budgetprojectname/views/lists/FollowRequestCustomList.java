@@ -16,6 +16,8 @@ import com.cmput301f21t09.budgetprojectname.controllers.UserController;
 import com.cmput301f21t09.budgetprojectname.models.UserModel;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.views.activities.DefineHabitEventActivity;
+import com.cmput301f21t09.budgetprojectname.views.activities.FollowRequestActivity;
+import com.cmput301f21t09.budgetprojectname.views.activities.ViewHabitActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,6 +75,10 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
             // context.startActivity(intent);
             System.out.println("user that got accepted " + user.getUID() + "name " + user.getUsername());
             acceptFollowRequest(user);
+//            Intent i = new Intent(this, FollowRequestActivity.class);
+//            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            startActivity(i);
+
         });
 
         return view;
@@ -91,9 +97,19 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
         // modify other user's status with respect to current user
         userController.readUser(currentUserID, currentUser -> {
             HashMap<String, Integer> updatedCurrentSocialMap = currentUser.getSocial();
+            // if this friend has send m
             // remove the request from current user's social map
             updatedCurrentSocialMap.remove(anotherUserID);
             userController.updateUserSocialMap(currentUserID, updatedCurrentSocialMap);
+            Intent intent = new Intent(context, FollowRequestActivity.class);
+            intent.putExtra("uid", currentUserID);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            System.out.println("refresh??");
+
         });
+
+
     }
 }

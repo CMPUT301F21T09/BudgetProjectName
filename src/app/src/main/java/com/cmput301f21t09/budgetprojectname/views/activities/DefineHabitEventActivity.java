@@ -122,7 +122,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
 
         habitEventName = findViewById(R.id.habitName);
         comment = findViewById(R.id.comment);
-        imageView = findViewById(R.id.image);
+        imageView = findViewById(R.id.habit_event_image);
 
         ImageButton back = findViewById(R.id.back);
 

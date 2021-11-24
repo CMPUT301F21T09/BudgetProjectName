@@ -7,6 +7,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+
 /**
  * Authorization service. Handles user sign in, sign out, and registration.
  */
@@ -70,6 +72,7 @@ public class AuthorizationService {
                 user.setUID(task.getResult().getUser().getUid());
                 user.setFirstName(firstname);
                 user.setLastName(lastname);
+                user.setSocial(new HashMap<String, Integer>());
                 user.commit();
             }
         });

@@ -55,5 +55,17 @@ public class ExampleActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // TODO: Move this function to its appropriate place
+        final Button profileBtn = findViewById(R.id.another_user_profile);
+        profileBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AnotherUserProfileActivity.class);
+                final String USER_ID = "USER_ID";
+                String another_userID = "tFNyfQdVKahhh8kE38SdAHSSGz92";
+                intent.putExtra(USER_ID, another_userID);
+                startActivity(intent);
+            }
+        });
     }
 }

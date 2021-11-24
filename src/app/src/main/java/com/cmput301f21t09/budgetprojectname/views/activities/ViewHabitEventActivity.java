@@ -45,7 +45,7 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         TextView habitEventLocation = findViewById(R.id.view_habit_event_habit_event_location);
         TextView habitEventDescription = findViewById(R.id.view_habit_event_habit_event_description);
         TextView habitEventDate = findViewById(R.id.view_habit_event_habit_event_date);
-        ImageView habitEventImage = findViewById(R.id.image);
+        ImageView habitEventImage = findViewById(R.id.habit_event_image);
 
         habitTitle.setText(habitTitleStr);
 
@@ -113,7 +113,6 @@ public class ViewHabitEventActivity extends AppCompatActivity {
             editIntent.putExtra(HABIT_EVENT_ID, habitEventID);
             startActivity(editIntent);
         });
-
 
         Button deleteHabitEventBtn = findViewById(R.id.view_habit_event_habit_event_delete_button);
         deleteHabitEventBtn.setOnClickListener(v -> {

@@ -73,7 +73,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/locationLabel" />
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/location_container"
         android:layout_width="0dp"
@@ -187,7 +186,7 @@
         app:layout_constraintTop_toTopOf="@+id/image_placeholder" />
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/image"
+        android:id="@+id/habit_event_image"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="10dp"

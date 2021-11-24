@@ -45,7 +45,7 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         TextView habitEventLocation = findViewById(R.id.view_habit_event_habit_event_location);
         TextView habitEventDescription = findViewById(R.id.view_habit_event_habit_event_description);
         TextView habitEventDate = findViewById(R.id.view_habit_event_habit_event_date);
-        ImageView habitEventImage = findViewById(R.id.habit_event_image);
+        ImageView habitEventImage = findViewById(R.id.view_habit_event_image);
 
         habitTitle.setText(habitTitleStr);
 

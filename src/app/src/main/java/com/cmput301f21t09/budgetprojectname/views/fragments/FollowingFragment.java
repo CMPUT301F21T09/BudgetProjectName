@@ -14,7 +14,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.cmput301f21t09.budgetprojectname.R;
+import com.cmput301f21t09.budgetprojectname.controllers.UserController;
 import com.cmput301f21t09.budgetprojectname.models.HabitModel;
+import com.cmput301f21t09.budgetprojectname.models.UserModel;
+import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.views.activities.FollowRequestActivity;
 import com.cmput301f21t09.budgetprojectname.views.lists.UserHabitCustomList;
 
@@ -25,6 +28,11 @@ import java.util.ArrayList;
  * follower request from other user
  */
 public class FollowingFragment extends Fragment {
+
+    /**
+     * Controller for fetching user details
+     */
+    private UserController userController;
 
     /**
      * Check on the follow requests sent to you
@@ -46,6 +54,20 @@ public class FollowingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         Button requests_btn = (Button) view.findViewById(R.id.requests_button);
+        // set the number of follow requests
+        // set up controller
+        userController = new UserController();
+        String currentUserId = AuthorizationService.getInstance().getCurrentUserId();
+        System.out.println("curr user id " + currentUserId);
+        userController.readUserFollowRequests(currentUserId, followRequests -> {
+//            name.setText(retrievedAnotherUser.getFirstName() + " " + retrievedAnotherUser.getLastName());
+//            username.setText("@" + retrievedAnotherUser.getUsername());
+            for(UserModel followRequestUser: followRequests){
+                System.out.println("user who wants to follow you "
+                        + followRequestUser.getUsername());
+            }
+        });
+
         requests_btn.setOnClickListener(v -> seeRequests());
 
         // TODO: replace with users following instead of habit

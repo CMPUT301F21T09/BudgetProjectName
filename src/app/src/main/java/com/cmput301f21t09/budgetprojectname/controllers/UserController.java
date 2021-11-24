@@ -1,6 +1,7 @@
 package com.cmput301f21t09.budgetprojectname.controllers;
 
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 
@@ -14,6 +15,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -28,6 +30,10 @@ public class UserController {
 
     public interface UserCallback {
         void onCallback(UserModel user);
+    }
+
+    public interface UsersCallback {
+        void onCallback(ArrayList<UserModel> users);
     }
 
     /**
@@ -93,4 +99,62 @@ public class UserController {
                     }
                 });
     }
+
+    /**
+     * Gets follow requests for existing user from Firestore Db
+     *
+     * @param userID ID of user whose follow requests we are retrieving
+     */
+    // TODO: generalize this to get users that the current user is following
+    public void readUserFollowRequests(String userID, UserController.UsersCallback usersCallback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("users").document(userID);
+        // arrayList of users who are requesting to follow us
+        ArrayList<UserModel> followRequests = new ArrayList<>();
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
+                        String id = (String) doc.getId();
+                        String username = (String) doc.getData().get("username");
+                        String firstname = (String) doc.getData().get("firstname");
+                        String lastname = (String) doc.getData().get("lastname");
+                        HashMap<String, Integer> social =
+                         (HashMap<String, Integer>) doc.getData().get("social");
+
+
+                        // find all the users with "userid" : 0 meaning they
+                        // are requesting to follow us or  "userid" : 2 meaning both of us are
+                        // requesting to follow one another
+                        for(String userid : social.keySet()){
+                            int value = Integer.parseInt(String.valueOf(social.get(userid)));
+                            System.out.println("userid " + userid + "value " + value);
+                            if(value == 0 || value == 2){
+                                System.out.println("This is a follow request!");
+                            }
+                        }
+
+                        // Set up the UserModel
+                        UserModel retrievedUserModel = new UserModel();
+                        retrievedUserModel.setUsername(username);
+                        retrievedUserModel.setUID(id);
+                        retrievedUserModel.setFirstName(firstname);
+                        retrievedUserModel.setLastName(lastname);
+                        retrievedUserModel.setSocial(social);
+                        followRequests.add(retrievedUserModel); // just add current user for now
+                        usersCallback.onCallback(followRequests);
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+
 }

@@ -63,6 +63,10 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         habitEventController.readHabitEvent(habitEventID, retrievedhabitEvent -> {
             System.out.println("habitevent id " + retrievedhabitEvent.getID());
 
+            // Check there is location data or not
+            // Set Address as City, Province, Country if address info exist
+            // "No Address" if address info not exist
+            // "No Location" when there is no location data
             if (retrievedhabitEvent.getLocation() != null) {
                 LatLngModel latLngModel = retrievedhabitEvent.getLocation();
                 Geocoder geocoder = new Geocoder(this);

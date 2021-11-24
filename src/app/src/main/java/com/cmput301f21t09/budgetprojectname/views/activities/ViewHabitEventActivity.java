@@ -79,7 +79,7 @@ public class ViewHabitEventActivity extends AppCompatActivity {
             startActivity(editIntent);
         });
 
-        ImageView imageHabitEvent = findViewById(R.id.image);
+        ImageView imageHabitEvent = findViewById(R.id.profile_pic);
         // TODO: Set Proper Image of Habit Event to the ImageView
         // imageHabitEvent.setImageBitmap();
 

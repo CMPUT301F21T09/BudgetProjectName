@@ -76,7 +76,7 @@ public class DefineHabitEventActivity extends AppCompatActivity {
 
         location = (EditText) findViewById(R.id.location);
         comment = (EditText) findViewById(R.id.comment);
-        image = (ImageView) findViewById(R.id.image);
+        image = (ImageView) findViewById(R.id.habit_event_image);
 
         // Let User Add/Change their habit event image as click ImageView area
         image.setOnClickListener(v -> {

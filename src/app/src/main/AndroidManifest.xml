@@ -32,6 +32,9 @@
             android:name=".views.activities.ViewHabitEventActivity"
             android:exported="false" />
         <activity
+            android:name=".views.activities.AnotherUserProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".views.activities.UserLoginActivity"
             android:exported="true">
             <intent-filter>

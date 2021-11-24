@@ -32,6 +32,12 @@ public class UserModel implements IUserModel {
     private String firstname;
 
     /**
+     * User's social details
+     * key(user_id): value(0==incoming_request, 1==following, 2==incoming_request and following)
+     */
+    private HashMap<String, Integer> social;
+
+    /**
      * User's last name
      */
     private String lastname;
@@ -54,6 +60,15 @@ public class UserModel implements IUserModel {
     @Override
     public String getLastName() {
         return lastname;
+    }
+
+    /**
+     * Get the Social HashMap
+     * @return social HashMap
+     */
+    @Override
+    public HashMap<String, Integer> getSocial() {
+        return social;
     }
 
     /**
@@ -89,6 +104,14 @@ public class UserModel implements IUserModel {
     }
 
     /**
+     * Set the social of the model
+     * @param social to set to
+     */
+    public void setSocial(HashMap<String, Integer> social) {
+        this.social = social;
+    }
+
+    /**
      * Commit the user model to the database
      *
      * @return task representing status of save task
@@ -102,6 +125,7 @@ public class UserModel implements IUserModel {
         map.put("username", getUsername());
         map.put("firstname", getFirstName());
         map.put("lastname", getLastName());
+        map.put("social", getSocial());
 
         FirebaseFirestore.getInstance().collection(USER_COLLECTION_ID)
                 .document(this.uid)

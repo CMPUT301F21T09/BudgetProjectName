@@ -1,4 +1,4 @@
-package com.cmput301f21t09.budgetprojectname;
+package com.cmput301f21t09.budgetprojectname.views.lists;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.models.UserModel;
 
 import java.util.ArrayList;
@@ -47,7 +48,10 @@ public class UserCustomList extends ArrayAdapter<UserModel> {
         TextView name = view.findViewById(R.id.name);
         TextView userName = view.findViewById(R.id.username);
 
-        Button follow = view.findViewById(R.id.following);
+        name.setText(user.getFirstName() + " " + user.getLastName());
+        userName.setText(user.getUsername());
+
+        Button follow = view.findViewById(R.id.follow);
         // if user following this user
         // set follow button to gone or unfollow
         follow.setOnClickListener(v -> {

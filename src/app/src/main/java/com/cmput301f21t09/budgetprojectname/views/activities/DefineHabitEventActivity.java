@@ -223,7 +223,6 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                         habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
                             @Override
                             public void onCallback(String habitEventID) {
-                                // TODO: figure out what to add here
                                 IHabitModel model = controller.getModel();
                                 if (model.getLastCompleted() == null || model.getSchedule().wasSkippedIfLastCompletedOn(model.getLastCompleted())) {
                                     controller.updateModel(model.getTitle(), model.getReason(), model.getStartDate(), 1, model.getSchedule(), new Date());

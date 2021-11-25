@@ -48,7 +48,10 @@ public class UserCustomList extends ArrayAdapter<UserModel> {
         TextView name = view.findViewById(R.id.name);
         TextView userName = view.findViewById(R.id.username);
 
-        Button follow = view.findViewById(R.id.following);
+        name.setText(user.getFirstName() + " " + user.getLastName());
+        userName.setText(user.getUsername());
+
+        Button follow = view.findViewById(R.id.follow);
         // if user following this user
         // set follow button to gone or unfollow
         follow.setOnClickListener(v -> {

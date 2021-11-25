@@ -13,10 +13,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Controller which handles the interaction with the users collection in firestore
@@ -72,6 +75,43 @@ public class UserController {
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
                 }
+            }
+        });
+    }
+
+    /**
+     * Gets existing user from Firestore Db
+     *
+     * @param username of user to retrieve
+     */
+    public void readUserByUserName(String username, UserController.UserCallback userCallback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Query query = db.collection("users").whereEqualTo("username", username).limit(1);
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<DocumentSnapshot> docs = task.getResult().getDocuments();
+                if (docs.size() > 0) {
+                    DocumentSnapshot doc = docs.get(0);
+                    Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
+                    String id = (String) doc.getId();
+                    String firstname = (String) doc.getData().get("firstname");
+                    String lastname = (String) doc.getData().get("lastname");
+                    HashMap<String, Integer> social = (HashMap<String, Integer>) doc.getData().get("social");
+
+                    // Set up the UserModel
+                    UserModel retrievedUserModel = new UserModel();
+                    retrievedUserModel.setUsername(username);
+                    retrievedUserModel.setUID(id);
+                    retrievedUserModel.setFirstName(firstname);
+                    retrievedUserModel.setLastName(lastname);
+                    retrievedUserModel.setSocial(social);
+
+                    userCallback.onCallback(retrievedUserModel);
+                } else {
+                    Log.d(TAG, "No such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
             }
         });
     }

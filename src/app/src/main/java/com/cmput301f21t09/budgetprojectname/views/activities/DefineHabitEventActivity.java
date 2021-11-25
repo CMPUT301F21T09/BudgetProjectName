@@ -28,6 +28,7 @@ import androidx.core.app.ActivityCompat;
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
 import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
+import com.cmput301f21t09.budgetprojectname.controllers.HabitController;
 import com.cmput301f21t09.budgetprojectname.models.LatLngModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -58,6 +59,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     private static final String TAG = "DefineHabitEventActivity";
     private boolean isNewHabitEvent;
     private final HabitEventController habitEventController = new HabitEventController();
+    private HabitController controller;
     private String habitID;
     private String habitEventID;
 
@@ -217,6 +219,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                             @Override
                             public void onCallback(String habitEventID) {
                                 // TODO: figure out what to add here
+                                controller = HabitController.getEditHabitController(habitID);
                                 System.out.println("habitevent id " + habitEventID);
                                 // return back to main habit list
                                 finish();

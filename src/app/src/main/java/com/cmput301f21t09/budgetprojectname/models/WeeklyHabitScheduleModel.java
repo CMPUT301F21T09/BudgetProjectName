@@ -62,11 +62,21 @@ public class WeeklyHabitScheduleModel implements IWeeklyHabitScheduleModel {
 
     @Override
     public boolean isToBeCompletedOn(Date date) {
-        return false; // TODO
+        Date today = new Date();
+        int testedDatOfWeek = date.getDay();
+        if (date.after(today)) {
+            if (testedDatOfWeek > 0) {
+                return days[testedDatOfWeek - 1];
+            } else if (testedDatOfWeek == 0) {
+                return days[6];
+            }
+        }
+        return false;
     }
 
     @Override
     public boolean wasSkippedIfLastCompletedOn(Date date) {
+
         return false; // TODO
     }
 

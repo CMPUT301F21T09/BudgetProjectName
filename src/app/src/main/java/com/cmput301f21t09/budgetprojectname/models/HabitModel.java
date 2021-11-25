@@ -61,6 +61,7 @@ public class HabitModel implements IHabitModel {
      */
     private IHabitScheduleModel schedule;
 
+    private Date nextDueDate;
     /**
      * Private constructor for creating a habit model with the given data
      *

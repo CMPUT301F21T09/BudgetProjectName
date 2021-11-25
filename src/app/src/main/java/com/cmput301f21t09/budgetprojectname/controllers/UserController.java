@@ -105,7 +105,7 @@ public class UserController {
      *
      * @param userID ID of user whose follow requests we are retrieving
      */
-    // TODO: generalize this to get users that the current user is following
+    // TODO: generalize this to get users that the current user is following (user:1)
     public void readUserFollowRequests(String userID, UserController.UsersCallback usersCallback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(userID);
@@ -118,10 +118,6 @@ public class UserController {
                     DocumentSnapshot doc = task.getResult();
                     if (doc.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
-                        String id = (String) doc.getId();
-                        String username = (String) doc.getData().get("username");
-                        String firstname = (String) doc.getData().get("firstname");
-                        String lastname = (String) doc.getData().get("lastname");
                         HashMap<String, Integer> social =
                          (HashMap<String, Integer>) doc.getData().get("social");
 
@@ -136,7 +132,7 @@ public class UserController {
                                 followRequests.add(userid);
                             }
                         }
-
+                        // return back the list of user ids
                         usersCallback.onCallback(followRequests);
                     } else {
                         Log.d(TAG, "No such document");

@@ -69,21 +69,18 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
         // Brings the user to the create habit event screen
         ImageButton acceptBtn = view.findViewById(R.id.accept_button);
         acceptBtn.setOnClickListener(v -> {
-            // pass habit id to create habit event for targeted habit
-            // Intent intent = new Intent(context, DefineHabitEventActivity.class);
-            // intent.putExtra("HABIT_ID", habit.getId());
-            // context.startActivity(intent);
             System.out.println("user that got accepted " + user.getUID() + "name " + user.getUsername());
             acceptFollowRequest(user);
-//            Intent i = new Intent(this, FollowRequestActivity.class);
-//            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            startActivity(i);
-
         });
 
         return view;
     }
 
+    /**
+     * Accepts follow request of another user and updates the database accordingly.
+     * Refreshes the activity to ensure updated db data is used.
+     * @param anotherUser user whose request we want to accept
+     */
     private void acceptFollowRequest(UserModel anotherUser){
         String currentUserID = AuthorizationService.getInstance().getCurrentUserId();
         UserController userController = new UserController();
@@ -97,17 +94,28 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
         // modify other user's status with respect to current user
         userController.readUser(currentUserID, currentUser -> {
             HashMap<String, Integer> updatedCurrentSocialMap = currentUser.getSocial();
-            // if this friend has send m
-            // remove the request from current user's social map
-            updatedCurrentSocialMap.remove(anotherUserID);
+            int anotherUserInCurrentSocialMap =
+                    Integer.parseInt(String.valueOf(updatedCurrentSocialMap.get(anotherUserID)));
+
+            if(anotherUserInCurrentSocialMap == 0){
+                // 0 means they have sent us a request which we have accepted now we must
+                // remove the request from current user's social map
+                updatedCurrentSocialMap.remove(anotherUserID);
+            } else if(anotherUserInCurrentSocialMap == 2){
+                // 2 means we are already following this friend and they've sent a request to us
+                // we want to change value to 1 to show that we are still following them
+                updatedCurrentSocialMap.put(anotherUserID, 1);
+            }
+            // update db with new relationships
             userController.updateUserSocialMap(currentUserID, updatedCurrentSocialMap);
+
+            // refresh list on page to account for newly removed entries
+            // needs to be done in callback to ensure db has been updated
             Intent intent = new Intent(context, FollowRequestActivity.class);
             intent.putExtra("uid", currentUserID);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
-            System.out.println("refresh??");
-
         });
 
 

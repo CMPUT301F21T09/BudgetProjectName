@@ -70,26 +70,7 @@ public class FollowingFragment extends Fragment {
         System.out.println("curr user id " + currentUserId);
         // TODO: store list of follow requests
 
-//        userController.readUserFollowRequests(currentUserId, followRequests -> {
-////            name.setText(retrievedAnotherUser.getFirstName() + " " + retrievedAnotherUser.getLastName());
-////            username.setText("@" + retrievedAnotherUser.getUsername());
-//            for(String userID: followRequests){
-//                // get back the model using userID
-//                userController.readUser(userID, followRequestUser -> {
-//                    System.out.println("user who wants to follow you " +
-//                            followRequestUser.getFirstName() + " " + followRequestUser.getUID());
-//                    followRequestUsers.add(followRequestUser);
-//                    System.out.println("size of follow req inside loop" + followRequestUsers.size());
-//                    requests_btn.setText("Requests (" + followRequestUsers.size() +")    >");
-//                });
-//                // set number of requests
-//                System.out.println("size of follow req inside callback" + followRequestUsers.size());
-////                requests_btn.setText("Requests (" + followRequestUsers.size() +")    >");
-//            }
-//
-//
-//        });
-        System.out.println("size of follow req" + followRequestUsers.size());
+        // System.out.println("size of follow req" + followRequestUsers.size());
         requests_btn.setOnClickListener(v -> seeRequests(currentUserId));
 
         // TODO: replace with users following instead of habit
@@ -109,8 +90,6 @@ public class FollowingFragment extends Fragment {
             }
             habitAdapter.notifyDataSetChanged();
         });
-
-        System.out.println("size of follow req later" + followRequestUsers.size());
 
         habitList.setOnItemClickListener((parent, view1, position, id) -> {
             // TODO: Pass targeted Habit to ViewHabitActivity

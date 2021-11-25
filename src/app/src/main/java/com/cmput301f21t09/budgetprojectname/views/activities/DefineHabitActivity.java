@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -68,10 +69,14 @@ public class DefineHabitActivity extends AppCompatActivity {
 
         // Set up the toolbar
         Toolbar toolbar = findViewById(R.id.adh_toolbar);
-        toolbar.setTitle(isNewHabitEvent ? "Create Habit" : "Edit Habit");
+        TextView tbTitle = findViewById(R.id.toolbar_title);
+        tbTitle.setText(isNewHabitEvent ? "Create Habit" : "Edit Habit");
         setSupportActionBar(toolbar);
 
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
+
 
         // Retrieve the specific views
         habitTitle = findViewById(R.id.adh_editHabitTitle);

@@ -70,10 +70,10 @@ public class FollowingFragment extends Fragment {
         System.out.println("curr user id " + currentUserId);
         // TODO: store list of follow requests
 
-        // System.out.println("size of follow req" + followRequestUsers.size());
         requests_btn.setOnClickListener(v -> seeRequests(currentUserId));
 
         // TODO: replace with users following instead of habit
+
         // ListView setup
         ListView habitList = view.findViewById(R.id.following_list);
 

@@ -8,33 +8,33 @@ public interface IWeeklyHabitScheduleModel extends IHabitScheduleModel {
     /* Identifiers for checking getting data for each day */
 
     /**
+     * Specifier for Sunday
+     */
+    int SUNDAY = 0;
+    /**
      * Specifier for Monday
      */
-    int MONDAY = 0;
+    int MONDAY = 1;
     /**
      * Specifier for Tuesday
      */
-    int TUESDAY = 1;
+    int TUESDAY = 2;
     /**
      * Specifier for Wednesday
      */
-    int WEDNESDAY = 2;
+    int WEDNESDAY = 3;
     /**
      * Specifier for Thursday
      */
-    int THURSDAY = 3;
+    int THURSDAY = 4;
     /**
      * Specifier for Friday
      */
-    int FRIDAY = 4;
+    int FRIDAY = 5;
     /**
      * Specifier for Saturday
      */
-    int SATURDAY = 5;
-    /**
-     * Specifier for Sunday
-     */
-    int SUNDAY = 6;
+    int SATURDAY = 6;
 
     /**
      * Number of days in a week

@@ -28,7 +28,12 @@ import androidx.core.app.ActivityCompat;
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
 import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
+import com.cmput301f21t09.budgetprojectname.controllers.HabitController;
+import com.cmput301f21t09.budgetprojectname.models.HabitModel;
+import com.cmput301f21t09.budgetprojectname.models.IHabitModel;
+import com.cmput301f21t09.budgetprojectname.MainActivity;
 import com.cmput301f21t09.budgetprojectname.models.LatLngModel;
+import com.cmput301f21t09.budgetprojectname.views.fragments.DailyHabitFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -57,6 +62,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "DefineHabitEventActivity";
     private boolean isNewHabitEvent;
+    private HabitController controller;
     private final HabitEventController habitEventController = new HabitEventController();
     private String habitID;
     private String habitEventID;
@@ -113,6 +119,8 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         back.setOnClickListener(v -> {
             finish();
         });
+
+        controller = HabitController.getEditHabitController(habitID);
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -211,15 +219,22 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                     HabitEventModel habitEvent = new HabitEventModel(null,
                             locationSwitch.isChecked() && (markerLocation.getLatitude() != null) ? markerLocation : null,
                             new Date(), commentStr, null, habitID);
-
                     if (isNewHabitEvent) {
                         habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
                             @Override
                             public void onCallback(String habitEventID) {
-                                // TODO: figure out what to add here
+                                IHabitModel model = controller.getModel();
+                                if (model.getLastCompleted() == null || model.getSchedule().wasSkippedIfLastCompletedOn(model.getLastCompleted())) {
+                                    controller.updateModel(model.getTitle(), model.getReason(), model.getStartDate(), 1, model.getSchedule(), new Date());
+                                } else {
+                                    controller.updateModel(model.getTitle(), model.getReason(), model.getStartDate(), model.getStreak() + 1, model.getSchedule(), new Date());
+                                }
                                 System.out.println("habitevent id " + habitEventID);
                                 // return back to main habit list
-                                finish();
+                                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                                i.putExtra("frgToLoad", "daily_habits");
+                                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(i);
                             }
                         });
                     } else {

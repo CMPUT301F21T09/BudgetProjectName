@@ -1,18 +1,26 @@
 package com.cmput301f21t09.budgetprojectname.views.lists;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
 import com.cmput301f21t09.budgetprojectname.R;
+import com.cmput301f21t09.budgetprojectname.controllers.UserController;
 import com.cmput301f21t09.budgetprojectname.models.UserModel;
+import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
+import com.cmput301f21t09.budgetprojectname.views.activities.DefineHabitEventActivity;
+import com.cmput301f21t09.budgetprojectname.views.activities.FollowRequestActivity;
+import com.cmput301f21t09.budgetprojectname.views.activities.ViewHabitActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Helper class to create a custom list for user follow request
@@ -58,6 +66,58 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
         followRequestName.setText(user.getFirstName());
         followRequestUsername.setText("@"+ user.getUsername());
 
+        // Brings the user to the create habit event screen
+        ImageButton acceptBtn = view.findViewById(R.id.accept_button);
+        acceptBtn.setOnClickListener(v -> {
+            System.out.println("user that got accepted " + user.getUID() + "name " + user.getUsername());
+            acceptFollowRequest(user);
+        });
+
         return view;
+    }
+
+    /**
+     * Accepts follow request of another user and updates the database accordingly.
+     * Refreshes the activity to ensure updated db data is used.
+     * @param anotherUser user whose request we want to accept
+     */
+    private void acceptFollowRequest(UserModel anotherUser){
+        String currentUserID = AuthorizationService.getInstance().getCurrentUserId();
+        UserController userController = new UserController();
+
+        // modify current user's status with respect to the other user
+        HashMap<String, Integer> updatedOtherSocialMap = anotherUser.getSocial();
+        String anotherUserID = anotherUser.getUID();
+        updatedOtherSocialMap.put(currentUserID, 1); // current user is followed by anotherUser
+        userController.updateUserSocialMap(anotherUserID, updatedOtherSocialMap);
+
+        // modify other user's status with respect to current user
+        userController.readUser(currentUserID, currentUser -> {
+            HashMap<String, Integer> updatedCurrentSocialMap = currentUser.getSocial();
+            int anotherUserInCurrentSocialMap =
+                    Integer.parseInt(String.valueOf(updatedCurrentSocialMap.get(anotherUserID)));
+
+            if(anotherUserInCurrentSocialMap == 0){
+                // 0 means they have sent us a request which we have accepted now we must
+                // remove the request from current user's social map
+                updatedCurrentSocialMap.remove(anotherUserID);
+            } else if(anotherUserInCurrentSocialMap == 2){
+                // 2 means we are already following this friend and they've sent a request to us
+                // we want to change value to 1 to show that we are still following them
+                updatedCurrentSocialMap.put(anotherUserID, 1);
+            }
+            // update db with new relationships
+            userController.updateUserSocialMap(currentUserID, updatedCurrentSocialMap);
+
+            // refresh list on page to account for newly removed entries
+            // needs to be done in callback to ensure db has been updated
+            Intent intent = new Intent(context, FollowRequestActivity.class);
+            intent.putExtra("uid", currentUserID);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        });
+
+
     }
 }

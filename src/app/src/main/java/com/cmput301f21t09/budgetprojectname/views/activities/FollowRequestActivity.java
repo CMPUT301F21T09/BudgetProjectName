@@ -70,14 +70,6 @@ public class FollowRequestActivity extends AppCompatActivity {
 
             }
         });
-       followRequestList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                System.out.println("cliecked");
-                followRequestAdapter.notifyDataSetChanged();
-            }
-        });
-
 
         // TODO: add back button
       }

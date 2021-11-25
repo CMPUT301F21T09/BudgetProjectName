@@ -24,13 +24,13 @@ public class WeeklyHabitScheduleModel implements IWeeklyHabitScheduleModel {
      * Names of each weekday as found in the database
      */
     private static final String[] WEEKDAY_IDENTIFIERS = {
+            "doWeeklySunday",
             "doWeeklyMonday",
             "doWeeklyTuesday",
             "doWeeklyWednesday",
             "doWeeklyThursday",
             "doWeeklyFriday",
             "doWeeklySaturday",
-            "doWeeklySunday"
     };
 
     /**
@@ -63,21 +63,45 @@ public class WeeklyHabitScheduleModel implements IWeeklyHabitScheduleModel {
     @Override
     public boolean isToBeCompletedOn(Date date) {
         Date today = new Date();
-        int testedDatOfWeek = date.getDay();
+        int testedDateOfWeek = date.getDay();
         if (date.after(today)) {
-            if (testedDatOfWeek > 0) {
-                return days[testedDatOfWeek - 1];
-            } else if (testedDatOfWeek == 0) {
-                return days[6];
-            }
+            return days[testedDateOfWeek];
         }
         return false;
     }
 
     @Override
     public boolean wasSkippedIfLastCompletedOn(Date date) {
+        int lastCompletedDateOfWeek = date.getDay();
+        int lastCompletedDay = date.getDate();
+        int i;
+        int current = lastCompletedDay+1;
+        Date today = new Date();
+        int todayDayOfWeek = today.getDay();
 
-        return false; // TODO
+        if (lastCompletedDateOfWeek == 6) {
+            i = 0;
+        } else {
+            i = lastCompletedDateOfWeek+1;
+        }
+        if (lastCompletedDay == today.getDate()) {
+            return false;
+        }
+        while(true) {
+            if (days[i]) {
+                if (todayDayOfWeek == current) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+            if (i == 6) {
+                i = 0;
+            } else {
+                i++;
+            }
+            current++;
+        }
     }
 
     @Override

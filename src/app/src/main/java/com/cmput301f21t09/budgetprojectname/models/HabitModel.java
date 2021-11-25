@@ -52,16 +52,16 @@ public class HabitModel implements IHabitModel {
      * Habit start date
      */
     private Date startDate;
+
     /**
      * Habit last completed date
      */
-    private final Date lastCompleted;
+    private Date lastCompleted;
     /**
      * Habit schedule
      */
     private IHabitScheduleModel schedule;
 
-    private Date nextDueDate;
     /**
      * Private constructor for creating a habit model with the given data
      *
@@ -72,6 +72,14 @@ public class HabitModel implements IHabitModel {
      * @param lastCompleted habit last time completed date
      * @param streak        habit streak score
      */
+
+    /**
+     * Custom HabitModel Class to make HabitModelClass serializable
+     */
+    public HabitModel() {
+
+    }
+
     private HabitModel(String id, String title, String reason, Date startDate, Date lastCompleted, long streak, IHabitScheduleModel schedule) {
         this.id = id;
         this.title = sanitizeStringFromDatabase(title, IHabitModel.MAX_TITLE_LENGTH);
@@ -266,6 +274,10 @@ public class HabitModel implements IHabitModel {
     @Override
     public Date getLastCompleted() {
         return this.lastCompleted;
+    }
+
+    public void setLastCompleted(Date lastCompleted) {
+        this.lastCompleted = lastCompleted;
     }
 
     @Override

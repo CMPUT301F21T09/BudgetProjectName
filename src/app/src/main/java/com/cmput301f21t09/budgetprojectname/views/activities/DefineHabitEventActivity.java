@@ -66,6 +66,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     private final HabitEventController habitEventController = new HabitEventController();
     private String habitID;
     private String habitEventID;
+    private String habitName;
 
     SupportMapFragment mapFragment;
     SwitchMaterial locationSwitch;
@@ -83,8 +84,10 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         Intent intent = getIntent();
         habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
         habitID = intent.getStringExtra("HABIT_ID");
+        habitName = intent.getStringExtra("HABIT_NAME");
         System.out.println("*****habitID " + habitID);
         System.out.println("****HE id" + habitEventID);
+
         isNewHabitEvent = (habitEventID == null);
         String modeStr;
 
@@ -108,6 +111,8 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         habitEventName = (TextView) findViewById(R.id.habitName);
         comment = (EditText) findViewById(R.id.comment);
         image = (ImageView) findViewById(R.id.habit_event_image);
+
+        habitEventName.setText(habitName);
 
         // Let User Add/Change their habit event image as click ImageView area
         image.setOnClickListener(v -> {
@@ -181,7 +186,6 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                             });
                         }
                         comment.setText(habitEventModel.getComment());
-
                         // TODO: set image
 
                     } else {

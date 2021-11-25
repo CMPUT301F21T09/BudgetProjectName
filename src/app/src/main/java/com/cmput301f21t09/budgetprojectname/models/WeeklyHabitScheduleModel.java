@@ -75,19 +75,19 @@ public class WeeklyHabitScheduleModel implements IWeeklyHabitScheduleModel {
         int lastCompletedDateOfWeek = date.getDay();
         int lastCompletedDay = date.getDate();
         int i;
-        int current = lastCompletedDay+1;
+        int current = lastCompletedDay + 1;
         Date today = new Date();
         int todayDayOfWeek = today.getDay();
 
         if (lastCompletedDateOfWeek == 6) {
             i = 0;
         } else {
-            i = lastCompletedDateOfWeek+1;
+            i = lastCompletedDateOfWeek + 1;
         }
         if (lastCompletedDay == today.getDate()) {
             return false;
         }
-        while(true) {
+        while (true) {
             if (days[i]) {
                 if (todayDayOfWeek == current) {
                     return false;

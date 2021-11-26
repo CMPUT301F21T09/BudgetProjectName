@@ -1,7 +1,6 @@
 package com.cmput301f21t09.budgetprojectname.views.activities;
 
 import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -110,28 +109,50 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
             username.setText("@" + retrievedAnotherUser.getUsername());
         });
 
-        // Display (Not following and hasn't requested, Requested, or Following) scenarios based on Social Map values of current user and user on screen
+        // Display (Not following and hasn't requested, Requested, or Following)
+        // scenarios based on Social Map values of current user and user on screen
         userController.readUser(currentUserId, retrievedCurrentUser -> {
             userController.readUser(anotherUserID, retrievedAnotherUser -> {
                 // Get the Social Map values accordingly and set it to null if it doesn't exist
-                Integer valueOfAnotherUserInCurrentUserSocialMap = retrievedCurrentUser.getSocial().get(anotherUserID) == null ? null : ((Number) retrievedCurrentUser.getSocial().get(anotherUserID)).intValue();
-                Integer valueOfCurrentUserInAnotherUserSocialMap = retrievedAnotherUser.getSocial().get(currentUserId) == null ? null : ((Number) retrievedAnotherUser.getSocial().get(currentUserId)).intValue();
+                Integer valueOfAnotherUserInCurrentUserSocialMap = retrievedCurrentUser.getSocial()
+                        .get(anotherUserID) == null ? null : ((Number) retrievedCurrentUser.getSocial()
+                        .get(anotherUserID)).intValue();
 
-                // The conditional statements below would render the correct screen accordingly based on the fact that (0==incoming_request, 1==following, 2==incoming_request and following)
-                if ((isNull(valueOfAnotherUserInCurrentUserSocialMap) || valueOfAnotherUserInCurrentUserSocialMap == 0) && isNull(valueOfCurrentUserInAnotherUserSocialMap)) {
-                    // Not Following and hasn't requested Screen is shown and the Follow button is presented (Additionally, user on screen is not following the logged-in user)
+                Integer valueOfCurrentUserInAnotherUserSocialMap = retrievedAnotherUser.getSocial()
+                        .get(currentUserId) == null ? null : ((Number) retrievedAnotherUser.getSocial()
+                        .get(currentUserId)).intValue();
 
-                    // If the user clicks on the Follow button, increase the user on screen's Social Map's value of current user from None to 0
+                // The conditional statements below would render the correct screen accordingly based on
+                // the fact that (0==incoming_request, 1==following, 2==incoming_request and following)
+                if ((isNull(valueOfAnotherUserInCurrentUserSocialMap) ||
+                        valueOfAnotherUserInCurrentUserSocialMap == 0)
+                        && isNull(valueOfCurrentUserInAnotherUserSocialMap)) {
+                    // Not Following and hasn't requested Screen is shown and the Follow button is presented
+                    // (Additionally, user on screen is not following the logged-in user)
+                    // If the user clicks on the Follow button,
+                    // increase the user on screen's Social Map's value of current user from None to 0
                     requestToFollow(currentUserId, anotherUserID, 0);
-                } else if ((isNull(valueOfAnotherUserInCurrentUserSocialMap) || valueOfAnotherUserInCurrentUserSocialMap == 0) && valueOfCurrentUserInAnotherUserSocialMap == 1) {
-                    // Not Following and hasn't requested Screen is shown and the Follow button is presented (Additionally, user on screen is following the logged-in user)
+                } else if ((isNull(valueOfAnotherUserInCurrentUserSocialMap)
+                        || valueOfAnotherUserInCurrentUserSocialMap == 0)
+                        && valueOfCurrentUserInAnotherUserSocialMap == 1) {
+                    // Not Following and hasn't requested Screen is shown and the Follow button is presented
+                    // (Additionally, user on screen is following the logged-in user)
 
-                    // If the user clicks on the Follow button, increase the user on screen's Social Map's value of current user from 1 to 2
+                    // If the user clicks on the Follow button,
+                    // increase the user on screen's Social Map's value of current user from 1 to 2
                     requestToFollow(currentUserId, anotherUserID, 2);
-                } else if ((isNull(valueOfAnotherUserInCurrentUserSocialMap) || valueOfAnotherUserInCurrentUserSocialMap == 0) && (valueOfCurrentUserInAnotherUserSocialMap == 0 || valueOfCurrentUserInAnotherUserSocialMap == 2)) {
+                } else if ((isNull(valueOfAnotherUserInCurrentUserSocialMap)
+                        || valueOfAnotherUserInCurrentUserSocialMap == 0)
+                        && (valueOfCurrentUserInAnotherUserSocialMap == 0
+                        || valueOfCurrentUserInAnotherUserSocialMap == 2)) {
                     // Requested Screen is shown
                     changeDisplayToRequestedState();
-                } else if ((valueOfAnotherUserInCurrentUserSocialMap == 1 || valueOfAnotherUserInCurrentUserSocialMap == 2) && (isNull(valueOfCurrentUserInAnotherUserSocialMap) || valueOfCurrentUserInAnotherUserSocialMap == 0 || valueOfCurrentUserInAnotherUserSocialMap == 1 || valueOfCurrentUserInAnotherUserSocialMap == 2)) {
+                } else if ((valueOfAnotherUserInCurrentUserSocialMap == 1
+                        || valueOfAnotherUserInCurrentUserSocialMap == 2)
+                        && (isNull(valueOfCurrentUserInAnotherUserSocialMap)
+                        || valueOfCurrentUserInAnotherUserSocialMap == 0
+                        || valueOfCurrentUserInAnotherUserSocialMap == 1
+                        || valueOfCurrentUserInAnotherUserSocialMap == 2)) {
                     // Following screen is shown
                     changeDisplayToFollowingState(anotherUserID);
                 }

@@ -89,8 +89,11 @@ public class AuthorizationServiceTest {
     public void testRegister() throws InterruptedException {
         String testRegisterEmail = "abc@aba.abc";
         String testRegisterPassword = "abcabcabc";
+        String testUsername = "abc";
+        String testFirstName = "Jane";
+        String testLastName = "Doe";
 
-        authInstance.register(testRegisterEmail, testRegisterPassword).addOnCompleteListener(task -> {
+        authInstance.register(testRegisterEmail, testRegisterPassword, testUsername, testFirstName, testLastName).addOnCompleteListener(task -> {
             assertTrue("Register failed", task.isSuccessful());
         });
 

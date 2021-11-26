@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/habit_details_background"
+        android:id="@+id/user_lists_background"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/white"
@@ -34,9 +34,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="14dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/habit_details_background"
+        app:layout_constraintBottom_toBottomOf="@+id/user_lists_background"
         app:layout_constraintStart_toEndOf="@+id/profile_pic"
-        app:layout_constraintTop_toTopOf="@+id/habit_details_background">
+        app:layout_constraintTop_toTopOf="@+id/user_lists_background">
 
         <TextView
             android:id="@+id/name"
@@ -53,22 +53,11 @@
             android:text="\@username"
             android:textColor="#A6A6A6"
             android:textSize="11sp"
-            app:layout_constraintBottom_toBottomOf="@+id/habit_details_background"
+            app:layout_constraintBottom_toBottomOf="@+id/user_lists_background"
             app:layout_constraintStart_toEndOf="@+id/profile_pic"
-            app:layout_constraintTop_toTopOf="@+id/habit_details_background" />
+            app:layout_constraintTop_toTopOf="@+id/user_lists_background" />
 
     </LinearLayout>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:backgroundTint="@color/secondary_light"
-        android:text="Follow"
-        android:textColor="@color/secondary_dark"
-        app:layout_constraintBottom_toBottomOf="@id/habit_details_background"
-        app:layout_constraintEnd_toEndOf="@id/habit_details_background"
-        app:layout_constraintTop_toTopOf="@id/habit_details_background" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -4,8 +4,12 @@ package com.cmput301f21t09.budgetprojectname;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.cmput301f21t09.budgetprojectname.views.activities.DefineHabitActivity;
 import com.cmput301f21t09.budgetprojectname.views.fragments.CurrentUserProfileFragment;
@@ -18,6 +22,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
  * Activity that holds 4 main Fragment
  */
 public class MainActivity extends AppCompatActivity {
+
+    private Window window;
+
+    private long backpressedTime;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -35,8 +43,19 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
         bottomNavigationView.getMenu().findItem(R.id.add).setCheckable(false);
 
+        window = getWindow();
+
         bottomNavigationView.setOnItemSelectedListener(item -> {
-            switch (item.getItemId()) {
+            int itemId = item.getItemId();
+            int prevItemId = bottomNavigationView.getSelectedItemId();
+            if (itemId != R.id.add) {
+                if (prevItemId != R.id.search && itemId == R.id.search) {
+                    updateStatusBarColor();
+                } else if (prevItemId == R.id.search && itemId != R.id.search) {
+                    updateStatusBarColor();
+                }
+            }
+            switch (itemId) {
                 case R.id.daily_habit:
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment, dailyHabitFragment).commit();
                     return true;
@@ -59,5 +78,33 @@ public class MainActivity extends AppCompatActivity {
         });
 
         bottomNavigationView.setSelectedItemId(R.id.daily_habit);
+    }
+
+    @Override
+    public void onBackPressed() {
+        long currentTimeMillis = System.currentTimeMillis();
+        if (System.currentTimeMillis() > backpressedTime + 2000) {
+            backpressedTime = currentTimeMillis;
+            Toast.makeText(this, "Back again to exit", Toast.LENGTH_SHORT).show();
+        } else {
+            moveTaskToBack(true);
+            finish();
+            android.os.Process.killProcess(android.os.Process.myPid());
+        }
+    }
+
+    /**
+     * Update the color of the status bar same as the top colour of screen
+     */
+    private void updateStatusBarColor() {
+        int flags = window.getDecorView().getSystemUiVisibility();
+        if (window.getStatusBarColor() == ContextCompat.getColor(this, R.color.white)) {
+            flags ^= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.secondary_dark));
+        } else {
+            flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.white));
+        }
+        window.getDecorView().setSystemUiVisibility(flags);
     }
 }

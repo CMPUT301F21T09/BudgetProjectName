@@ -55,10 +55,10 @@ public class UserCustomList extends ArrayAdapter<UserModel> {
         name.setText(user.getFirstName() + " " + user.getLastName());
         userName.setText(user.getUsername());
 
-        // Brings the user to the habit details screen
+        // Brings the user to the profile screen
         ShapeableImageView habitBackground = view.findViewById(R.id.user_lists_background);
         habitBackground.setOnClickListener(v -> {
-            // pass habit id to view the habit details for targeted habit
+            // Pass the UserID through intent
             Intent intent = new Intent(context, AnotherUserProfileActivity.class);
             intent.putExtra("USER_ID", user.getUID());
             context.startActivity(intent);

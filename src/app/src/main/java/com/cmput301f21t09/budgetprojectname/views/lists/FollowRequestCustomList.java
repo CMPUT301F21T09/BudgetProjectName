@@ -28,6 +28,7 @@ import java.util.HashMap;
 public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
     private final ArrayList<UserModel> users;
     private final Context context;
+    private final boolean isFollowRequest;
 
     /**
      * Constructor for FollowRequestCustomList
@@ -35,10 +36,12 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
      * @param context a current context of application
      * @param users   a arrayList of users who wish to follow a given user
      */
-    public FollowRequestCustomList(Context context, ArrayList<UserModel> users) {
+    public FollowRequestCustomList(Context context, ArrayList<UserModel> users,
+                                   boolean isFollowRequest){
         super(context, 0, users);
         this.users = users;
         this.context = context;
+        this.isFollowRequest = isFollowRequest;
     }
 
     /**
@@ -55,6 +58,12 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
             view = LayoutInflater.from(context).inflate(R.layout.follow_request_custom_list,
                     parent, false);
         }
+        // if isFollowRequest is false, then set the check and decline buttons to invisible
+        ImageButton acceptBtn = view.findViewById(R.id.accept_button);
+        Button decline_btn =  view.findViewById(R.id.decline_button);
+        accept_btn.setVisibility(view.INVISIBLE);
+        decline_btn.setVisibility(view.INVISIBLE);
+
         // Get the specific user being interacted with
         UserModel user = users.get(position);
 
@@ -67,7 +76,6 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
         followRequestUsername.setText("@"+ user.getUsername());
 
         // Brings the user to the create habit event screen
-        ImageButton acceptBtn = view.findViewById(R.id.accept_button);
         acceptBtn.setOnClickListener(v -> {
             System.out.println("user that got accepted " + user.getUID() + "name " + user.getUsername());
             acceptFollowRequest(user);

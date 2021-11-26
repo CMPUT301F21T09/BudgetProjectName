@@ -141,9 +141,11 @@ public class UserController {
     }
 
     /**
-     * Gets follow requests for existing user from Firestore Db
+     * Gets follow requests or following users for existing user from Firestore Db
      *
      * @param userID ID of user whose follow requests we are retrieving
+     * @param isFollowRequest checks if activity using this is a follow request or not,
+     * and bases the read logic from database on this
      */
     public void readUserFollows(String userID, boolean isFollowRequest,
                                        UserController.UsersCallback usersCallback) {
@@ -161,18 +163,20 @@ public class UserController {
                         HashMap<String, Integer> social =
                          (HashMap<String, Integer>) doc.getData().get("social");
 
-                        // find all the users with "userid" : 0 meaning they
-                        // are requesting to follow us or  "userid" : 2 meaning both of us are
-                        // requesting to follow one another
                         for(String userid : social.keySet()){
                             int value = Integer.parseInt(String.valueOf(social.get(userid)));
-                            System.out.println("userid " + userid + "value " + value);
                             if(isFollowRequest && (value == 0 || value == 2)){
-                                System.out.println("This is a follow request!");
+                                // retrieve all the users who want to follow you
+                                // userid:0 means they are requesting to follow us
+                                // userid:2 means they are requesting to follow us and
+                                // we are already following them
                                 followIDs.add(userid);
                             }
-                            else if(!isFollowRequest && (value == 1)){
-                                System.out.println("Following");
+                            else if(!isFollowRequest && (value == 1 || value == 2)){
+                                // retrieve all the users you, the current user, follows
+                                // userid:1 means we are following them
+                                // userid:2 means we are following them and they are requesting to
+                                // follow us
                                 followIDs.add(userid);
                             }
                         }

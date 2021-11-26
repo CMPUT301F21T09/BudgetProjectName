@@ -21,6 +21,7 @@ import com.cmput301f21t09.budgetprojectname.models.UserModel;
 import com.cmput301f21t09.budgetprojectname.views.lists.UserCustomList;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Fragment that allows the user to search other user
@@ -67,6 +68,12 @@ public class SearchFragment extends Fragment {
                 users.clear();
                 userlist.notifyDataSetChanged();
                 getUserById(s.toString().trim());
+
+                if (s.toString().trim().equals("")) {
+                    clearSearch.setVisibility(View.GONE);
+                    userList.setVisibility(View.GONE);
+                    background.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -85,6 +92,7 @@ public class SearchFragment extends Fragment {
         new UserController().readUserByUserName(id, user -> {
             if (currentRequest == this.request && user != null) {
                 users.add(user);
+                users.sort(Comparator.comparing(UserModel::getFirstName));
                 userlist.notifyDataSetChanged();
             }
         });

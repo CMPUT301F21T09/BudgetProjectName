@@ -58,7 +58,7 @@ public class FollowRequestActivity extends AppCompatActivity {
                 followRequestDataList, true);
         followRequestList.setAdapter(followRequestAdapter);
         userController = new UserController();
-        userController.readUserFollowRequests(currentUserId, true, followRequests -> {
+        userController.readUserFollows(currentUserId, true, followRequests -> {
             for(String userID: followRequests){
                 // get back the model using userID
                 userController.readUser(userID, followRequestUser -> {

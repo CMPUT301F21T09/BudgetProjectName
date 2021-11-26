@@ -15,9 +15,10 @@ import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.controllers.UserController;
 import com.cmput301f21t09.budgetprojectname.models.UserModel;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
-import com.cmput301f21t09.budgetprojectname.views.activities.DefineHabitEventActivity;
+import com.cmput301f21t09.budgetprojectname.views.activities.AnotherUserProfileActivity;
 import com.cmput301f21t09.budgetprojectname.views.activities.FollowRequestActivity;
 import com.cmput301f21t09.budgetprojectname.views.activities.ViewHabitActivity;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
     private final ArrayList<UserModel> users;
     private final Context context;
     private final boolean isFollowRequest;
+    private final String currentUserID = AuthorizationService.getInstance().getCurrentUserId();
 
     /**
      * Constructor for FollowRequestCustomList
@@ -57,7 +59,7 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
     public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
         View view = convertView;
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.follow_request_custom_list,
+            view = LayoutInflater.from(context).inflate(R.layout.follow_custom_list,
                     parent, false);
         }
 
@@ -81,6 +83,15 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
         followRequestName.setText(user.getFirstName());
         followRequestUsername.setText("@" + user.getUsername());
 
+        // Brings the user to the following another user's details screen
+        ShapeableImageView habitBackground = view.findViewById(R.id.follow_list_background);
+        habitBackground.setOnClickListener(v -> {
+            // pass habit id to view the habit details for targeted habit
+            Intent intent = new Intent(context, AnotherUserProfileActivity.class);
+            intent.putExtra("USER_ID", user.getUID());
+            context.startActivity(intent);
+        });
+
         // User clicks accept request button
         acceptBtn.setOnClickListener(v -> {
             System.out.println("user that got accepted " + user.getUID() + "name " + user.getUsername());
@@ -103,7 +114,7 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
      * @param anotherUser user whose request we want to accept
      */
     private void acceptFollowRequest(UserModel anotherUser) {
-        String currentUserID = AuthorizationService.getInstance().getCurrentUserId();
+
         UserController userController = new UserController();
 
         // modify current user's status inside other user's social map
@@ -161,7 +172,6 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
      * @param anotherUser user whose request we want to deny
      */
     private void denyFollowRequest(UserModel anotherUser) {
-        String currentUserID = AuthorizationService.getInstance().getCurrentUserId();
         String anotherUserID = anotherUser.getUID();
 
         UserController userController = new UserController();
@@ -200,5 +210,9 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+        // TODO: figure out a way of "freezing screen" or waiting for this reload to finish
+        // A request may already have been deleted from the database + list but the screen hasn't
+        // finished rendering. So a user may click on a button that should not even be there
+        // and this crashes the app because it's getting a null value onclick
     }
 }

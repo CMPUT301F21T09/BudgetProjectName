@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -65,8 +66,10 @@ public class FollowingFragment extends Fragment {
 
         String currentUserId = AuthorizationService.getInstance().getCurrentUserId();
 
-        Button requests_btn = (Button) view.findViewById(R.id.requests_button);
-        requests_btn.setOnClickListener(v -> seeRequests(currentUserId));
+        Button requestsBtn = (Button) view.findViewById(R.id.requests_button);
+        requestsBtn.setOnClickListener(v -> seeRequests(currentUserId));
+
+        TextView numFollowing = (TextView) view.findViewById(R.id.following_label);
 
         // ListView setup
         ListView followingList = view.findViewById(R.id.following_list);
@@ -78,9 +81,9 @@ public class FollowingFragment extends Fragment {
         followingList.setAdapter(followingAdapter);
 
         // load all users we are following
-        userController.readUserFollowRequests(currentUserId, false ,
-                followRequests -> {
-            for(String userID: followRequests){
+        userController.readUserFollows(currentUserId, false ,
+                following -> {
+            for(String userID: following){
                 // get back the model using userID
                 userController.readUser(userID, followingUser -> {
                     System.out.println("user you are following " +
@@ -91,7 +94,7 @@ public class FollowingFragment extends Fragment {
                     // update number of users following
                     // must be done in callback function so it is dynamic
                     // ie. changes when data is fetched
-                    requests_btn.setText("You are following " +
+                    numFollowing.setText("You are following " +
                             followingDataList.size() + " users");
                 });
             }

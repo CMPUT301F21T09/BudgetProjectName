@@ -86,7 +86,9 @@ public class MainActivity extends AppCompatActivity {
             backpressedTime = currentTimeMillis;
             Toast.makeText(this, "Back again to exit", Toast.LENGTH_SHORT).show();
         } else {
+            moveTaskToBack(true);
             finish();
+            android.os.Process.killProcess(android.os.Process.myPid());
         }
     }
 

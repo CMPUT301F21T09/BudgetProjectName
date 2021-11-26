@@ -36,13 +36,20 @@ public class FollowingFragment extends Fragment {
      */
     private UserController userController;
 
-    // TODO: comment
+    /**
+     * List of users that the current user is following
+     */
     ArrayList<UserModel> followingDataList;
+
+    /**
+     * Adapter used to make custom list work
+     */
     ArrayAdapter<UserModel> followingAdapter;
 
     /**
      * Check on the follow requests sent to you
      * by transitioning to the follow request screen
+     * @param userID current user ID
      */
     private void seeRequests(String userID) {
         // TODO: send userid in intent
@@ -89,8 +96,10 @@ public class FollowingFragment extends Fragment {
                     System.out.println("user you are following " +
                             followingUser.getFirstName() + " " + followingUser.getUID());
                     followingDataList.add(followingUser);
+
                     // update adapter that new users have been added to list
                     followingAdapter.notifyDataSetChanged();
+
                     // update number of users following
                     // must be done in callback function so it is dynamic
                     // ie. changes when data is fetched
@@ -100,6 +109,5 @@ public class FollowingFragment extends Fragment {
             }
         });
 
-        // when a user is selected go to their profile page
     }
 }

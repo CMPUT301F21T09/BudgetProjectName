@@ -27,10 +27,25 @@ import java.util.HashMap;
  * Helper class to create a custom list for user follow request
  */
 public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
-    // TODO: add comment
+    /**
+     * List of users who have requested to follow current user
+     */
     private final ArrayList<UserModel> users;
+
+    /**
+     * This custom list
+     */
     private final Context context;
+
+    /**
+     * Checks if the activity using it is a follow request, the accept/decline buttons
+     * should be visible
+     */
     private final boolean isFollowRequest;
+
+    /**
+     * User ID of user currently signed in
+     */
     private final String currentUserID = AuthorizationService.getInstance().getCurrentUserId();
 
     /**
@@ -65,6 +80,7 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
 
         ImageButton acceptBtn = view.findViewById(R.id.accept_button);
         ImageButton denyBtn = view.findViewById(R.id.decline_button);
+
         // if using this for the following list then there is no option to accept or decline
         // just show their name and username
         if(!isFollowRequest){

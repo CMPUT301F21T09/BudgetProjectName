@@ -91,10 +91,12 @@ public class HabitController extends ServiceTaskController<String> {
      * @param reason    to update model to
      * @param startDate to update model to
      */
-    public void updateModel(String title, String reason, Date startDate, IHabitScheduleModel schedule) {
+    public void updateModel(String title, String reason, Date startDate, long streak, IHabitScheduleModel schedule, Date lastCompleted) {
         Log.d("HabitController", "Habit Model Save Command issued");
 
         // Set data
+        model.setStreak(streak);
+        model.setLastCompleted(lastCompleted);
         model.setTitle(title);
         model.setReason(reason);
         model.setStartDate(startDate);

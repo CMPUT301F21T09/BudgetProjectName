@@ -133,7 +133,7 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
                     changeDisplayToRequestedState();
                 } else if ((valueOfAnotherUserInCurrentUserSocialMap == 1 || valueOfAnotherUserInCurrentUserSocialMap == 2) && (isNull(valueOfCurrentUserInAnotherUserSocialMap) || valueOfCurrentUserInAnotherUserSocialMap == 0 || valueOfCurrentUserInAnotherUserSocialMap == 1 || valueOfCurrentUserInAnotherUserSocialMap == 2)) {
                     // Following screen is shown
-                    changeDisplayToFollowingState();
+                    changeDisplayToFollowingState(anotherUserID);
                 }
             });
         });
@@ -142,7 +142,7 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
     /**
      * Change the display to the Following state
      */
-    private void changeDisplayToFollowingState() {
+    private void changeDisplayToFollowingState(String anotherUserID) {
         // Set the views accordingly
         followBtn.setVisibility(View.INVISIBLE);
         followingLabel.setVisibility(View.VISIBLE);
@@ -156,7 +156,7 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
         habitList.setAdapter(habitAdapter);
 
         // Display all the habits of another user
-        HabitModel.getAllForCurrentUser().addTaskCompleteListener(task -> {
+        HabitModel.getAllForAnotherUser(anotherUserID).addTaskCompleteListener(task -> {
             habitDataList.clear();
             if (task.isSuccessful()) {
                 habitDataList.addAll(task.getResult());

@@ -16,11 +16,20 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.cmput301f21t09.budgetprojectname.R;
+import com.cmput301f21t09.budgetprojectname.controllers.UserController;
+import com.cmput301f21t09.budgetprojectname.models.UserModel;
+import com.cmput301f21t09.budgetprojectname.views.lists.UserCustomList;
+
+import java.util.ArrayList;
 
 /**
  * Fragment that allows the user to search other user
  */
 public class SearchFragment extends Fragment {
+
+    private ArrayList<UserModel> users = new ArrayList<>();
+    private int request = 0;
+    private UserCustomList userlist;
 
     @Nullable
     @Override
@@ -36,6 +45,10 @@ public class SearchFragment extends Fragment {
         ListView userList = view.findViewById(R.id.user_listview);
         ImageButton clearSearch = view.findViewById(R.id.clear_text);
         EditText searchUser = view.findViewById(R.id.search_friend_edittext);
+
+        this.userlist = new UserCustomList(getContext(), users);
+        userList.setAdapter(userlist);
+
         searchUser.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -51,6 +64,9 @@ public class SearchFragment extends Fragment {
                 clearSearch.setVisibility(View.VISIBLE);
                 background.setVisibility(View.GONE);
                 userList.setVisibility(View.VISIBLE);
+                users.clear();
+                userlist.notifyDataSetChanged();
+                getUserById(s.toString().trim());
             }
         });
 
@@ -61,5 +77,16 @@ public class SearchFragment extends Fragment {
             background.setVisibility(View.VISIBLE);
         });
 
+    }
+
+    private void getUserById(String id) {
+        final int currentRequest = ++this.request;
+
+        new UserController().readUserByUserName(id, user -> {
+            if (currentRequest == this.request && user != null) {
+                users.add(user);
+                userlist.notifyDataSetChanged();
+            }
+        });
     }
 }

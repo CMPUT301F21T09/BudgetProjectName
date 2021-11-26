@@ -65,4 +65,11 @@ public interface IHabitModel {
      */
     IHabitScheduleModel getSchedule();
 
+    /**
+     * Get the UID associated with the habit
+     *
+     * @return User ID associated with the habit
+     */
+    String getUID();
+
 }

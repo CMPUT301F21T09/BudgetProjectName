@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cmput301f21t09.budgetprojectname.MainActivity;
+import com.cmput301f21t09.budgetprojectname.views.fragments.HabitScheduleViewSelector;
 import com.cmput301f21t09.budgetprojectname.views.lists.HabitEventCustomList;
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
@@ -22,7 +23,6 @@ import com.cmput301f21t09.budgetprojectname.controllers.HabitController;
 import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
 import com.cmput301f21t09.budgetprojectname.models.IHabitModel;
 import com.cmput301f21t09.budgetprojectname.models.IWeeklyHabitScheduleModel;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,15 +67,6 @@ public class ViewHabitActivity extends AppCompatActivity {
      */
     private TextView habitDate;
 
-    // Image View for each of the icon
-    private ImageView sundayIcon;
-    private ImageView mondayIcon;
-    private ImageView tuesdayIcon;
-    private ImageView wednesdayIcon;
-    private ImageView thursdayIcon;
-    private ImageView fridayIcon;
-    private ImageView saturdayIcon;
-
     /**
      * List View for habit events
      */
@@ -83,7 +74,6 @@ public class ViewHabitActivity extends AppCompatActivity {
 
     ArrayAdapter<HabitEventModel> habitEventAdapter;
     ArrayList<HabitEventModel> habitEventDataList;
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "ViewHabitActivity";
 
     @Override
@@ -174,17 +164,7 @@ public class ViewHabitActivity extends AppCompatActivity {
      * Update the views of the habit details
      */
     private void updateView() {
-        /**
-         * Get the image views
-         */
-        sundayIcon = findViewById(R.id.sunday_icon);
-        mondayIcon = findViewById(R.id.monday_icon);
-        tuesdayIcon = findViewById(R.id.tuesday_icon);
-        wednesdayIcon = findViewById(R.id.wednesday_icon);
-        thursdayIcon = findViewById(R.id.thursday_icon);
-        fridayIcon = findViewById(R.id.friday_icon);
-        saturdayIcon = findViewById(R.id.saturday_icon);
-
+        // Deletion of a habit
         if (controller.isTaskComplete(HabitController.HABIT_MODEL_DELETE)) {
             if (controller.isTaskSuccessful(HabitController.HABIT_MODEL_DELETE)) {
                 Toast t = new Toast(this);
@@ -209,28 +189,13 @@ public class ViewHabitActivity extends AppCompatActivity {
             habitDescription.setText(model.getReason());
             habitDate.setText(new SimpleDateFormat("MM/dd/yyyy").format(model.getStartDate()));
 
-            // Set the frequency of habit accordingly
-            IWeeklyHabitScheduleModel schedule = (IWeeklyHabitScheduleModel) model.getSchedule();
-            if (schedule.getDay(IWeeklyHabitScheduleModel.SUNDAY))
-                sundayIcon.setImageResource(R.drawable.ic_sunday_positive);
-
-            if (schedule.getDay(IWeeklyHabitScheduleModel.MONDAY))
-                mondayIcon.setImageResource(R.drawable.ic_monday_positive);
-
-            if (schedule.getDay(IWeeklyHabitScheduleModel.TUESDAY))
-                tuesdayIcon.setImageResource(R.drawable.ic_tuesday_positive);
-
-            if (schedule.getDay(IWeeklyHabitScheduleModel.WEDNESDAY))
-                wednesdayIcon.setImageResource(R.drawable.ic_wednesday_positive);
-
-            if (schedule.getDay(IWeeklyHabitScheduleModel.THURSDAY))
-                thursdayIcon.setImageResource(R.drawable.ic_thursday_positive);
-
-            if (schedule.getDay(IWeeklyHabitScheduleModel.FRIDAY))
-                fridayIcon.setImageResource(R.drawable.ic_friday_positive);
-
-            if (schedule.getDay(IWeeklyHabitScheduleModel.SATURDAY))
-                saturdayIcon.setImageResource(R.drawable.ic_saturday_positive);
+            // Set schedule fragment
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(
+                            R.id.adh_scheduleFragment,
+                            HabitScheduleViewSelector.getFragmentForModel(model.getSchedule(), true)
+                    ).commit();
         }
     }
 }

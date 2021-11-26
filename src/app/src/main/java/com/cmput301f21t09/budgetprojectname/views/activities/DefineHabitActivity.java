@@ -140,6 +140,7 @@ public class DefineHabitActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        IHabitModel model = controller.getModel();
         switch (item.getItemId()) {
             // Brings the user back to the previous activity if the back button on the app bar is pressed
             case android.R.id.home:
@@ -153,7 +154,7 @@ public class DefineHabitActivity extends AppCompatActivity {
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(habitStartDate.getYear(), habitStartDate.getMonth(), habitStartDate.getDayOfMonth());
                     HabitScheduleFragment hsv = ((HabitScheduleFragment) getSupportFragmentManager().findFragmentById(R.id.adh_scheduleFragment));
-                    controller.updateModel(habitTitle.getText().toString(), habitReason.getText().toString(), calendar.getTime(), hsv.getSchedule());
+                    controller.updateModel(habitTitle.getText().toString(), habitReason.getText().toString(), calendar.getTime(), model.getStreak(), hsv.getSchedule(), model.getLastCompleted());
                 }
 
                 // Head back to the daily habit fragment

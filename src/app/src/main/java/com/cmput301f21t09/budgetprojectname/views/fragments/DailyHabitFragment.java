@@ -52,34 +52,6 @@ public class DailyHabitFragment extends Fragment {
         TextView dateText = view.findViewById(R.id.today_date);
         dateText.setText(new SimpleDateFormat("EEEE, MMMM d").format(date));
 
-        // Set Today's Day to set to the Spinner
-        ArrayList<String> dayList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.dayArray)));
-        String day = new SimpleDateFormat("EEEE").format(new Date());
-        int todayIndex = 0;
-        switch (day) {
-            case "Monday":
-                todayIndex = 0;
-                break;
-            case "Tuesday":
-                todayIndex = 1;
-                break;
-            case "Wednesday":
-                todayIndex = 2;
-                break;
-            case "Thursday":
-                todayIndex = 3;
-                break;
-            case "Friday":
-                todayIndex = 4;
-        }
-        dayList.set(todayIndex, "Today");
-
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, dayList);
-
-        Spinner spinner = view.findViewById(R.id.day_spinner);
-        spinner.setAdapter(spinnerAdapter);
-        spinner.setSelection(todayIndex);
-
         // Retrieve the specific view
         ListView habitList = view.findViewById(R.id.habit_listview);
 

@@ -1,0 +1,71 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#3C85B9" />
+        </shape>
+    </item>
+
+    <item>
+        <rotate
+            android:fromDegrees="-20"
+            android:pivotX="290%"
+            android:pivotY="-10%"
+            android:toDegrees="-20">
+            <shape android:shape="rectangle">
+                <solid android:color="#F2F8FD" />
+            </shape>
+        </rotate>
+    </item>
+
+    <item>
+        <rotate
+            android:fromDegrees="20"
+            android:pivotX="-190%"
+            android:pivotY="-10%"
+            android:toDegrees="20">
+            <shape android:shape="rectangle">
+                <solid android:color="#F2F8FD" />
+            </shape>
+        </rotate>
+    </item>
+    <item android:top="400dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#F2F8FD" />
+        </shape>
+    </item>
+
+</layer-list>
+
+<!--<layer-list xmlns:android="http://schemas.android.com/apk/res/android">-->
+<!--<item>-->
+
+<!--    <shape android:shape="rectangle">-->
+<!--        <solid android:color="#3C85B9" />-->
+<!--    </shape>-->
+<!--</item>-->
+
+<!--<item>-->
+<!--    <rotate-->
+<!--        android:fromDegrees="-30"-->
+<!--        android:pivotX="23%"-->
+<!--        android:pivotY="-48%"-->
+<!--        android:toDegrees="-30">-->
+<!--        <shape android:shape="rectangle">-->
+<!--            <solid android:color="@color/white" />-->
+<!--        </shape>-->
+<!--    </rotate>-->
+<!--</item>-->
+
+<!--<item>-->
+<!--    <rotate-->
+<!--        android:fromDegrees="-30"-->
+<!--        android:pivotX="100%"-->
+<!--        android:pivotY="143%"-->
+<!--        android:toDegrees="-30">-->
+<!--        <shape android:shape="rectangle">-->
+<!--            <solid android:color="@color/white" />-->
+<!--        </shape>-->
+<!--    </rotate>-->
+<!--</item>-->
+
+<!--</layer-list>-->

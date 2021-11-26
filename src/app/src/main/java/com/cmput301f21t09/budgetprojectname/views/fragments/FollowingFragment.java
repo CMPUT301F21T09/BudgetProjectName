@@ -73,7 +73,8 @@ public class FollowingFragment extends Fragment {
 
         // Set up the list and send an empty list to the view
         followingDataList = new ArrayList<>();
-        followingAdapter = new FollowRequestCustomList(getContext(), followingDataList);
+        followingAdapter = new FollowRequestCustomList(getContext(),
+                followingDataList, false);
         followingList.setAdapter(followingAdapter);
 
         userController.readUserFollowRequests(currentUserId, followRequests -> {

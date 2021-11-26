@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/profile_background">
+    android:background="@drawable/profile_background_screen">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -72,8 +72,10 @@
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:fontFamily="sans-serif-light"
         android:text="\@userName"
-        android:textColor="@color/white"
+        android:textColor="#F1F1F1"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -88,66 +90,69 @@
         android:layout_marginEnd="120dp"
         android:backgroundTint="#80B8DF"
         android:text="Follow"
+        android:textAllCaps="false"
         android:textColor="#FFFFFF"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username"
-        android:visibility="visible" />
+        app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <TextView
         android:id="@+id/following_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="38dp"
+        android:fontFamily="sans-serif-light"
         android:text="Following"
+        android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="24dp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username"
-        android:visibility="invisible" />
+        app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <TextView
         android:id="@+id/follow_this_account_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
-        android:text="You must follow this account\n to see their habits."
+        android:layout_marginTop="180dp"
         android:gravity="center"
+        android:text="You must follow this account\n to see their habits."
         android:textColor="#3C85B9"
         android:textSize="24sp"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username"
-        android:visibility="visible" />
+        app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <TextView
         android:id="@+id/all_habits_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="41dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="140dp"
         android:text="All habits"
         android:textColor="#3C85B9"
         android:textSize="24sp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username"
-        android:visibility="invisible"/>
+        app:layout_constraintTop_toBottomOf="@+id/username" />
 
     <ListView
         android:id="@+id/current_user_habit_listview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="38dp"
-        android:layout_marginTop="9dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="38dp"
         android:divider="@android:color/transparent"
         android:dividerHeight="17dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/all_habits_label"
-        android:visibility="invisible" />
+        app:layout_constraintTop_toBottomOf="@id/all_habits_label" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

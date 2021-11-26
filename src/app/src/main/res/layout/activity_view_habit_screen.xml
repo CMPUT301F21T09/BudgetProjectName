@@ -148,68 +148,27 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/habitFrequencyLabel" />
 
-        <ImageView
-            android:id="@+id/sunday_icon"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
-            android:src="@drawable/ic_sunday_negative"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/habitFrequencyLabel" />
+            app:layout_constraintTop_toBottomOf="@+id/habitFrequencyLabel">
 
-        <ImageView
-            android:id="@+id/monday_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/ic_monday_negative"
-            app:layout_constraintStart_toEndOf="@id/sunday_icon"
-            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/adh_scheduleFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/tuesday_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/ic_tuesday_negative"
-            app:layout_constraintStart_toEndOf="@id/monday_icon"
-            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
-
-        <ImageView
-            android:id="@+id/wednesday_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/ic_wednesday_negative"
-            app:layout_constraintStart_toEndOf="@id/tuesday_icon"
-            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
-
-        <ImageView
-            android:id="@+id/thursday_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/ic_thursday_negative"
-            app:layout_constraintStart_toEndOf="@id/wednesday_icon"
-            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
-
-        <ImageView
-            android:id="@+id/friday_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/ic_friday_negative"
-            app:layout_constraintStart_toEndOf="@id/thursday_icon"
-            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
-
-        <ImageView
-            android:id="@+id/saturday_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/ic_saturday_negative"
-            app:layout_constraintStart_toEndOf="@id/friday_icon"
-            app:layout_constraintTop_toTopOf="@id/sunday_icon" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

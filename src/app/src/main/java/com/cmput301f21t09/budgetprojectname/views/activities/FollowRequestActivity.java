@@ -53,7 +53,8 @@ public class FollowRequestActivity extends AppCompatActivity {
 
         // Set up the list and send an empty list to the view
         followRequestDataList = new ArrayList<>();
-        followRequestAdapter = new FollowRequestCustomList(this, followRequestDataList);
+        followRequestAdapter = new FollowRequestCustomList(this,
+                followRequestDataList, true);
         followRequestList.setAdapter(followRequestAdapter);
         userController = new UserController();
         userController.readUserFollowRequests(currentUserId, followRequests -> {

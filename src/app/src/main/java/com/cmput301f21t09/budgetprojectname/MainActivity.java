@@ -76,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.daily_habit);
     }
 
+
+    /**
+     * Update the color of the status bar same as the top colour of screen
+     */
     private void updateStatusBarColor() {
         int flags = window.getDecorView().getSystemUiVisibility();
         if (window.getStatusBarColor() == ContextCompat.getColor(this, R.color.white)) {

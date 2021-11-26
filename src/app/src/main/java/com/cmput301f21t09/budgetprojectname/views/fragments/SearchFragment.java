@@ -28,9 +28,14 @@ import java.util.Comparator;
  */
 public class SearchFragment extends Fragment {
 
+    private ConstraintLayout background;
+    private ListView userListView;
+    private ImageButton clearSearch;
+    private EditText searchUser;
+
     private ArrayList<UserModel> users = new ArrayList<>();
     private int request = 0;
-    private UserCustomList userlist;
+    private UserCustomList userList;
 
     @Nullable
     @Override
@@ -42,13 +47,13 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ConstraintLayout background = view.findViewById(R.id.search_fragment_background);
-        ListView userList = view.findViewById(R.id.user_listview);
-        ImageButton clearSearch = view.findViewById(R.id.clear_text);
-        EditText searchUser = view.findViewById(R.id.search_friend_edittext);
+        background = view.findViewById(R.id.search_fragment_background);
+        userListView = view.findViewById(R.id.user_listview);
+        clearSearch = view.findViewById(R.id.clear_text);
+        searchUser = view.findViewById(R.id.search_friend_edittext);
 
-        this.userlist = new UserCustomList(getContext(), users);
-        userList.setAdapter(userlist);
+        userList = new UserCustomList(getContext(), users);
+        userListView.setAdapter(userList);
 
         searchUser.addTextChangedListener(new TextWatcher() {
             @Override
@@ -62,26 +67,22 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                clearSearch.setVisibility(View.VISIBLE);
-                background.setVisibility(View.GONE);
-                userList.setVisibility(View.VISIBLE);
-                users.clear();
-                userlist.notifyDataSetChanged();
-                getUserById(s.toString().trim());
-
-                if (s.toString().trim().equals("")) {
-                    clearSearch.setVisibility(View.GONE);
-                    userList.setVisibility(View.GONE);
-                    background.setVisibility(View.VISIBLE);
+                String keyword = s.toString().trim();
+                if (!keyword.equals("")) {
+                    hideBackground();
+                    users.clear();
+                    userList.notifyDataSetChanged();
+                    getUserById(keyword);
+                } else {
+                    showBackground();
                 }
+                clearSearch.setVisibility(View.VISIBLE);
             }
         });
 
         clearSearch.setOnClickListener(v -> {
             searchUser.getText().clear();
-            clearSearch.setVisibility(View.GONE);
-            userList.setVisibility(View.GONE);
-            background.setVisibility(View.VISIBLE);
+            showBackground();
         });
 
     }
@@ -93,8 +94,19 @@ public class SearchFragment extends Fragment {
             if (currentRequest == this.request && user != null) {
                 users.add(user);
                 users.sort(Comparator.comparing(UserModel::getFirstName));
-                userlist.notifyDataSetChanged();
+                userList.notifyDataSetChanged();
             }
         });
+    }
+
+    private void hideBackground() {
+        background.setVisibility(View.GONE);
+        userListView.setVisibility(View.VISIBLE);
+    }
+
+    private void showBackground() {
+        clearSearch.setVisibility(View.GONE);
+        userListView.setVisibility(View.GONE);
+        background.setVisibility(View.VISIBLE);
     }
 }

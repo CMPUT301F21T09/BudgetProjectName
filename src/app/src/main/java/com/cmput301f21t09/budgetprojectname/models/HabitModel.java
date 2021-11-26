@@ -63,15 +63,9 @@ public class HabitModel implements IHabitModel {
     private IHabitScheduleModel schedule;
 
     /**
-     * Private constructor for creating a habit model with the given data
-     *
-     * @param id            habit id
-     * @param title         habit title string
-     * @param reason        habit reason
-     * @param startDate     habit start date
-     * @param lastCompleted habit last time completed date
-     * @param streak        habit streak score
+     * Habit associated user ID
      */
+    private String UID;
 
     /**
      * Custom HabitModel Class to make HabitModelClass serializable
@@ -80,7 +74,19 @@ public class HabitModel implements IHabitModel {
 
     }
 
-    private HabitModel(String id, String title, String reason, Date startDate, Date lastCompleted, long streak, IHabitScheduleModel schedule) {
+    /**
+     * Private constructor for creating a habit model with the given data
+     *
+     * @param id            habit id
+     * @param title         habit title string
+     * @param reason        habit reason
+     * @param startDate     habit start date
+     * @param lastCompleted habit last time completed date
+     * @param streak        habit streak score
+     * @param schedule      habit schedule
+     * @param UID           habit UID
+     */
+    private HabitModel(String id, String title, String reason, Date startDate, Date lastCompleted, long streak, IHabitScheduleModel schedule, String UID) {
         this.id = id;
         this.title = sanitizeStringFromDatabase(title, IHabitModel.MAX_TITLE_LENGTH);
         this.reason = sanitizeStringFromDatabase(reason, IHabitModel.MAX_REASON_LENGTH);
@@ -88,6 +94,7 @@ public class HabitModel implements IHabitModel {
         this.lastCompleted = lastCompleted;
         this.schedule = schedule;
         this.streak = streak;
+        this.UID = UID;
     }
 
     /**
@@ -98,7 +105,7 @@ public class HabitModel implements IHabitModel {
     public static ServiceTask<HabitModel> getNewInstance() {
         HabitScheduleModelFactory scheduleFactory = new HabitScheduleModelFactory();
         ServiceTaskManager<HabitModel> taskman = new ServiceTaskManager<>();
-        taskman.setSuccess(new HabitModel(null, null, null, new Date(), null, 0, scheduleFactory.getNewModelInstance()));
+        taskman.setSuccess(new HabitModel(null, null, null, new Date(), null, 0, scheduleFactory.getNewModelInstance(), null));
         return taskman.getTask();
     }
 
@@ -130,6 +137,31 @@ public class HabitModel implements IHabitModel {
         ServiceTaskManager<List<HabitModel>> taskManager = new ServiceTaskManager<>();
         FirebaseFirestore.getInstance().collection(HABIT_COLLECTION_ID)
                 .whereEqualTo("uid", AuthorizationService.getInstance().getCurrentUserId())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<HabitModel> models = new ArrayList<>();
+                        HabitModelMapParser parser = new HabitModelMapParser();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            models.add(parser.parseMap(document.getData(), document.getId()));
+                        }
+                        taskManager.setSuccess(models);
+                    } else {
+                        taskManager.setFailure(task.getException());
+                    }
+                });
+        return taskManager.getTask();
+    }
+
+    /**
+     * Get all the another user's habits
+     *
+     * @return load task for all user's habits
+     */
+    public static ServiceTask<List<HabitModel>> getAllForAnotherUser(String UID) {
+        ServiceTaskManager<List<HabitModel>> taskManager = new ServiceTaskManager<>();
+        FirebaseFirestore.getInstance().collection(HABIT_COLLECTION_ID)
+                .whereEqualTo("uid", UID)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -281,6 +313,11 @@ public class HabitModel implements IHabitModel {
     }
 
     @Override
+    public String getUID() {
+        return this.UID;
+    }
+
+    @Override
     public IHabitScheduleModel getSchedule() {
         return this.schedule;
     }
@@ -378,7 +415,8 @@ public class HabitModel implements IHabitModel {
                     DocumentModelSerializer.parseAsDate(map.get("start_date")),
                     DocumentModelSerializer.parseAsDate(map.get("last_completed")),
                     map.get("streak") != null ? (Long) map.get("streak") : 0,
-                    scheduleFactory.getModelInstanceFromData((List<String>) map.get("schedule"))
+                    scheduleFactory.getModelInstanceFromData((List<String>) map.get("schedule")),
+                    (String) map.get("uid")
             );
         }
 

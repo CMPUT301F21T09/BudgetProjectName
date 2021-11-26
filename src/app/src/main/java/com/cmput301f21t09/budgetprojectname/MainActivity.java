@@ -21,6 +21,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private Window window;
+
     @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,18 +39,23 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
         bottomNavigationView.getMenu().findItem(R.id.add).setCheckable(false);
 
-        Window window = getWindow();
+        window = getWindow();
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
-            switch (item.getItemId()) {
+            int itemId = item.getItemId();
+            int prevItemId = bottomNavigationView.getSelectedItemId();
+            if (itemId != R.id.add) {
+                if (prevItemId != R.id.search && itemId == R.id.search) {
+                    updateStatusBarColor();
+                } else if (prevItemId == R.id.search && itemId != R.id.search) {
+                    updateStatusBarColor();
+                }
+            }
+            switch (itemId) {
                 case R.id.daily_habit:
-                    if (bottomNavigationView.getSelectedItemId() == R.id.search)
-                        updateStatusBarColor(window);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment, dailyHabitFragment).commit();
                     return true;
                 case R.id.search:
-                    if(bottomNavigationView.getSelectedItemId() != R.id.search)
-                        updateStatusBarColor(window);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment, searchFragment).commit();
                     return true;
                 case R.id.add:
@@ -57,13 +64,9 @@ public class MainActivity extends AppCompatActivity {
                     // using break instead of return to keep previous fragment selection
                     break;
                 case R.id.following:
-                    if (bottomNavigationView.getSelectedItemId() == R.id.search)
-                        updateStatusBarColor(window);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment, followingFragment).commit();
                     return true;
                 case R.id.profile:
-                    if (bottomNavigationView.getSelectedItemId() == R.id.search)
-                        updateStatusBarColor(window);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment, currentUserProfileFragment).commit();
                     return true;
             }
@@ -73,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.daily_habit);
     }
 
-    private void updateStatusBarColor(Window window) {
+    private void updateStatusBarColor() {
         int flags = window.getDecorView().getSystemUiVisibility();
         if (window.getStatusBarColor() == ContextCompat.getColor(this, R.color.white)) {
             flags ^= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.cmput301f21t09.budgetprojectname.R;
@@ -57,7 +58,7 @@ public class FollowRequestActivity extends AppCompatActivity {
                 followRequestDataList, true);
         followRequestList.setAdapter(followRequestAdapter);
         userController = new UserController();
-        userController.readUserFollowRequests(currentUserId, followRequests -> {
+        userController.readUserFollowRequests(currentUserId, true, followRequests -> {
             for(String userID: followRequests){
                 // get back the model using userID
                 userController.readUser(userID, followRequestUser -> {
@@ -72,6 +73,10 @@ public class FollowRequestActivity extends AppCompatActivity {
             }
         });
 
-        // TODO: add back button
+        // setup back button
+        ImageButton back = findViewById(R.id.back);
+        back.setOnClickListener(v -> {
+            finish();
+        });
       }
 }

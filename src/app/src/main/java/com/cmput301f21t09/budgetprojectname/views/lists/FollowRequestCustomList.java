@@ -26,6 +26,7 @@ import java.util.HashMap;
  * Helper class to create a custom list for user follow request
  */
 public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
+    // TODO: add comment
     private final ArrayList<UserModel> users;
     private final Context context;
     private final boolean isFollowRequest;

@@ -146,7 +146,8 @@ public class UserController {
      * @param userID ID of user whose follow requests we are retrieving
      */
     // TODO: generalize this to get users that the current user is following (user:1)
-    public void readUserFollowRequests(String userID, UserController.UsersCallback usersCallback) {
+    public void readUserFollowRequests(String userID, boolean isFollowRequest,
+                                       UserController.UsersCallback usersCallback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(userID);
         // arrayList of userids of users who are requesting to follow us
@@ -167,8 +168,12 @@ public class UserController {
                         for(String userid : social.keySet()){
                             int value = Integer.parseInt(String.valueOf(social.get(userid)));
                             System.out.println("userid " + userid + "value " + value);
-                            if(value == 0 || value == 2){
+                            if(isFollowRequest && (value == 0 || value == 2)){
                                 System.out.println("This is a follow request!");
+                                followRequests.add(userid);
+                            }
+                            else if(!isFollowRequest && (value == 1)){
+                                System.out.println("Following");
                                 followRequests.add(userid);
                             }
                         }

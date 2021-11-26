@@ -77,7 +77,9 @@ public class FollowingFragment extends Fragment {
                 followingDataList, false);
         followingList.setAdapter(followingAdapter);
 
-        userController.readUserFollowRequests(currentUserId, followRequests -> {
+        // load all users we are following
+        userController.readUserFollowRequests(currentUserId, false ,
+                followRequests -> {
             for(String userID: followRequests){
                 // get back the model using userID
                 userController.readUser(userID, followingUser -> {
@@ -86,10 +88,15 @@ public class FollowingFragment extends Fragment {
                     followingDataList.add(followingUser);
                     // update adapter that new users have been added to list
                     followingAdapter.notifyDataSetChanged();
+                    // update number of users following
+                    // must be done in callback function so it is dynamic
+                    // ie. changes when data is fetched
+                    requests_btn.setText("You are following " +
+                            followingDataList.size() + " users");
                 });
-                // followRequestList.addAll(hbEvtLst);
-
             }
         });
+
+        // when a user is selected go to their profile page
     }
 }

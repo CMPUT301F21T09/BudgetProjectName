@@ -1,6 +1,7 @@
 package com.cmput301f21t09.budgetprojectname.views.lists;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,9 @@ import androidx.annotation.Nullable;
 
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.models.UserModel;
+import com.cmput301f21t09.budgetprojectname.views.activities.AnotherUserProfileActivity;
+import com.cmput301f21t09.budgetprojectname.views.activities.ViewHabitActivity;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 
@@ -51,11 +55,13 @@ public class UserCustomList extends ArrayAdapter<UserModel> {
         name.setText(user.getFirstName() + " " + user.getLastName());
         userName.setText(user.getUsername());
 
-        Button follow = view.findViewById(R.id.follow);
-        // if user following this user
-        // set follow button to gone or unfollow
-        follow.setOnClickListener(v -> {
-            // TODO: Request follow selected user
+        // Brings the user to the habit details screen
+        ShapeableImageView habitBackground = view.findViewById(R.id.user_lists_background);
+        habitBackground.setOnClickListener(v -> {
+            // pass habit id to view the habit details for targeted habit
+            Intent intent = new Intent(context, AnotherUserProfileActivity.class);
+            intent.putExtra("USER_ID", user.getUID());
+            context.startActivity(intent);
         });
 
         return view;

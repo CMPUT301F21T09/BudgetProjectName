@@ -67,30 +67,36 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+                clearSearch.setVisibility(View.VISIBLE);
                 String keyword = s.toString().trim();
+
                 if (!keyword.equals("")) {
-                    hideBackground();
+                    hideViews();
                     users.clear();
                     userList.notifyDataSetChanged();
                     getUserById(keyword);
                 } else {
-                    showBackground();
+                    showViews();
                 }
-                clearSearch.setVisibility(View.VISIBLE);
             }
         });
 
         clearSearch.setOnClickListener(v -> {
             searchUser.getText().clear();
-            showBackground();
+            clearSearch.setVisibility(View.GONE);
+            showViews();
         });
 
     }
 
-    private void getUserById(String id) {
+    /**
+     * Get User by username
+     * @param keyword to search user
+     */
+    private void getUserById(String keyword) {
         final int currentRequest = ++this.request;
 
-        new UserController().readUserByUserName(id, user -> {
+        new UserController().readUserByUserName(keyword, user -> {
             if (currentRequest == this.request && user != null) {
                 users.add(user);
                 users.sort(Comparator.comparing(UserModel::getFirstName));
@@ -99,13 +105,18 @@ public class SearchFragment extends Fragment {
         });
     }
 
-    private void hideBackground() {
+    /**
+     * Hide views
+     */
+    private void hideViews() {
         background.setVisibility(View.GONE);
         userListView.setVisibility(View.VISIBLE);
     }
 
-    private void showBackground() {
-        clearSearch.setVisibility(View.GONE);
+    /**
+     * Show Views
+     */
+    private void showViews() {
         userListView.setVisibility(View.GONE);
         background.setVisibility(View.VISIBLE);
     }

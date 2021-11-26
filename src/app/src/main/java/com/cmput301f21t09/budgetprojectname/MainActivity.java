@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -22,6 +23,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
 
     private Window window;
+
+    private long backpressedTime;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -76,6 +79,16 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.daily_habit);
     }
 
+    @Override
+    public void onBackPressed() {
+        long currentTimeMillis = System.currentTimeMillis();
+        if (System.currentTimeMillis() > backpressedTime + 2000) {
+            backpressedTime = currentTimeMillis;
+            Toast.makeText(this, "Back again to exit", Toast.LENGTH_SHORT).show();
+        } else {
+            finish();
+        }
+    }
 
     /**
      * Update the color of the status bar same as the top colour of screen

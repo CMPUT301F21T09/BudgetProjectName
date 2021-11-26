@@ -51,7 +51,7 @@ import java.util.Date;
  */
 public class DefineHabitEventActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private TextView habitTitleTextView;
+    private TextView habitEventName;
     private EditText comment;
     private ImageView image;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -59,7 +59,6 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     private boolean isNewHabitEvent;
     private final HabitEventController habitEventController = new HabitEventController();
     private String habitID;
-    private String habitTitle;
     private String habitEventID;
 
     SupportMapFragment mapFragment;
@@ -78,7 +77,6 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         Intent intent = getIntent();
         habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
         habitID = intent.getStringExtra("HABIT_ID");
-        habitTitle = intent.getStringExtra("HABIT_TITLE");
         System.out.println("*****habitID " + habitID);
         System.out.println("****HE id" + habitEventID);
         isNewHabitEvent = (habitEventID == null);
@@ -101,11 +99,9 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText(modeStr);
 
-        habitTitleTextView = (TextView) findViewById(R.id.habitName);
+        habitEventName = (TextView) findViewById(R.id.habitName);
         comment = (EditText) findViewById(R.id.comment);
         image = (ImageView) findViewById(R.id.habit_event_image);
-
-        habitTitleTextView.setText(habitTitle);
 
         // Let User Add/Change their habit event image as click ImageView area
         image.setOnClickListener(v -> {

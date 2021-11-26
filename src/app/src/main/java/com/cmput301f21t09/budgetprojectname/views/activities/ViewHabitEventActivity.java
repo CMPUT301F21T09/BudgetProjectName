@@ -104,11 +104,9 @@ public class ViewHabitEventActivity extends AppCompatActivity {
             Intent editIntent = new Intent(getApplicationContext(), DefineHabitEventActivity.class);
             final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
             final String HABIT_ID = "HABIT_ID";
-            final String HABIT_TITLE = "HABIT_TITLE";
             editIntent.putExtra(HABIT_ID, habitID);
             System.out.println("habit id " + habitID);
             editIntent.putExtra(HABIT_EVENT_ID, habitEventID);
-            editIntent.putExtra(HABIT_TITLE, habitTitleStr);
             startActivity(editIntent);
         });
 

@@ -73,7 +73,6 @@ public class DailyHabitCustomList extends ArrayAdapter<HabitModel> {
             // pass habit id to create habit event for targeted habit
             Intent intent = new Intent(context, DefineHabitEventActivity.class);
             intent.putExtra("HABIT_ID", habit.getId());
-            intent.putExtra("HABIT_TITLE", habit.getTitle());
             context.startActivity(intent);
         });
 

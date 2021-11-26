@@ -147,6 +147,31 @@ public class HabitModel implements IHabitModel {
     }
 
     /**
+     * Get all the another user's habits
+     *
+     * @return load task for all user's habits
+     */
+    public static ServiceTask<List<HabitModel>> getAllForAnotherUser(String UID) {
+        ServiceTaskManager<List<HabitModel>> taskManager = new ServiceTaskManager<>();
+        FirebaseFirestore.getInstance().collection(HABIT_COLLECTION_ID)
+                .whereEqualTo("uid", UID)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<HabitModel> models = new ArrayList<>();
+                        HabitModelMapParser parser = new HabitModelMapParser();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            models.add(parser.parseMap(document.getData(), document.getId()));
+                        }
+                        taskManager.setSuccess(models);
+                    } else {
+                        taskManager.setFailure(task.getException());
+                    }
+                });
+        return taskManager.getTask();
+    }
+
+    /**
      * Get all habits that the current user needs to do for the day
      *
      * @return load task for all user's habits they need to do

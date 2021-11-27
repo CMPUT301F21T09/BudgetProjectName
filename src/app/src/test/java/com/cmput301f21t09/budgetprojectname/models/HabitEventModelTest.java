@@ -31,7 +31,7 @@ public class HabitEventModelTest {
         LatLngModel location = new LatLngModel(0.0, 0.0);
         Date date = new Date(1, 1, 1);
         String comment = "comment";
-        Image image = null;
+        String image = null;
         String habitID = "habitid";
 
         assertEquals(id, testHE.getID());
@@ -48,7 +48,7 @@ public class HabitEventModelTest {
         LatLngModel location = new LatLngModel(1.0, 1.0);
         Date date = new Date(2, 2, 2);
         String comment = "newcomment";
-        Image image = null;
+        String image = null;
         String habitID = "newhabitid";
 
         testHE.setID(id);

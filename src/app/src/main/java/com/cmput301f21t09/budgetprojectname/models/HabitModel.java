@@ -3,20 +3,12 @@ package com.cmput301f21t09.budgetprojectname.models;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.services.ServiceTask;
 import com.cmput301f21t09.budgetprojectname.services.ServiceTaskManager;
-import com.cmput301f21t09.budgetprojectname.services.database.CollectionSpecifier;
-import com.cmput301f21t09.budgetprojectname.services.database.DatabaseService;
 import com.cmput301f21t09.budgetprojectname.services.database.serializers.DocumentModelSerializer;
 import com.cmput301f21t09.budgetprojectname.services.database.serializers.ModelMapParser;
-
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -36,27 +28,37 @@ public class HabitModel implements IHabitModel {
      * Habit title
      */
     private String title;
+
     /**
      * Habit database entry id
      */
     private String id;
+
     /**
      * Habit reason
      */
     private String reason;
+
     /**
      * Habit streak score
      */
     private long streak;
+
     /**
      * Habit start date
      */
     private Date startDate;
 
     /**
+     * Habit privacy
+     */
+    private boolean isPrivate;
+
+    /**
      * Habit last completed date
      */
     private Date lastCompleted;
+
     /**
      * Habit schedule
      */
@@ -81,16 +83,19 @@ public class HabitModel implements IHabitModel {
      * @param title         habit title string
      * @param reason        habit reason
      * @param startDate     habit start date
+     * @param isPrivate     habit privacy
      * @param lastCompleted habit last time completed date
      * @param streak        habit streak score
      * @param schedule      habit schedule
      * @param UID           habit UID
      */
-    private HabitModel(String id, String title, String reason, Date startDate, Date lastCompleted, long streak, IHabitScheduleModel schedule, String UID) {
+    private HabitModel(String id, String title, String reason, Date startDate, boolean isPrivate,
+                       Date lastCompleted, long streak, IHabitScheduleModel schedule, String UID) {
         this.id = id;
         this.title = sanitizeStringFromDatabase(title, IHabitModel.MAX_TITLE_LENGTH);
         this.reason = sanitizeStringFromDatabase(reason, IHabitModel.MAX_REASON_LENGTH);
         this.startDate = startDate != null ? startDate : new Date();
+        this.isPrivate = isPrivate;
         this.lastCompleted = lastCompleted;
         this.schedule = schedule;
         this.streak = streak;
@@ -105,7 +110,8 @@ public class HabitModel implements IHabitModel {
     public static ServiceTask<HabitModel> getNewInstance() {
         HabitScheduleModelFactory scheduleFactory = new HabitScheduleModelFactory();
         ServiceTaskManager<HabitModel> taskman = new ServiceTaskManager<>();
-        taskman.setSuccess(new HabitModel(null, null, null, new Date(), null, 0, scheduleFactory.getNewModelInstance(), null));
+        taskman.setSuccess(new HabitModel(null, null, null, new Date(), true,
+                null, 0, scheduleFactory.getNewModelInstance(), null));
         return taskman.getTask();
     }
 
@@ -155,6 +161,7 @@ public class HabitModel implements IHabitModel {
 
     /**
      * Get all the another user's habits
+     * Only gets non-private habits
      *
      * @return load task for all user's habits
      */
@@ -168,7 +175,12 @@ public class HabitModel implements IHabitModel {
                         List<HabitModel> models = new ArrayList<>();
                         HabitModelMapParser parser = new HabitModelMapParser();
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            models.add(parser.parseMap(document.getData(), document.getId()));
+                            HabitModel model = parser.parseMap(document.getData(), document.getId());
+
+                            // Only add if the habit is not private
+                            if (!model.getIsPrivate()) {
+                                models.add(model);
+                            }
                         }
                         taskManager.setSuccess(models);
                     } else {
@@ -304,6 +316,20 @@ public class HabitModel implements IHabitModel {
     }
 
     @Override
+    public boolean getIsPrivate() {
+        return this.isPrivate;
+    }
+
+    /**
+     * Set privacy of the habit
+     *
+     * @param isPrivate Privacy of the habit
+     */
+    public void setIsPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
+    }
+
+    @Override
     public Date getLastCompleted() {
         return this.lastCompleted;
     }
@@ -413,6 +439,7 @@ public class HabitModel implements IHabitModel {
                     (String) map.get("title"),
                     (String) map.get("reason"),
                     DocumentModelSerializer.parseAsDate(map.get("start_date")),
+                    map.get("is_private") != null && (boolean) map.get("is_private"),
                     DocumentModelSerializer.parseAsDate(map.get("last_completed")),
                     map.get("streak") != null ? (Long) map.get("streak") : 0,
                     scheduleFactory.getModelInstanceFromData((List<String>) map.get("schedule")),
@@ -426,6 +453,7 @@ public class HabitModel implements IHabitModel {
             map.put("title", model.getTitle());
             map.put("reason", model.getReason());
             map.put("start_date", model.getStartDate());
+            map.put("is_private", model.getIsPrivate());
             map.put("last_completed", model.getLastCompleted());
             map.put("streak", model.getStreak());
             map.put("schedule", model.getSchedule().toList());

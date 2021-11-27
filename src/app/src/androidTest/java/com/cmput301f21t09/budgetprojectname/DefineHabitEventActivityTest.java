@@ -44,7 +44,7 @@ public class DefineHabitEventActivityTest {
         solo.enterText((EditText) solo.getView(R.id.comment),
                 "thisisasuperlongcommentexceeds20chars");
 
-        solo.clickOnView(solo.getView(R.id.menu_commit_changes));
+        solo.clickOnView(solo.getView(R.id.habit_event_confirm));
         boolean isError = solo.waitForText(solo.getString(R.string.errorHabitEventComment),
                 1,
                 2000);
@@ -57,7 +57,7 @@ public class DefineHabitEventActivityTest {
         solo.enterText((EditText) solo.getView(R.id.comment),
                 "thisisavalidcomment");
 
-        solo.clickOnView(solo.getView(R.id.menu_commit_changes));
+        solo.clickOnView(solo.getView(R.id.habit_event_confirm));
         boolean isError = solo.waitForText(solo.getString(R.string.errorHabitEventComment),
                 1,
                 2000);

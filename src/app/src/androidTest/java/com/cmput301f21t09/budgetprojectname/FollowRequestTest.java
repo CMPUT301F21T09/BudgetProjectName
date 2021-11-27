@@ -1,9 +1,11 @@
 package com.cmput301f21t09.budgetprojectname;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
 import android.util.Log;
+import android.widget.ListView;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -31,12 +33,31 @@ public class FollowRequestTest {
 
     /**
      * Runs before all tests and creates solo instance.
+     * Creates an incoming follow request to be accepted or denied.
      *
      * @throws Exception
      */
     @Before
     public void setUp() throws Exception {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
+        UserController userController = new UserController();
+        String currentUserId = "XPG70micV5XLyvhytqghBOLnK8U2";
+        String anotherUserID = "BtVfJ5exBBgpYXchbR4wsN8f0cp1";
+
+        // get current user model (test user)
+        userController.readUser(currentUserId, currentUser -> {
+            HashMap<String, Integer> incomingFollowRequests = currentUser.getSocial();
+
+            // add a follow request into current user's social map
+            incomingFollowRequests.put(anotherUserID, 0);
+            userController.updateUserSocialMap(currentUserId, incomingFollowRequests);
+
+            // click accept on this request
+            solo.waitForText("Test", 1, 3000);
+            // solo.clickOnView(solo.getView(R.id.accept_button));
+
+        });
+
     }
 
     /**
@@ -64,6 +85,7 @@ public class FollowRequestTest {
      */
     private void navigateToFollowFragment() {
         solo.clickOnView(solo.getView(R.id.following));
+        solo.waitForText("Follow Requests", 1, 3000);
         assertTrue(solo.waitForView(R.id.following_list));
 
     }
@@ -79,24 +101,56 @@ public class FollowRequestTest {
         solo.assertCurrentActivity("Wrong Activity", FollowRequestActivity.class);
     }
 
+    /**
+     * Test for accepting a follow request
+     */
     @Test
     public void testAcceptRequest(){
         // go to follow request page
         navigateToFollowFragment();
+
         solo.clickOnView(solo.getView(R.id.requests_button));
         solo.waitForText("Follow Requests", 1, 3000);
+        ListView listView = (ListView) solo.getView(R.id.follow_request_listview);
 
-        String currentUserId = "XPG70micV5XLyvhytqghBOLnK8U2";
-        UserController userController = new UserController();
-        // get current user model (test user)
-        userController.readUser(currentUserId, retrievedAnotherUser -> {
-            Log.d("",retrievedAnotherUser.getFirstName() + " " + retrievedAnotherUser.getLastName());
-            // add a follow request into current user's social map
-            HashMap<String, Integer> incomingFollowRequest = new HashMap<String, Integer>();
-            incomingFollowRequest.put(currentUserId, newValue);
-            userController.updateUserSocialMap(anotherUserID, incomingFollowRequest);
-        });
+        // check that request shows up
+        assertEquals(1, listView.getCount());
 
+        // click accept on request
+        solo.clickOnView(solo.getView(R.id.accept_button));
+
+        // wait for a reload of page
+        solo.waitForText("Follow Requests", 1, 3000);
+
+        // check that request is removed
+        listView = (ListView) solo.getView(R.id.follow_request_listview);
+        assertEquals(0, listView.getCount());
+    }
+
+    /**
+     * Test for denying a follow request
+     */
+    @Test
+    public void testDenyRequest(){
+        // go to follow request page
+        navigateToFollowFragment();
+
+        solo.clickOnView(solo.getView(R.id.requests_button));
+        solo.waitForText("Follow Requests", 1, 3000);
+        ListView listView = (ListView) solo.getView(R.id.follow_request_listview);
+
+        // check that request shows up
+        assertEquals(1, listView.getCount());
+
+        // click deny on request
+        solo.clickOnView(solo.getView(R.id.decline_button));
+
+        // wait for a reload of page
+        solo.waitForText("Follow Requests", 1, 3000);
+
+        // check that request is removed
+        listView = (ListView) solo.getView(R.id.follow_request_listview);
+        assertEquals(0, listView.getCount());
     }
 
 }

@@ -35,15 +35,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import com.cmput301f21t09.budgetprojectname.MainActivity;
 import com.cmput301f21t09.budgetprojectname.R;
+import com.cmput301f21t09.budgetprojectname.controllers.HabitController;
 import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
 import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
-import com.cmput301f21t09.budgetprojectname.controllers.HabitController;
-import com.cmput301f21t09.budgetprojectname.models.HabitModel;
 import com.cmput301f21t09.budgetprojectname.models.IHabitModel;
-import com.cmput301f21t09.budgetprojectname.MainActivity;
 import com.cmput301f21t09.budgetprojectname.models.LatLngModel;
-import com.cmput301f21t09.budgetprojectname.views.fragments.DailyHabitFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -304,9 +302,13 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                             public void onCallback(String habitEventID) {
                                 IHabitModel model = controller.getModel();
                                 if (model.getLastCompleted() == null || model.getSchedule().wasSkippedIfLastCompletedOn(model.getLastCompleted())) {
-                                    controller.updateModel(model.getTitle(), model.getReason(), model.getStartDate(), 1, model.getSchedule(), new Date());
+                                    controller.updateModel(model.getTitle(), model.getReason(),
+                                            model.getStartDate(), model.getIsPrivate(),
+                                            1, model.getSchedule(), new Date());
                                 } else {
-                                    controller.updateModel(model.getTitle(), model.getReason(), model.getStartDate(), model.getStreak() + 1, model.getSchedule(), new Date());
+                                    controller.updateModel(model.getTitle(), model.getReason(),
+                                            model.getStartDate(), model.getIsPrivate(),
+                                            model.getStreak() + 1, model.getSchedule(), new Date());
                                 }
                                 System.out.println("habitevent id " + habitEventID);
                                 // return back to main habit list

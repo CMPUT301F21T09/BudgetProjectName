@@ -209,6 +209,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout5"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -245,7 +246,7 @@
         <DatePicker
             android:id="@+id/adh_editStartDate"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="160dp"
             android:calendarViewShown="false"
             android:datePickerMode="spinner"
             android:theme="@style/DatePicker"
@@ -253,6 +254,41 @@
             app:layout_constraintEnd_toEndOf="@id/adh_datePickerBackground"
             app:layout_constraintStart_toStartOf="@id/adh_datePickerBackground"
             app:layout_constraintTop_toTopOf="@id/adh_datePickerBackground" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:clickable="false"
+        android:clipChildren="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout5">
+
+        <TextView
+            android:id="@+id/adh_private"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/adh_editPrivateLabel"
+            android:textColor="#2B638B"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/adh_privateSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/Switch"
+            android:checked="true"
+            app:layout_constraintBottom_toBottomOf="@+id/adh_private"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/adh_private" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

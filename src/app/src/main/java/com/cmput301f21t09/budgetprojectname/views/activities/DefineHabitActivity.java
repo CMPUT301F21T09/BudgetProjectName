@@ -19,11 +19,12 @@ import com.cmput301f21t09.budgetprojectname.controllers.HabitController;
 import com.cmput301f21t09.budgetprojectname.models.IHabitModel;
 import com.cmput301f21t09.budgetprojectname.views.fragments.HabitScheduleFragment;
 import com.cmput301f21t09.budgetprojectname.views.fragments.HabitScheduleViewSelector;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.Calendar;
 
 /**
- * Activity that makes the user to add/edit a habit
+ * Activity that allows the user to add/edit a habit
  */
 public class DefineHabitActivity extends AppCompatActivity {
 
@@ -47,11 +48,15 @@ public class DefineHabitActivity extends AppCompatActivity {
      */
     private ProgressBar loadingBar;
 
-
     /**
      * Date Picker view for editing the start date
      */
     private DatePicker habitStartDate;
+
+    /**
+     * Switch view for selecting whether the habit is private
+     */
+    private SwitchMaterial privateSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,12 +82,12 @@ public class DefineHabitActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
 
-
         // Retrieve the specific views
         habitTitle = findViewById(R.id.adh_editHabitTitle);
         habitReason = findViewById(R.id.adh_editHabitReason);
         loadingBar = findViewById(R.id.adh_loading_bar);
         habitStartDate = findViewById(R.id.adh_editStartDate);
+        privateSwitch = findViewById(R.id.adh_privateSwitch);
 
         // Set up the controller and set views
         controller.attachListener(this::updateView);
@@ -103,12 +108,14 @@ public class DefineHabitActivity extends AppCompatActivity {
             habitTitle.setEnabled(false);
             habitReason.setEnabled(false);
             habitStartDate.setEnabled(false);
+            privateSwitch.setEnabled(false);
         } else if (controller.isTaskComplete(HabitController.HABIT_MODEL_LOAD)) {
             // Enable editing fields and hide loading bar
             loadingBar.setVisibility(View.GONE);
             habitTitle.setEnabled(true);
             habitReason.setEnabled(true);
             habitStartDate.setEnabled(controller.isStartDateEditable());
+            privateSwitch.setEnabled(true);
 
             // Update fields
             IHabitModel model = controller.getModel();
@@ -121,6 +128,7 @@ public class DefineHabitActivity extends AppCompatActivity {
                     calendar.get(Calendar.MONTH),
                     calendar.get(Calendar.DAY_OF_MONTH)
             );
+            privateSwitch.setChecked(model.getIsPrivate());
 
             // Set schedule fragment
             getSupportFragmentManager()
@@ -154,7 +162,9 @@ public class DefineHabitActivity extends AppCompatActivity {
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(habitStartDate.getYear(), habitStartDate.getMonth(), habitStartDate.getDayOfMonth());
                     HabitScheduleFragment hsv = ((HabitScheduleFragment) getSupportFragmentManager().findFragmentById(R.id.adh_scheduleFragment));
-                    controller.updateModel(habitTitle.getText().toString(), habitReason.getText().toString(), calendar.getTime(), model.getStreak(), hsv.getSchedule(), model.getLastCompleted());
+                    controller.updateModel(habitTitle.getText().toString(), habitReason.getText().toString(),
+                            calendar.getTime(), privateSwitch.isChecked(),
+                            model.getStreak(), hsv.getSchedule(), model.getLastCompleted());
                 }
 
                 // Head back to the daily habit fragment

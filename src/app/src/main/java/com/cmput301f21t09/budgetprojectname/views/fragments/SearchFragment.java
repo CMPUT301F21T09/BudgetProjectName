@@ -61,12 +61,14 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                clearSearch.setVisibility(View.VISIBLE);
-                background.setVisibility(View.GONE);
-                userList.setVisibility(View.VISIBLE);
                 users.clear();
                 userlist.notifyDataSetChanged();
-                getUserById(s.toString().trim());
+                if (s.length() > 0) {
+                    clearSearch.setVisibility(View.VISIBLE);
+                    background.setVisibility(View.GONE);
+                    userList.setVisibility(View.VISIBLE);
+                    getUserById(s.toString().trim());
+                }
             }
         });
 

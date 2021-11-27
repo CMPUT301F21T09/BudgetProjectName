@@ -12,7 +12,7 @@ public class FollowTest {
      * Tests the sending a follow request
      */
     @Test
-    public void testSendRequest(){
+    public void testSendRequest() {
 
     }
 
@@ -20,7 +20,7 @@ public class FollowTest {
      * Tests the receiving a follow request
      */
     @Test
-    public void testReceiveRequest(){
+    public void testReceiveRequest() {
 
     }
 
@@ -28,7 +28,7 @@ public class FollowTest {
      * Tests the accepting of a follow request
      */
     @Test
-    public void testAcceptRequest(){
+    public void testAcceptRequest() {
 
     }
 
@@ -36,7 +36,7 @@ public class FollowTest {
      * Tests the denial of a follow request
      */
     @Test
-    public void testDenyRequest(){
+    public void testDenyRequest() {
 
     }
 
@@ -44,7 +44,7 @@ public class FollowTest {
      * Tests when another user has accepted request
      */
     @Test
-    public void testRequestIsAccepted(){
+    public void testRequestIsAccepted() {
 
     }
 
@@ -52,7 +52,7 @@ public class FollowTest {
      * Tests when another user has denied request
      */
     @Test
-    public void testRequestIsDenied(){
+    public void testRequestIsDenied() {
 
     }
 }

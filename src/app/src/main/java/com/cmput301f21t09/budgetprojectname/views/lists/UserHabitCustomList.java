@@ -58,18 +58,15 @@ public class UserHabitCustomList extends ArrayAdapter<HabitModel> {
         habitDescription.setText(habit.getReason());
         streak.setText(String.valueOf(habit.getStreak()));
 
-        // If this habit belongs to the currently logged-in user, set a listener to the habit
-        // such that when it is clicked, it'll bring the user to the habit details screen
-        if (habit.getUID().equals(AuthorizationService.getInstance().getCurrentUserId())) {
-            ShapeableImageView habitBackground = view.findViewById(R.id.habit_lists_background);
-
-            habitBackground.setOnClickListener(v -> {
-                // Pass habit id to view the habit details for targeted habit
-                Intent intent = new Intent(context, ViewHabitActivity.class);
-                intent.putExtra("HABIT_ID", habit.getId());
-                context.startActivity(intent);
-            });
-        }
+        // Brings the user to the View Habit Details screen
+        ShapeableImageView habitBackground = view.findViewById(R.id.habit_lists_background);
+        habitBackground.setOnClickListener(v -> {
+            // Pass habit id to view the habit details for targeted habit
+            Intent intent = new Intent(context, ViewHabitActivity.class);
+            intent.putExtra("HABIT_ID", habit.getId());
+            intent.putExtra("HABIT_USERID", habit.getUID());
+            context.startActivity(intent);
+        });
         return view;
     }
 }

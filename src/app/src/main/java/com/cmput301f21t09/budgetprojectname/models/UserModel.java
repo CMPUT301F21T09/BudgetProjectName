@@ -112,6 +112,17 @@ public class UserModel implements IUserModel {
         this.social = social;
     }
 
+    public UserModel() {
+
+    }
+    public UserModel(String uid, String username, String firstname, String lastname, HashMap<String, Integer> social) {
+        this.uid = uid;
+        this.username = username;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.social = social;
+    }
+
     /**
      * Commit the user model to the database
      *

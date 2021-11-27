@@ -30,6 +30,15 @@
             android:background="@null"
             android:src="@drawable/ic_back" />
 
+        <ImageButton
+            android:id="@+id/habit_event_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="32dp"
+            android:background="@null"
+            android:src="@drawable/ic_done" />
+
         <TextView
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
@@ -69,6 +78,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"
+        android:theme="@style/Switch"
         app:layout_constraintBottom_toBottomOf="@+id/locationLabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/locationLabel" />

@@ -134,11 +134,13 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
 
         habitEventName.setText(habitName);
 
+        // Back button pressed
         ImageButton back = findViewById(R.id.back);
+        back.setOnClickListener(v -> finish());
 
-        back.setOnClickListener(v -> {
-            finish();
-        });
+        // Confirm button pressed
+        ImageButton confirm = findViewById(R.id.habit_event_confirm);
+        confirm.setOnClickListener(v -> confirmButtonPressed());
 
         controller = HabitController.getEditHabitController(habitID);
 
@@ -271,10 +273,52 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_define_habit, menu);
-        return true;
+    /**
+     * Fired when checkmark is pressed
+     */
+    private void confirmButtonPressed() {
+        String commentStr = comment.getText().toString();
+        // error checking/handling for adding optional comment of up to 30 chars
+        if (commentStr.length() > 20) {
+            comment.setError(getString(R.string.errorHabitEventComment));
+            comment.requestFocus();
+            Toast.makeText(getApplicationContext(), "ERROR: could not save habit event",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            HabitEventModel habitEvent = new HabitEventModel(null,
+                    locationSwitch.isChecked() && (markerLocation.getLatitude() != null) ? markerLocation : null,
+                    new Date(), commentStr, encodeImage(), habitID);
+            if (isNewHabitEvent) {
+                habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
+                    @Override
+                    public void onCallback(String habitEventID) {
+                        IHabitModel model = controller.getModel();
+                        if (model.getLastCompleted() == null || model.getSchedule().wasSkippedIfLastCompletedOn(model.getLastCompleted())) {
+                            controller.updateModel(model.getTitle(), model.getReason(),
+                                    model.getStartDate(), model.getIsPrivate(),
+                                    1, model.getSchedule(), new Date());
+                        } else {
+                            controller.updateModel(model.getTitle(), model.getReason(),
+                                    model.getStartDate(), model.getIsPrivate(),
+                                    model.getStreak() + 1, model.getSchedule(), new Date());
+                        }
+                        System.out.println("habitevent id " + habitEventID);
+                        // return back to main habit list
+                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                        i.putExtra("frgToLoad", "daily_habits");
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
+                    }
+                });
+            } else {
+                habitEventController.updateHabitEvent(habitEventID, habitEvent);
+                // return back to habit detail page
+                Intent i = new Intent(getApplicationContext(), ViewHabitActivity.class);
+                i.putExtra("HABIT_ID", habitID);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+            }
+        }
     }
 
     @Override
@@ -283,50 +327,6 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
             // Brings the user back to the previous activity if the back button on the app bar is pressed
             case android.R.id.home:
                 finish();
-                return true;
-            case R.id.menu_commit_changes:
-                String commentStr = comment.getText().toString();
-                // error checking/handling for adding optional comment of up to 30 chars
-                if (commentStr.length() > 20) {
-                    comment.setError(getString(R.string.errorHabitEventComment));
-                    comment.requestFocus();
-                    Toast.makeText(getApplicationContext(), "ERROR: could not save habit event",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    HabitEventModel habitEvent = new HabitEventModel(null,
-                            locationSwitch.isChecked() && (markerLocation.getLatitude() != null) ? markerLocation : null,
-                            new Date(), commentStr, encodeImage(), habitID);
-                    if (isNewHabitEvent) {
-                        habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
-                            @Override
-                            public void onCallback(String habitEventID) {
-                                IHabitModel model = controller.getModel();
-                                if (model.getLastCompleted() == null || model.getSchedule().wasSkippedIfLastCompletedOn(model.getLastCompleted())) {
-                                    controller.updateModel(model.getTitle(), model.getReason(),
-                                            model.getStartDate(), model.getIsPrivate(),
-                                            1, model.getSchedule(), new Date());
-                                } else {
-                                    controller.updateModel(model.getTitle(), model.getReason(),
-                                            model.getStartDate(), model.getIsPrivate(),
-                                            model.getStreak() + 1, model.getSchedule(), new Date());
-                                }
-                                System.out.println("habitevent id " + habitEventID);
-                                // return back to main habit list
-                                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                                i.putExtra("frgToLoad", "daily_habits");
-                                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(i);
-                            }
-                        });
-                    } else {
-                        habitEventController.updateHabitEvent(habitEventID, habitEvent);
-                        // return back to habit detail page
-                        Intent i = new Intent(getApplicationContext(), ViewHabitActivity.class);
-                        i.putExtra("HABIT_ID", habitID);
-                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
-                    }
-                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

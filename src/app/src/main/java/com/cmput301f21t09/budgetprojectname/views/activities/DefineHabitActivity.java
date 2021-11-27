@@ -2,11 +2,11 @@ package com.cmput301f21t09.budgetprojectname.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -89,6 +89,10 @@ public class DefineHabitActivity extends AppCompatActivity {
         habitStartDate = findViewById(R.id.adh_editStartDate);
         privateSwitch = findViewById(R.id.adh_privateSwitch);
 
+        // Confirm button pressed
+        ImageButton confirm = findViewById(R.id.habit_confirm);
+        confirm.setOnClickListener(v -> confirmButtonPressed());
+
         // Set up the controller and set views
         controller.attachListener(this::updateView);
         updateView();
@@ -140,38 +144,36 @@ public class DefineHabitActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_define_habit, menu);
-        return true;
+    /**
+     * Fired when checkmark is pressed
+     */
+    private void confirmButtonPressed() {
+        IHabitModel model = controller.getModel();
+        String titleError = controller.getTitleError(habitTitle.getText().toString());
+        if (titleError != null) {
+            habitTitle.setError(titleError);
+        } else {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(habitStartDate.getYear(), habitStartDate.getMonth(), habitStartDate.getDayOfMonth());
+            HabitScheduleFragment hsv = ((HabitScheduleFragment) getSupportFragmentManager().findFragmentById(R.id.adh_scheduleFragment));
+            controller.updateModel(habitTitle.getText().toString(), habitReason.getText().toString(),
+                    calendar.getTime(), privateSwitch.isChecked(),
+                    model.getStreak(), hsv.getSchedule(), model.getLastCompleted());
+
+            // Head back to the daily habit fragment
+            Intent i = new Intent(this, MainActivity.class);
+            i.putExtra("frgToLoad", "daily_habits");
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        IHabitModel model = controller.getModel();
         switch (item.getItemId()) {
             // Brings the user back to the previous activity if the back button on the app bar is pressed
             case android.R.id.home:
                 finish();
-                return true;
-            case R.id.menu_commit_changes:
-                String titleError = controller.getTitleError(habitTitle.getText().toString());
-                if (titleError != null) {
-                    habitTitle.setError(titleError);
-                } else {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(habitStartDate.getYear(), habitStartDate.getMonth(), habitStartDate.getDayOfMonth());
-                    HabitScheduleFragment hsv = ((HabitScheduleFragment) getSupportFragmentManager().findFragmentById(R.id.adh_scheduleFragment));
-                    controller.updateModel(habitTitle.getText().toString(), habitReason.getText().toString(),
-                            calendar.getTime(), privateSwitch.isChecked(),
-                            model.getStreak(), hsv.getSchedule(), model.getLastCompleted());
-                }
-
-                // Head back to the daily habit fragment
-                Intent i = new Intent(this, MainActivity.class);
-                i.putExtra("frgToLoad", "daily_habits");
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

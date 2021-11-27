@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
 import com.cmput301f21t09.budgetprojectname.models.LatLngModel;
+import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
@@ -38,6 +39,9 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_habit_event);
 
+        // Retrieve the logged in user's userid
+        String currentUserId = AuthorizationService.getInstance().getCurrentUserId();
+
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.secondary_super_light));
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -47,6 +51,7 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         String habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
         String habitID = intent.getStringExtra("HABIT_ID");
         String habitTitleStr = intent.getStringExtra("HABIT_TITLE");
+        String habitEventUID = intent.getStringExtra("HABIT_EVENT_USERID");
 
         TextView habitTitle = findViewById(R.id.view_habit_event_habit_title);
         TextView habitEventLocation = findViewById(R.id.view_habit_event_habit_event_location);
@@ -109,29 +114,38 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         });
 
         ImageButton editHabitEvent = findViewById(R.id.view_habit_event_habit_event_edit_button);
-        editHabitEvent.setOnClickListener(v -> {
-            // TODO: Pass Targeted Habit Event Info to the Intent
-            System.out.println("habit event to edit " + habitEventID);
-            Intent editIntent = new Intent(getApplicationContext(), DefineHabitEventActivity.class);
-            final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
-            final String HABIT_ID = "HABIT_ID";
-            editIntent.putExtra(HABIT_ID, habitID);
-            editIntent.putExtra("HABIT_NAME", habitTitleStr);
-            System.out.println("habit id " + habitID);
-            editIntent.putExtra(HABIT_EVENT_ID, habitEventID);
-            startActivity(editIntent);
-        });
+
+        // Let the user edit the habit event if the user owns this habit event
+        if (habitEventUID.equals(currentUserId)) {
+            editHabitEvent.setOnClickListener(v -> {
+                Intent editIntent = new Intent(getApplicationContext(), DefineHabitEventActivity.class);
+                final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
+                final String HABIT_ID = "HABIT_ID";
+                editIntent.putExtra(HABIT_ID, habitID);
+                editIntent.putExtra("HABIT_NAME", habitTitleStr);
+                System.out.println("habit id " + habitID);
+                editIntent.putExtra(HABIT_EVENT_ID, habitEventID);
+                startActivity(editIntent);
+            });
+        } else {
+            editHabitEvent.setVisibility(View.INVISIBLE);
+        }
 
         Button deleteHabitEventBtn = findViewById(R.id.view_habit_event_habit_event_delete_button);
-        deleteHabitEventBtn.setOnClickListener(v -> {
-            System.out.println("habit event to delete " + habitEventID);
-            habitEventController.deleteHabitEvent(habitEventID);
-            Intent deleteIntent = new Intent(getApplicationContext(), ViewHabitActivity.class);
-            final String HABIT_ID = "HABIT_ID";
-            deleteIntent.putExtra(HABIT_ID, habitID);
-            deleteIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(deleteIntent);
-        });
+
+        // Let the user delete the habit event if the user owns this habit event
+        if (habitEventUID.equals(currentUserId)) {
+            deleteHabitEventBtn.setOnClickListener(v -> {
+                habitEventController.deleteHabitEvent(habitEventID);
+                Intent deleteIntent = new Intent(getApplicationContext(), ViewHabitActivity.class);
+                final String HABIT_ID = "HABIT_ID";
+                deleteIntent.putExtra(HABIT_ID, habitID);
+                deleteIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(deleteIntent);
+            });
+        } else {
+            deleteHabitEventBtn.setVisibility(View.INVISIBLE);
+        }
     }
 
 

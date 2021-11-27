@@ -60,13 +60,13 @@ public class UserHabitCustomList extends ArrayAdapter<HabitModel> {
 
         // Brings the user to the View Habit Details screen
         ShapeableImageView habitBackground = view.findViewById(R.id.habit_lists_background);
-            habitBackground.setOnClickListener(v -> {
-                // Pass habit id to view the habit details for targeted habit
-                Intent intent = new Intent(context, ViewHabitActivity.class);
-                intent.putExtra("HABIT_ID", habit.getId());
-                intent.putExtra("HABIT_USERID", habit.getUID());
-                context.startActivity(intent);
-            });
+        habitBackground.setOnClickListener(v -> {
+            // Pass habit id to view the habit details for targeted habit
+            Intent intent = new Intent(context, ViewHabitActivity.class);
+            intent.putExtra("HABIT_ID", habit.getId());
+            intent.putExtra("HABIT_USERID", habit.getUID());
+            context.startActivity(intent);
+        });
         return view;
     }
 }

@@ -1,7 +1,6 @@
 package com.cmput301f21t09.budgetprojectname;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 
 import com.cmput301f21t09.budgetprojectname.models.UserModel;
@@ -39,7 +38,18 @@ public class FollowTest {
      */
     @Test
     public void testSendRequest() {
+        // UserID of another user
+        UserModel anotherUser = new UserModel(anotherUserId, "testUser2", "Test2",
+                "User", new HashMap<String, Integer>());
+        HashMap<String, Integer> socialMap = anotherUser.getSocial();
 
+        // The current user has sent a another user a follow request
+        socialMap.put(currentUserId, 0);
+
+        // Check that this request is seen by another user
+        assertEquals(1, socialMap.size());
+        assertEquals(0,
+                Integer.parseInt(String.valueOf(socialMap.get(currentUserId))));
     }
 
     /**
@@ -113,9 +123,8 @@ public class FollowTest {
 
         // check that other user is removed from social map
         assertEquals(0, currentSocialMap.size());
-        // check that other user is NOT following current user (denoted by value 1 in social map)
+        // check that other user is NOT following current user
         assertNull(anotherSocialMap.get(currentUserId));
-
     }
 
     /**
@@ -123,7 +132,28 @@ public class FollowTest {
      */
     @Test
     public void testRequestIsAccepted() {
+        // Current user
+        UserModel currentUser = new UserModel(currentUserId, "test1", "Test",
+                "User", new HashMap<String, Integer>());
+        HashMap<String, Integer> currentSocialMap = currentUser.getSocial();
 
+        // Another user
+        UserModel anotherUser = new UserModel(anotherUserId, "test2", "Test2",
+                "User", new HashMap<String, Integer>());
+        HashMap<String, Integer> anotherSocialMap = anotherUser.getSocial();
+
+        // Current user has sent another user a follow request
+        anotherSocialMap.put(currentUserId, 0);
+
+        // Another user accepts follow request
+        anotherSocialMap.remove(currentUserId);
+        currentSocialMap.put(anotherUserId, 1);
+
+        // Check that current user is removed from social map
+        assertEquals(0, anotherSocialMap.size());
+        // Check that current user is following other user
+        assertEquals(1,
+                Integer.parseInt(String.valueOf(currentSocialMap.get(anotherUserId))));
     }
 
     /**
@@ -131,6 +161,25 @@ public class FollowTest {
      */
     @Test
     public void testRequestIsDenied() {
+        // Current user
+        UserModel currentUser = new UserModel(currentUserId, "test1", "Test",
+                "User", new HashMap<String, Integer>());
+        HashMap<String, Integer> currentSocialMap = currentUser.getSocial();
 
+        // Another user
+        UserModel anotherUser = new UserModel(anotherUserId, "test2", "Test2",
+                "User", new HashMap<String, Integer>());
+        HashMap<String, Integer> anotherSocialMap = anotherUser.getSocial();
+
+        // Current user has sent another user a follow request
+        anotherSocialMap.put(currentUserId, 0);
+
+        // Another user denies follow request
+        anotherSocialMap.remove(currentUserId);
+
+        // Check that current user is removed from social map
+        assertEquals(0, anotherSocialMap.size());
+        // Check that current user is NOT following other user
+        assertNull(currentSocialMap.get(anotherSocialMap));
     }
 }

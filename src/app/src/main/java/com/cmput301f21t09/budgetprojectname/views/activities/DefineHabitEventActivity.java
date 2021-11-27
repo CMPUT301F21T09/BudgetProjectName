@@ -80,6 +80,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     private String habitID;
     private String habitEventID;
     private String habitName;
+    private String habitUserID;
 
     private SupportMapFragment mapFragment;
     private SwitchMaterial locationSwitch;
@@ -104,6 +105,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
         habitID = intent.getStringExtra("HABIT_ID");
         habitName = intent.getStringExtra("HABIT_NAME");
+        habitUserID = intent.getStringExtra("HABIT_USERID");
         System.out.println("*****habitID " + habitID);
         System.out.println("****HE id" + habitEventID);
 
@@ -315,6 +317,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                 // return back to habit detail page
                 Intent i = new Intent(getApplicationContext(), ViewHabitActivity.class);
                 i.putExtra("HABIT_ID", habitID);
+                i.putExtra("HABIT_USERID", habitUserID);
                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
             }

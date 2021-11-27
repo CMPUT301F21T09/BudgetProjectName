@@ -1,15 +1,15 @@
 package com.cmput301f21t09.budgetprojectname.models;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import com.cmput301f21t09.budgetprojectname.services.ServiceTask;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Map;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * Tests the HabitScheduleFactorModel
@@ -17,12 +17,10 @@ import java.util.Map;
 public class HabitScheduleModelFactoryTest {
     private HabitScheduleModelFactory scheduleFactory;
     private IHabitScheduleModel newModel;
-    private WeeklyHabitScheduleModel weeklyModel;
 
     @Before
     public void init() {
         scheduleFactory = new HabitScheduleModelFactory();
-        weeklyModel =  new WeeklyHabitScheduleModel();
     }
 
     /**
@@ -31,9 +29,7 @@ public class HabitScheduleModelFactoryTest {
     @Test
     public void testNewModelInstance(){
         newModel = scheduleFactory.getNewModelInstance();
-        Map<String, Object> map = newModel.toMap();
-        Object innerMap = map.get("weekly");
-        assertNotNull(innerMap);
+        assertNotNull(newModel);
     }
 
     /**
@@ -41,18 +37,20 @@ public class HabitScheduleModelFactoryTest {
      */
     @Test
     public void testGetModelInstanceFromData(){
-        HabitModel newHabit = HabitModel.getNewInstance().getResult();
+        List<String> data = Arrays.asList("doWeeklyTuesday", "doWeeklyFriday");
 
-        boolean[] days = {true, false, true, false, false, false, false};
-        for (int i = 0; i < days.length; i++) {
-            weeklyModel.setDay(i, days[i]);
+        newModel = scheduleFactory.getModelInstanceFromData(data);
+
+        Calendar testDate = Calendar.getInstance();
+
+        boolean[] isToBeCompleted = {false, false, true, false, false, true, false};
+        final int initialDate = 21;
+
+        for (int date = initialDate; date - initialDate < isToBeCompleted.length; date++) {
+            testDate.set(2021, 11, date);
+            assertEquals(isToBeCompleted[date - initialDate], newModel.isToBeCompletedOn(testDate.getTime()));
         }
-        newHabit.setSchedule(weeklyModel);
 
-        newModel = scheduleFactory.getModelInstanceFromData(newHabit.getSchedule().toMap());
-        Map<String, Object> map = newModel.toMap();
-        Object innerMap = map.get("weekly");
-        assertNotNull(innerMap);
     }
 
 }

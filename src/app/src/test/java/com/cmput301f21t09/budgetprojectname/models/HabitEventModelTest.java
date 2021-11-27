@@ -55,14 +55,14 @@ public class HabitEventModelTest {
         testHE.setLocation(location);
         testHE.setDate(date);
         testHE.setComment(comment);
-        testHE.setImage(image);
+        testHE.setImage(null);
         testHE.setHabitID(habitID);
 
         assertEquals(id, testHE.getID());
         assertEquals(location, testHE.getLocation());
         assertEquals(date, testHE.getDate());
         assertEquals(comment, testHE.getComment());
-        assertEquals(image, testHE.getImage());
+        assertEquals(null, testHE.getImage());
         assertEquals(habitID, testHE.getHabitID());
     }
 }

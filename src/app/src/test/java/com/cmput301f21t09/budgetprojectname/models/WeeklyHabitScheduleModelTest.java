@@ -1,6 +1,7 @@
 package com.cmput301f21t09.budgetprojectname.models;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -8,7 +9,11 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Unit tests for HabitScheduleModel
@@ -49,14 +54,17 @@ public class WeeklyHabitScheduleModelTest {
      * Test for toMap method
      */
     @Test
-    public void testToMap() {
+    public void testToList() {
         boolean[] days = {true, false, true, false, false, false, false};
         for (int i = 0; i < days.length; i++) {
             model.setDay(i, days[i]);
         }
-        Map<String, Object> map = model.toMap();
-        Object innerMap = map.get("weekly");
-        assertNotNull(innerMap);
+
+        List<String> list = model.toList();
+        System.out.println(list.toString());
+        assertEquals(2, list.size());
+        assertTrue(list.contains("doWeeklySunday"));
+        assertTrue(list.contains("doWeeklyTuesday"));
     }
     //TODO: Test isToBeCompletedOn and wasSkippedIfLastCompletedOn once implemented
 

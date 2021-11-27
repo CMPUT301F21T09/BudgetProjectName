@@ -52,7 +52,7 @@ public class UserController {
                     if (doc.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
                         UserModel retrievedUserModel = doc.toObject(UserModel.class);
-
+                        retrievedUserModel.setUID((String) doc.getId());
                         userCallback.onCallback(retrievedUserModel);
                     } else {
                         Log.d(TAG, "No such document");
@@ -71,7 +71,8 @@ public class UserController {
      */
     public void readUserByUserName(String username, UserController.UserCallback userCallback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Query query = db.collection("users").orderBy("username").startAt(username).endAt(username + '\uf8ff');
+        Query query = db.collection("users").orderBy("username")
+                .startAt(username).endAt(username + '\uf8ff');
         query.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<DocumentSnapshot> docs = task.getResult().getDocuments();
@@ -79,7 +80,7 @@ public class UserController {
                     for (DocumentSnapshot doc : docs) {
                         Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
                         UserModel retrievedUserModel = doc.toObject(UserModel.class);
-
+                        retrievedUserModel.setUID((String) doc.getId());
                         userCallback.onCallback(retrievedUserModel);
                     }
                 } else {

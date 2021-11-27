@@ -15,9 +15,10 @@ import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.controllers.UserController;
 import com.cmput301f21t09.budgetprojectname.models.UserModel;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
-import com.cmput301f21t09.budgetprojectname.views.activities.DefineHabitEventActivity;
+import com.cmput301f21t09.budgetprojectname.views.activities.AnotherUserProfileActivity;
 import com.cmput301f21t09.budgetprojectname.views.activities.FollowRequestActivity;
 import com.cmput301f21t09.budgetprojectname.views.activities.ViewHabitActivity;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,8 +27,26 @@ import java.util.HashMap;
  * Helper class to create a custom list for user follow request
  */
 public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
+    /**
+     * List of users who have requested to follow current user
+     */
     private final ArrayList<UserModel> users;
+
+    /**
+     * This custom list
+     */
     private final Context context;
+
+    /**
+     * Checks if the activity using it is a follow request, the accept/decline buttons
+     * should be visible
+     */
+    private final boolean isFollowRequest;
+
+    /**
+     * User ID of user currently signed in
+     */
+    private final String currentUserID = AuthorizationService.getInstance().getCurrentUserId();
 
     /**
      * Constructor for FollowRequestCustomList
@@ -35,10 +54,12 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
      * @param context a current context of application
      * @param users   a arrayList of users who wish to follow a given user
      */
-    public FollowRequestCustomList(Context context, ArrayList<UserModel> users) {
+    public FollowRequestCustomList(Context context, ArrayList<UserModel> users,
+                                   boolean isFollowRequest){
         super(context, 0, users);
         this.users = users;
         this.context = context;
+        this.isFollowRequest = isFollowRequest;
     }
 
     /**
@@ -53,9 +74,20 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
     public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
         View view = convertView;
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.follow_request_custom_list,
+            view = LayoutInflater.from(context).inflate(R.layout.follow_custom_list,
                     parent, false);
         }
+
+        ImageButton acceptBtn = view.findViewById(R.id.accept_button);
+        ImageButton denyBtn = view.findViewById(R.id.decline_button);
+
+        // if using this for the following list then there is no option to accept or decline
+        // just show their name and username
+        if(!isFollowRequest){
+            acceptBtn.setVisibility(view.INVISIBLE);
+            denyBtn.setVisibility(view.INVISIBLE);
+        }
+
         // Get the specific user being interacted with
         UserModel user = users.get(position);
 
@@ -67,15 +99,22 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
         followRequestName.setText(user.getFirstName());
         followRequestUsername.setText("@" + user.getUsername());
 
+        // Brings the user to the following another user's details screen
+        ShapeableImageView habitBackground = view.findViewById(R.id.follow_list_background);
+        habitBackground.setOnClickListener(v -> {
+            // pass habit id to view the habit details for targeted habit
+            Intent intent = new Intent(context, AnotherUserProfileActivity.class);
+            intent.putExtra("USER_ID", user.getUID());
+            context.startActivity(intent);
+        });
+
         // User clicks accept request button
-        ImageButton acceptBtn = view.findViewById(R.id.accept_button);
         acceptBtn.setOnClickListener(v -> {
             System.out.println("user that got accepted " + user.getUID() + "name " + user.getUsername());
             acceptFollowRequest(user);
         });
 
         // User clicks deny request button
-        ImageButton denyBtn = view.findViewById(R.id.decline_button);
         denyBtn.setOnClickListener(v -> {
             System.out.println("user that got denied " + user.getUID() + "name " + user.getUsername());
             denyFollowRequest(user);
@@ -91,7 +130,7 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
      * @param anotherUser user whose request we want to accept
      */
     private void acceptFollowRequest(UserModel anotherUser) {
-        String currentUserID = AuthorizationService.getInstance().getCurrentUserId();
+
         UserController userController = new UserController();
 
         // modify current user's status inside other user's social map
@@ -149,7 +188,6 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
      * @param anotherUser user whose request we want to deny
      */
     private void denyFollowRequest(UserModel anotherUser) {
-        String currentUserID = AuthorizationService.getInstance().getCurrentUserId();
         String anotherUserID = anotherUser.getUID();
 
         UserController userController = new UserController();
@@ -188,5 +226,9 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+        // TODO: figure out a way of "freezing screen" or waiting for this reload to finish
+        // A request may already have been deleted from the database + list but the screen hasn't
+        // finished rendering. So a user may click on a button that should not even be there
+        // and this crashes the app because it's getting a null value onclick
     }
 }

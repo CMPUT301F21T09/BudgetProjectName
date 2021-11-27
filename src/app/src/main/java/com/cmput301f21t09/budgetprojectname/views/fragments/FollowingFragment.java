@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,7 @@ import com.cmput301f21t09.budgetprojectname.models.HabitModel;
 import com.cmput301f21t09.budgetprojectname.models.UserModel;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.views.activities.FollowRequestActivity;
+import com.cmput301f21t09.budgetprojectname.views.lists.FollowRequestCustomList;
 import com.cmput301f21t09.budgetprojectname.views.lists.UserHabitCustomList;
 
 import java.util.ArrayList;
@@ -35,15 +37,19 @@ public class FollowingFragment extends Fragment {
     private UserController userController;
 
     /**
-     * TODO: REMOVE
-     * List of users requesting to follow current user
-     * Used in this activity to set the text in the request button
+     * List of users that the current user is following
      */
-    private ArrayList<UserModel> followRequestUsers = new ArrayList<>();
+    ArrayList<UserModel> followingDataList;
+
+    /**
+     * Adapter used to make custom list work
+     */
+    ArrayAdapter<UserModel> followingAdapter;
 
     /**
      * Check on the follow requests sent to you
      * by transitioning to the follow request screen
+     * @param userID current user ID
      */
     private void seeRequests(String userID) {
         // TODO: send userid in intent
@@ -62,39 +68,46 @@ public class FollowingFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Button requests_btn = (Button) view.findViewById(R.id.requests_button);
-        // set the number of follow requests
         // set up controller
         userController = new UserController();
+
         String currentUserId = AuthorizationService.getInstance().getCurrentUserId();
-        System.out.println("curr user id " + currentUserId);
-        // TODO: store list of follow requests
 
-        requests_btn.setOnClickListener(v -> seeRequests(currentUserId));
+        Button requestsBtn = (Button) view.findViewById(R.id.requests_button);
+        requestsBtn.setOnClickListener(v -> seeRequests(currentUserId));
 
-        // TODO: replace with users following instead of habit
+        TextView numFollowing = (TextView) view.findViewById(R.id.following_label);
 
         // ListView setup
-        ListView habitList = view.findViewById(R.id.following_list);
+        ListView followingList = view.findViewById(R.id.following_list);
 
         // Set up the list and send an empty list to the view
-        ArrayList<HabitModel> habitDataList = new ArrayList<>();
-        ArrayAdapter<HabitModel> habitAdapter = new UserHabitCustomList(getContext(),
-                habitDataList);
-        habitList.setAdapter(habitAdapter);
+        followingDataList = new ArrayList<>();
+        followingAdapter = new FollowRequestCustomList(getContext(),
+                followingDataList, false);
+        followingList.setAdapter(followingAdapter);
 
-        HabitModel.getAllForCurrentUser().addTaskCompleteListener(task -> {
-            habitDataList.clear();
-            if (task.isSuccessful()) {
-                habitDataList.addAll(task.getResult());
+        // load all users we are following
+        userController.readUserFollows(currentUserId, false ,
+                following -> {
+            for(String userID: following){
+                // get back the model using userID
+                userController.readUser(userID, followingUser -> {
+                    System.out.println("user you are following " +
+                            followingUser.getFirstName() + " " + followingUser.getUID());
+                    followingDataList.add(followingUser);
+
+                    // update adapter that new users have been added to list
+                    followingAdapter.notifyDataSetChanged();
+
+                    // update number of users following
+                    // must be done in callback function so it is dynamic
+                    // ie. changes when data is fetched
+                    numFollowing.setText("You are following " +
+                            followingDataList.size() + " users");
+                });
             }
-            habitAdapter.notifyDataSetChanged();
         });
 
-        habitList.setOnItemClickListener((parent, view1, position, id) -> {
-            // TODO: Pass targeted Habit to ViewHabitActivity
-        });
-
-        // TODO: add back button
     }
 }

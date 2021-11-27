@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-path
+        name="temp_images"
+        path="Android/data/com.cmput301f21t09.budgetprojectname/files/Pictures" />
+</paths>

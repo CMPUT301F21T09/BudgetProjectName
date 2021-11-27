@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/habit_lists_background"
+        android:id="@+id/follow_list_background"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/white"
@@ -19,10 +19,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/habit_lists_background"
-        app:layout_constraintEnd_toEndOf="@id/habit_lists_background"
-        app:layout_constraintStart_toStartOf="@+id/habit_lists_background"
-        app:layout_constraintTop_toTopOf="@+id/habit_lists_background">
+        app:layout_constraintBottom_toBottomOf="@+id/follow_list_background"
+        app:layout_constraintEnd_toEndOf="@id/follow_list_background"
+        app:layout_constraintStart_toStartOf="@+id/follow_list_background"
+        app:layout_constraintTop_toTopOf="@+id/follow_list_background">
 
         <TextView
             android:id="@+id/follow_request_name"

@@ -1,9 +1,11 @@
 package com.cmput301f21t09.budgetprojectname.views.activities;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -50,6 +52,7 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         TextView habitEventLocation = findViewById(R.id.view_habit_event_habit_event_location);
         TextView habitEventDescription = findViewById(R.id.view_habit_event_habit_event_description);
         TextView habitEventDate = findViewById(R.id.view_habit_event_habit_event_date);
+        ImageView habitEventImage = findViewById(R.id.view_habit_event_image);
 
         habitTitle.setText(habitTitleStr);
 
@@ -67,15 +70,15 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         // Set the Habit Event fields
         // TODO: move to a helper function
         HabitEventController habitEventController = new HabitEventController();
-        habitEventController.readHabitEvent(habitEventID, retrievedhabitEvent -> {
-            System.out.println("habitevent id " + retrievedhabitEvent.getID());
+        habitEventController.readHabitEvent(habitEventID, retrievedHabitEvent -> {
+            System.out.println("habitevent id " + retrievedHabitEvent.getID());
 
             // Check there is location data or not
             // Set Address as City, Province, Country if address info exist
             // "No Address" if address info not exist
             // "No Location" when there is no location data
-            if (retrievedhabitEvent.getLocation() != null) {
-                LatLngModel latLngModel = retrievedhabitEvent.getLocation();
+            if (retrievedHabitEvent.getLocation() != null) {
+                LatLngModel latLngModel = retrievedHabitEvent.getLocation();
                 Geocoder geocoder = new Geocoder(this);
                 try {
                     List<Address> matches = geocoder.getFromLocation(latLngModel.getLatitude(), latLngModel.getLongitude(), 1);
@@ -91,10 +94,18 @@ public class ViewHabitEventActivity extends AppCompatActivity {
                 habitEventLocation.setText("No Location");
             }
 
-            habitEventDescription.setText(retrievedhabitEvent.getComment());
+            habitEventDescription.setText(retrievedHabitEvent.getComment());
+
             SimpleDateFormat format = new SimpleDateFormat("MMMM dd,yyyy");
-            String strDate = format.format(retrievedhabitEvent.getDate());
+            String strDate = format.format(retrievedHabitEvent.getDate());
             habitEventDate.setText(strDate);
+
+            // Check there is image data or not
+            // Decode image and set to the imageView if it exists
+            if (retrievedHabitEvent.getImage() != null) {
+                byte[] decodedString = Base64.decode(retrievedHabitEvent.getImage(), Base64.DEFAULT);
+                habitEventImage.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
+            }
         });
 
         ImageButton editHabitEvent = findViewById(R.id.view_habit_event_habit_event_edit_button);
@@ -110,11 +121,6 @@ public class ViewHabitEventActivity extends AppCompatActivity {
             editIntent.putExtra(HABIT_EVENT_ID, habitEventID);
             startActivity(editIntent);
         });
-
-        ImageView imageHabitEvent = findViewById(R.id.profile_pic);
-        // TODO: Set Proper Image of Habit Event to the ImageView
-        // imageHabitEvent.setImageBitmap();
-
 
         Button deleteHabitEventBtn = findViewById(R.id.view_habit_event_habit_event_delete_button);
         deleteHabitEventBtn.setOnClickListener(v -> {

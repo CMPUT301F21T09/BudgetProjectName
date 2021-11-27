@@ -1,14 +1,20 @@
 package com.cmput301f21t09.budgetprojectname.views.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,11 +25,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
@@ -43,12 +53,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -58,7 +73,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
 
     private TextView habitEventName;
     private EditText comment;
-    private ImageView image;
+    private ImageView imageView;
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "DefineHabitEventActivity";
     private boolean isNewHabitEvent;
@@ -68,13 +83,19 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     private String habitEventID;
     private String habitName;
 
-    SupportMapFragment mapFragment;
-    SwitchMaterial locationSwitch;
-    ConstraintLayout locationContainer;
+    private SupportMapFragment mapFragment;
+    private SwitchMaterial locationSwitch;
+    private ConstraintLayout locationContainer;
 
-    GoogleMap map;
-    LatLngModel markerLocation;
-    MarkerOptions markerOptions;
+    private GoogleMap map;
+    private LatLngModel markerLocation;
+    private MarkerOptions markerOptions;
+
+    private ActivityResultLauncher<Intent> GalleryResultLauncher;
+    private ActivityResultLauncher<Intent> CameraResultLauncher;
+    private String mPhotoPath;
+    private Bitmap image;
+    private String imageData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,16 +129,12 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         TextView tbTitle = findViewById(R.id.toolbar_title);
         tbTitle.setText(modeStr);
 
-        habitEventName = (TextView) findViewById(R.id.habitName);
-        comment = (EditText) findViewById(R.id.comment);
-        image = (ImageView) findViewById(R.id.habit_event_image);
+        habitEventName = findViewById(R.id.habitName);
+        comment = findViewById(R.id.comment);
+        imageView = findViewById(R.id.habit_event_image);
+
 
         habitEventName.setText(habitName);
-
-        // Let User Add/Change their habit event image as click ImageView area
-        image.setOnClickListener(v -> {
-            // TODO: Let User Choose Image from Gallery or Take a Photo
-        });
 
         ImageButton back = findViewById(R.id.back);
 
@@ -138,7 +155,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         locationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
                 } else {
                     if (isNewHabitEvent) {
                         mapMarkCurrentLocation();
@@ -153,6 +170,59 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                 locationContainer.setVisibility(View.GONE);
             }
         });
+
+        GalleryResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Uri selectedImage = result.getData().getData();
+                        try {
+                            image = BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage));
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        imageView.setImageBitmap(image);
+                    }
+                });
+
+        // Get Image from Camera
+        CameraResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        File file = new File(mPhotoPath);
+                        try {
+                            image = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.fromFile(file));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        imageView.setImageBitmap(image);
+                    }
+                });
+
+        // Add, Replace or Remove Image by Clicking ImageView area
+        // TODO: Detect orientation of photo, 1:1 Crop function
+        imageView.setOnClickListener(v -> new MaterialAlertDialogBuilder(this, R.style.Dialog)
+                .setTitle("Select Image From")
+                .setItems((imageData == null && image == null) ? new String[]{"Gallery", "Take a Photo"} : new String[]{"Gallery", "Take a Photo", "Delete"}, (dialog, which) -> {
+                    if (which == 0) {
+                        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).setType("image/*");
+                        if (galleryIntent.resolveActivity(getPackageManager()) != null) {
+                            GalleryResultLauncher.launch(galleryIntent);
+                        }
+                    } else if (which == 1) {
+                        // Check if Corresponding Permissions are granted
+                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                            requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
+                        } else {
+                            runCameraIntent();
+                        }
+                    } else if (which == 2) {
+                        imageView.setImageDrawable(null);
+                        imageData = null;
+                        image = null;
+                    }
+                }).show());
     }
 
 
@@ -186,7 +256,12 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                             });
                         }
                         comment.setText(habitEventModel.getComment());
-                        // TODO: set image
+
+                        imageData = habitEventModel.getImage();
+                        if (imageData != null) {
+                            byte[] byteArray = Base64.decode(imageData, Base64.DEFAULT);
+                            imageView.setImageBitmap(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
+                        }
 
                     } else {
                         Log.d(TAG, "No such document");
@@ -222,7 +297,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                 } else {
                     HabitEventModel habitEvent = new HabitEventModel(null,
                             locationSwitch.isChecked() && (markerLocation.getLatitude() != null) ? markerLocation : null,
-                            new Date(), commentStr, null, habitID);
+                            new Date(), commentStr, encodeImage(), habitID);
                     if (isNewHabitEvent) {
                         habitEventController.createHabitEvent(habitEvent, new HabitEventController.HabitEventIDCallback() {
                             @Override
@@ -259,7 +334,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
+        if (requestCode == 0) {
             if (grantResults.length > 0 &&
                     (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
                 mapMarkCurrentLocation();
@@ -281,6 +356,23 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                 }
             }
             locationContainer.setVisibility(View.VISIBLE);
+        } else if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                runCameraIntent();
+            } else {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+                    Snackbar.make(getWindow().getDecorView().getRootView(), "This action requires\ncamera permission", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Grant Permission", v1 -> {
+                                requestPermissions(new String[]{Manifest.permission.CAMERA}, 0);
+                            }).show();
+                } else {
+                    Snackbar.make(getWindow().getDecorView().getRootView(), "This action requires\ncamera permission.", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Go to Settings", v1 -> {
+                                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                                startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).setData(uri));
+                            }).show();
+                }
+            }
         }
     }
 
@@ -337,5 +429,42 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         }
 
         return bestLocation;
+    }
+
+    /**
+     * Encode Image to base64 string
+     *
+     * @return encoded image string
+     */
+    private String encodeImage() {
+        if (image != null) {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            imageData = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
+        }
+
+        return imageData;
+    }
+
+    /**
+     * Run camera
+     */
+    private void runCameraIntent() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File imageFile = null;
+            try {
+                // Try to Create Temporary File
+                imageFile = File.createTempFile("temp", ".jpg", getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            mPhotoPath = imageFile.getAbsolutePath();
+
+            Uri photoURI = FileProvider.getUriForFile(this, "com.cmput301f21t09.budgetprojectname.provider", imageFile);
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            CameraResultLauncher.launch(cameraIntent);
+        }
     }
 }

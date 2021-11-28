@@ -131,7 +131,7 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
                     // (Additionally, user on screen is not following the logged-in user)
                     // If the user clicks on the Follow button,
                     // increase the user on screen's Social Map's value of current user from None to 0
-                    requestToFollow(currentUserId, anotherUserID, 0);
+                    requestToFollow(currentUserId, anotherUserID, retrievedAnotherUser.getSocial(), 0);
                 } else if ((isNull(valueOfAnotherUserInCurrentUserSocialMap)
                         || valueOfAnotherUserInCurrentUserSocialMap == 0)
                         && valueOfCurrentUserInAnotherUserSocialMap == 1) {
@@ -140,7 +140,7 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
 
                     // If the user clicks on the Follow button,
                     // increase the user on screen's Social Map's value of current user from 1 to 2
-                    requestToFollow(currentUserId, anotherUserID, 2);
+                    requestToFollow(currentUserId, anotherUserID, retrievedAnotherUser.getSocial(), 2);
                 } else if ((isNull(valueOfAnotherUserInCurrentUserSocialMap)
                         || valueOfAnotherUserInCurrentUserSocialMap == 0)
                         && (valueOfCurrentUserInAnotherUserSocialMap == 0
@@ -193,13 +193,13 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
      * @param anotherUserID ID of the user that that the current user wants to follow
      * @param newValue      new value to be used
      */
-    private void requestToFollow(String currentUserId, String anotherUserID, Integer newValue) {
+    private void requestToFollow(String currentUserId, String anotherUserID,
+                                 HashMap<String, Integer> socialMap, Integer newValue) {
         followBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Update the value of the currentUserId in anotherUserID's document
-                HashMap<String, Integer> incomingFollowRequest = new HashMap<String, Integer>();
-                incomingFollowRequest.put(currentUserId, newValue);
-                userController.updateUserSocialMap(anotherUserID, incomingFollowRequest);
+                socialMap.put(currentUserId, newValue);
+                userController.updateUserSocialMap(anotherUserID, socialMap);
 
                 // Change the display to Requested State
                 changeDisplayToRequestedState();

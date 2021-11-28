@@ -89,7 +89,17 @@ public class ViewHabitEventActivity extends AppCompatActivity {
                     List<Address> matches = geocoder.getFromLocation(latLngModel.getLatitude(), latLngModel.getLongitude(), 1);
                     Address bestMatch = (matches.isEmpty() ? null : matches.get(0));
                     if (bestMatch != null) {
-                        String address = bestMatch.getLocality() + ", " + bestMatch.getAdminArea() + ", " + bestMatch.getCountryCode();
+                        String locality = bestMatch.getLocality();
+                        String adminArea = bestMatch.getAdminArea();
+                        String countryCode = bestMatch.getCountryCode();
+                        String address;
+
+                        if (locality == null) {
+                            address = adminArea + ", " + countryCode;
+                        } else {
+                            address = locality + ", " + adminArea + ", " + countryCode;
+                        }
+
                         habitEventLocation.setText(address);
                     }
                 } catch (IOException ex) {

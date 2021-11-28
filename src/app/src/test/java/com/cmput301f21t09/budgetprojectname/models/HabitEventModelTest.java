@@ -28,14 +28,16 @@ public class HabitEventModelTest {
     @Test
     public void testHabitEventModelConstructor() {
         String id = "habiteventid";
-        LatLngModel location = new LatLngModel(0.0, 0.0);
+        Double latitude = 0.0;
+        Double longitude = 0.0;
         Date date = new Date(1, 1, 1);
         String comment = "comment";
         String image = null;
         String habitID = "habitid";
 
         assertEquals(id, testHE.getID());
-        assertEquals(location, testHE.getLocation());
+        assertEquals(latitude, testHE.getLocation().getLatitude());
+        assertEquals(longitude, testHE.getLocation().getLongitude());
         assertEquals(date, testHE.getDate());
         assertEquals(comment, testHE.getComment());
         assertEquals(image, testHE.getImage());

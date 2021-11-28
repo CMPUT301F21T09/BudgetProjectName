@@ -198,7 +198,6 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
         followBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Update the value of the currentUserId in anotherUserID's document
-//                HashMap<String, Integer> incomingFollowRequest = new HashMap<String, Integer>();
                 socialMap.put(currentUserId, newValue);
                 userController.updateUserSocialMap(anotherUserID, socialMap);
 

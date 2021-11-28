@@ -5,16 +5,12 @@ import static org.junit.Assert.assertTrue;
 import android.app.Activity;
 import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -94,33 +90,33 @@ public class DefineHabitActivityTest {
         String reasonText = "A very good reason";
         solo.enterText((EditText) solo.getView(R.id.adh_editHabitTitle), titleText);
         solo.enterText((EditText) solo.getView(R.id.adh_editHabitReason), reasonText);
+
+        // Try setting the habit to be public
+        solo.clickOnView(solo.getView(R.id.adh_privateSwitch));
+
+        // Confirm
         solo.clickOnView(solo.getView(R.id.habit_confirm));
 
         CollectionReference collectionReference = db.collection("habits");
-        collectionReference
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            boolean hasNewHabitInDatabase = false;
-                            String documentID = "";
-                            // Append every document into habitEventDataList
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
-                                String ID = (String) doc.getId();
-                                String title = (String) doc.getData().get("title");
-                                String reason = (String) doc.getData().get("reason");
-                                if (reasonText.equals(reason) && titleText.equals(title)) {
-                                    hasNewHabitInDatabase = true;
-                                    documentID = ID;
-                                    collectionReference.document(ID).delete();
+        collectionReference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                boolean hasNewHabitInDatabase = false;
+                // Append every document into habitEventDataList
+                for (QueryDocumentSnapshot doc : task.getResult()) {
+                    String ID = (String) doc.getId();
+                    String title = (String) doc.getData().get("title");
+                    String reason = (String) doc.getData().get("reason");
+                    boolean isPrivate = doc.getData().get("is_private") != null &&
+                            (boolean) doc.getData().get("is_private");
 
-                                }
-                            }
-                            assertTrue(hasNewHabitInDatabase);
-                        }
+                    // Check fields were set correctly
+                    if (reasonText.equals(reason) && titleText.equals(title) && !isPrivate) {
+                        hasNewHabitInDatabase = true;
+                        collectionReference.document(ID).delete();
                     }
-                });
+                }
+                assertTrue(hasNewHabitInDatabase);
+            }
+        });
     }
-
 }

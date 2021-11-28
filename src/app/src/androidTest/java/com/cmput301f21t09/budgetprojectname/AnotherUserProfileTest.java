@@ -79,9 +79,10 @@ public class AnotherUserProfileTest {
     }
 
     /**
-     * Navigates to another user's profile
+     * Test for navigating to another user's profile
      */
-    public void navigateToUserProfile() {
+    @Test
+    public void testNavigateToUserProfile() {
         assertTrue(solo.waitForView(R.id.today_date));
         solo.clickOnView(solo.getView(R.id.search));
         assertTrue(solo.waitForView(R.id.toolbar_title));
@@ -94,15 +95,29 @@ public class AnotherUserProfileTest {
         ListView list = (ListView) solo.getView(R.id.user_listview);
         View v = list.getChildAt(0);
         solo.clickOnView(v);
+
+        // Check that the user profile screen is rendered
+        solo.assertCurrentActivity("Wrong Activity", AnotherUserProfileActivity.class);
+        assertTrue(solo.waitForText("Test2 User"));
     }
 
     /**
-     * Test for requesting to follow
+     * Test for requesting to follow another user
      */
     @Test
     public void testRequestToFollow() {
-        // Go to the user profile page
-        navigateToUserProfile();
+        assertTrue(solo.waitForView(R.id.today_date));
+        solo.clickOnView(solo.getView(R.id.search));
+        assertTrue(solo.waitForView(R.id.toolbar_title));
+
+        assertTrue(solo.waitForView(R.id.toolbar_title));
+        solo.typeText((EditText) solo.getView(R.id.search_friend_edittext), "testUser2");
+        assertTrue(solo.waitForText("Test2 User"));
+
+        // Click on testUser2's profile
+        ListView list = (ListView) solo.getView(R.id.user_listview);
+        View v = list.getChildAt(0);
+        solo.clickOnView(v);
 
         // Check that the user profile screen is rendered
         solo.assertCurrentActivity("Wrong Activity", AnotherUserProfileActivity.class);

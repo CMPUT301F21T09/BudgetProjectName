@@ -40,7 +40,7 @@ public class AnotherUserProfileTest {
 
     /**
      * Runs before all tests and creates solo instance.
-     * Creates an incoming follow request to be accepted or denied.
+     * Remove any instance of currentUserID in anotherUser's social map (if there exists)
      *
      * @throws Exception
      */
@@ -48,7 +48,7 @@ public class AnotherUserProfileTest {
     public void setUp() throws Exception {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
 
-        // Remove any instance of currentUserID in anotherUser's social (if it exists)
+        // Remove any instance of currentUserID in anotherUser's social (if there exists)
         userController.readUser(anotherUserID, anotherUser -> {
             HashMap<String, Integer> pendingFollowRequests = anotherUser.getSocial();
             if (pendingFollowRequests.containsKey(currentUserID)) {
@@ -61,6 +61,7 @@ public class AnotherUserProfileTest {
 
     /**
      * Closes the activity after each test
+     * Remove any instance of currentUserID in anotherUser's social map (if there exists)
      *
      * @throws Exception
      */

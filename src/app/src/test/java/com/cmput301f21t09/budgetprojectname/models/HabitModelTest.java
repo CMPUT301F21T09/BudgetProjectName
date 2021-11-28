@@ -72,6 +72,17 @@ public class HabitModelTest {
     }
 
     /**
+     * Test for setting and getting privacy from habitModel
+     */
+    @Test
+    public void testPrivacyGetterAndSetter() {
+        newHabitModel.setIsPrivate(true);
+        assertEquals(true, newHabitModel.getIsPrivate());
+        newHabitModel.setIsPrivate(false);
+        assertEquals(false, newHabitModel.getIsPrivate());
+    }
+
+    /**
      * Test for incrementing and getting lastCompleted from habitModel
      */
     @Test

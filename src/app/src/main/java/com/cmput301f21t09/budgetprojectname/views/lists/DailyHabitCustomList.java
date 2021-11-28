@@ -64,6 +64,7 @@ public class DailyHabitCustomList extends ArrayAdapter<HabitModel> {
             // pass habit id to view the habit details for targeted habit
             Intent intent = new Intent(context, ViewHabitActivity.class);
             intent.putExtra("HABIT_ID", habit.getId());
+            intent.putExtra("HABIT_USERID", habit.getUID());
             context.startActivity(intent);
         });
 

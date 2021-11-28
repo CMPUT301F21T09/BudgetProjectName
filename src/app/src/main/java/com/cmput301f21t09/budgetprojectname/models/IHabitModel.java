@@ -52,6 +52,13 @@ public interface IHabitModel {
     Date getStartDate();
 
     /**
+     * Get the privacy of the habit
+     *
+     * @return habit privacy
+     */
+    boolean getIsPrivate();
+
+    /**
      * Get the date of the last habit event created for the habit
      *
      * @return get the date that the habit was last completed

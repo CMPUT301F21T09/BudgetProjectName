@@ -1,12 +1,9 @@
 package com.cmput301f21t09.budgetprojectname;
 
-import org.junit.Rule;
-import android.app.Activity;
-import android.util.Log;
-import android.widget.EditText;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.*;
-import static org.junit.Assert.*;
+import android.app.Activity;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -19,6 +16,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.robotium.solo.Solo;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 
 /**
@@ -77,7 +79,7 @@ public class DefineHabitActivityTest {
     @Test
     public void testNoTitleHabitCreation() {
         testNavigateToAddHabit();
-        solo.clickOnView(solo.getView(R.id.menu_commit_changes));
+        solo.clickOnView(solo.getView(R.id.habit_confirm));
         solo.waitForText("Create Habit");
     }
 
@@ -92,7 +94,7 @@ public class DefineHabitActivityTest {
         String reasonText = "A very good reason";
         solo.enterText((EditText) solo.getView(R.id.adh_editHabitTitle), titleText);
         solo.enterText((EditText) solo.getView(R.id.adh_editHabitReason), reasonText);
-        solo.clickOnView(solo.getView(R.id.menu_commit_changes));
+        solo.clickOnView(solo.getView(R.id.habit_confirm));
 
         CollectionReference collectionReference = db.collection("habits");
         collectionReference

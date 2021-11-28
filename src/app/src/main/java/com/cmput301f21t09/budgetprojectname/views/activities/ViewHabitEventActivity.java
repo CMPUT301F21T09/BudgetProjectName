@@ -1,9 +1,11 @@
 package com.cmput301f21t09.budgetprojectname.views.activities;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -17,6 +19,7 @@ import androidx.core.content.ContextCompat;
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
 import com.cmput301f21t09.budgetprojectname.models.LatLngModel;
+import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
@@ -36,6 +39,9 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_habit_event);
 
+        // Retrieve the logged in user's userid
+        String currentUserId = AuthorizationService.getInstance().getCurrentUserId();
+
         Window window = getWindow();
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.secondary_super_light));
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -45,11 +51,13 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         String habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
         String habitID = intent.getStringExtra("HABIT_ID");
         String habitTitleStr = intent.getStringExtra("HABIT_TITLE");
+        String habitEventUID = intent.getStringExtra("HABIT_EVENT_USERID");
 
         TextView habitTitle = findViewById(R.id.view_habit_event_habit_title);
         TextView habitEventLocation = findViewById(R.id.view_habit_event_habit_event_location);
         TextView habitEventDescription = findViewById(R.id.view_habit_event_habit_event_description);
         TextView habitEventDate = findViewById(R.id.view_habit_event_habit_event_date);
+        ImageView habitEventImage = findViewById(R.id.view_habit_event_image);
 
         habitTitle.setText(habitTitleStr);
 
@@ -67,15 +75,15 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         // Set the Habit Event fields
         // TODO: move to a helper function
         HabitEventController habitEventController = new HabitEventController();
-        habitEventController.readHabitEvent(habitEventID, retrievedhabitEvent -> {
-            System.out.println("habitevent id " + retrievedhabitEvent.getID());
+        habitEventController.readHabitEvent(habitEventID, retrievedHabitEvent -> {
+            System.out.println("habitevent id " + retrievedHabitEvent.getID());
 
             // Check there is location data or not
             // Set Address as City, Province, Country if address info exist
             // "No Address" if address info not exist
             // "No Location" when there is no location data
-            if (retrievedhabitEvent.getLocation() != null) {
-                LatLngModel latLngModel = retrievedhabitEvent.getLocation();
+            if (retrievedHabitEvent.getLocation() != null) {
+                LatLngModel latLngModel = retrievedHabitEvent.getLocation();
                 Geocoder geocoder = new Geocoder(this);
                 try {
                     List<Address> matches = geocoder.getFromLocation(latLngModel.getLatitude(), latLngModel.getLongitude(), 1);
@@ -91,41 +99,54 @@ public class ViewHabitEventActivity extends AppCompatActivity {
                 habitEventLocation.setText("No Location");
             }
 
-            habitEventDescription.setText(retrievedhabitEvent.getComment());
+            habitEventDescription.setText(retrievedHabitEvent.getComment());
+
             SimpleDateFormat format = new SimpleDateFormat("MMMM dd,yyyy");
-            String strDate = format.format(retrievedhabitEvent.getDate());
+            String strDate = format.format(retrievedHabitEvent.getDate());
             habitEventDate.setText(strDate);
+
+            // Check there is image data or not
+            // Decode image and set to the imageView if it exists
+            if (retrievedHabitEvent.getImage() != null) {
+                byte[] decodedString = Base64.decode(retrievedHabitEvent.getImage(), Base64.DEFAULT);
+                habitEventImage.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
+            }
         });
 
         ImageButton editHabitEvent = findViewById(R.id.view_habit_event_habit_event_edit_button);
-        editHabitEvent.setOnClickListener(v -> {
-            // TODO: Pass Targeted Habit Event Info to the Intent
-            System.out.println("habit event to edit " + habitEventID);
-            Intent editIntent = new Intent(getApplicationContext(), DefineHabitEventActivity.class);
-            final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
-            final String HABIT_ID = "HABIT_ID";
-            editIntent.putExtra(HABIT_ID, habitID);
-            editIntent.putExtra("HABIT_NAME", habitTitleStr);
-            System.out.println("habit id " + habitID);
-            editIntent.putExtra(HABIT_EVENT_ID, habitEventID);
-            startActivity(editIntent);
-        });
 
-        ImageView imageHabitEvent = findViewById(R.id.profile_pic);
-        // TODO: Set Proper Image of Habit Event to the ImageView
-        // imageHabitEvent.setImageBitmap();
-
+        // Let the user edit the habit event if the user owns this habit event
+        if (habitEventUID.equals(currentUserId)) {
+            editHabitEvent.setOnClickListener(v -> {
+                Intent editIntent = new Intent(getApplicationContext(), DefineHabitEventActivity.class);
+                final String HABIT_EVENT_ID = "HABIT_EVENT_ID";
+                final String HABIT_ID = "HABIT_ID";
+                editIntent.putExtra(HABIT_ID, habitID);
+                editIntent.putExtra("HABIT_NAME", habitTitleStr);
+                editIntent.putExtra("HABIT_USERID", habitEventUID);
+                System.out.println("habit id " + habitID);
+                editIntent.putExtra(HABIT_EVENT_ID, habitEventID);
+                startActivity(editIntent);
+            });
+        } else {
+            editHabitEvent.setVisibility(View.INVISIBLE);
+        }
 
         Button deleteHabitEventBtn = findViewById(R.id.view_habit_event_habit_event_delete_button);
-        deleteHabitEventBtn.setOnClickListener(v -> {
-            System.out.println("habit event to delete " + habitEventID);
-            habitEventController.deleteHabitEvent(habitEventID);
-            Intent deleteIntent = new Intent(getApplicationContext(), ViewHabitActivity.class);
-            final String HABIT_ID = "HABIT_ID";
-            deleteIntent.putExtra(HABIT_ID, habitID);
-            deleteIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(deleteIntent);
-        });
+
+        // Let the user delete the habit event if the user owns this habit event
+        if (habitEventUID.equals(currentUserId)) {
+            deleteHabitEventBtn.setOnClickListener(v -> {
+                habitEventController.deleteHabitEvent(habitEventID);
+                Intent deleteIntent = new Intent(getApplicationContext(), ViewHabitActivity.class);
+                final String HABIT_ID = "HABIT_ID";
+                deleteIntent.putExtra(HABIT_ID, habitID);
+                deleteIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(deleteIntent);
+            });
+        } else {
+            deleteHabitEventBtn.setVisibility(View.INVISIBLE);
+        }
     }
 
 

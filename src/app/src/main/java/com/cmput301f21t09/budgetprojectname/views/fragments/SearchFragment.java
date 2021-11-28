@@ -21,15 +21,21 @@ import com.cmput301f21t09.budgetprojectname.models.UserModel;
 import com.cmput301f21t09.budgetprojectname.views.lists.UserCustomList;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Fragment that allows the user to search other user
  */
 public class SearchFragment extends Fragment {
 
+    private ConstraintLayout background;
+    private ListView userListView;
+    private ImageButton clearSearch;
+    private EditText searchUser;
+
     private ArrayList<UserModel> users = new ArrayList<>();
     private int request = 0;
-    private UserCustomList userlist;
+    private UserCustomList userList;
 
     @Nullable
     @Override
@@ -41,13 +47,13 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ConstraintLayout background = view.findViewById(R.id.search_fragment_background);
-        ListView userList = view.findViewById(R.id.user_listview);
-        ImageButton clearSearch = view.findViewById(R.id.clear_text);
-        EditText searchUser = view.findViewById(R.id.search_friend_edittext);
+        background = view.findViewById(R.id.search_fragment_background);
+        userListView = view.findViewById(R.id.user_listview);
+        clearSearch = view.findViewById(R.id.clear_text);
+        searchUser = view.findViewById(R.id.search_friend_edittext);
 
-        this.userlist = new UserCustomList(getContext(), users);
-        userList.setAdapter(userlist);
+        userList = new UserCustomList(getContext(), users);
+        userListView.setAdapter(userList);
 
         searchUser.addTextChangedListener(new TextWatcher() {
             @Override
@@ -61,13 +67,16 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                users.clear();
-                userlist.notifyDataSetChanged();
-                if (s.length() > 0) {
-                    clearSearch.setVisibility(View.VISIBLE);
-                    background.setVisibility(View.GONE);
-                    userList.setVisibility(View.VISIBLE);
-                    getUserById(s.toString().trim());
+                clearSearch.setVisibility(View.VISIBLE);
+                String keyword = s.toString().trim();
+
+                if (!keyword.equals("")) {
+                    hideViews();
+                    users.clear();
+                    userList.notifyDataSetChanged();
+                    getUserById(keyword);
+                } else {
+                    showViews();
                 }
             }
         });
@@ -75,20 +84,40 @@ public class SearchFragment extends Fragment {
         clearSearch.setOnClickListener(v -> {
             searchUser.getText().clear();
             clearSearch.setVisibility(View.GONE);
-            userList.setVisibility(View.GONE);
-            background.setVisibility(View.VISIBLE);
+            showViews();
         });
 
     }
 
-    private void getUserById(String id) {
+    /**
+     * Get User by username
+     * @param keyword to search user
+     */
+    private void getUserById(String keyword) {
         final int currentRequest = ++this.request;
 
-        new UserController().readUserByUserName(id, user -> {
+        new UserController().readUserByUserName(keyword, user -> {
             if (currentRequest == this.request && user != null) {
                 users.add(user);
-                userlist.notifyDataSetChanged();
+                users.sort(Comparator.comparing(UserModel::getFirstName));
+                userList.notifyDataSetChanged();
             }
         });
+    }
+
+    /**
+     * Hide views
+     */
+    private void hideViews() {
+        background.setVisibility(View.GONE);
+        userListView.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Show Views
+     */
+    private void showViews() {
+        userListView.setVisibility(View.GONE);
+        background.setVisibility(View.VISIBLE);
     }
 }

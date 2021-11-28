@@ -87,11 +87,16 @@ public class HabitController extends ServiceTaskController<String> {
     /**
      * Update the model with the given data and commit the changes to the backend
      *
-     * @param title     to update model to
-     * @param reason    to update model to
-     * @param startDate to update model to
+     * @param title         New habit title
+     * @param reason        New habit reason
+     * @param startDate     New habit start date
+     * @param isPrivate     New habit privacy
+     * @param streak        New habit streak
+     * @param schedule      New habit schedule
+     * @param lastCompleted New habit last completed date
      */
-    public void updateModel(String title, String reason, Date startDate, long streak, IHabitScheduleModel schedule, Date lastCompleted) {
+    public void updateModel(String title, String reason, Date startDate, boolean isPrivate,
+                            long streak, IHabitScheduleModel schedule, Date lastCompleted) {
         Log.d("HabitController", "Habit Model Save Command issued");
 
         // Set data
@@ -100,6 +105,7 @@ public class HabitController extends ServiceTaskController<String> {
         model.setTitle(title);
         model.setReason(reason);
         model.setStartDate(startDate);
+        model.setIsPrivate(isPrivate);
         model.setSchedule(schedule);
 
         // Commit changes

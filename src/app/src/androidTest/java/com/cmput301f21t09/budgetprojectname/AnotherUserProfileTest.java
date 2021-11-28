@@ -12,7 +12,6 @@ import androidx.test.rule.ActivityTestRule;
 import com.cmput301f21t09.budgetprojectname.controllers.UserController;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.views.activities.AnotherUserProfileActivity;
-import com.cmput301f21t09.budgetprojectname.views.activities.DefineHabitActivity;
 import com.robotium.solo.Solo;
 
 import org.junit.After;

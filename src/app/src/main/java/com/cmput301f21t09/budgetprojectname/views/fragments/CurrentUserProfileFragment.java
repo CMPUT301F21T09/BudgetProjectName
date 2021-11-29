@@ -17,10 +17,10 @@ import androidx.fragment.app.Fragment;
 
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.controllers.UserController;
-import com.cmput301f21t09.budgetprojectname.views.lists.UserHabitCustomList;
-import com.cmput301f21t09.budgetprojectname.views.activities.UserLoginActivity;
 import com.cmput301f21t09.budgetprojectname.models.HabitModel;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
+import com.cmput301f21t09.budgetprojectname.views.activities.UserLoginActivity;
+import com.cmput301f21t09.budgetprojectname.views.lists.UserHabitCustomList;
 
 import java.util.ArrayList;
 

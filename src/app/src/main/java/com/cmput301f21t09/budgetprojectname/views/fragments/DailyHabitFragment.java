@@ -16,25 +16,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.cmput301f21t09.budgetprojectname.views.lists.DailyHabitCustomList;
-import com.cmput301f21t09.budgetprojectname.controllers.HabitListController;
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.models.HabitModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
  * Fragment that shows User's Daily Habit
  */
 public class DailyHabitFragment extends Fragment {
-
-    /**
-     * Controller for fetching habit events
-     */
-    private final HabitListController habitListController = new HabitListController();
-
 
     @Nullable
     @Override

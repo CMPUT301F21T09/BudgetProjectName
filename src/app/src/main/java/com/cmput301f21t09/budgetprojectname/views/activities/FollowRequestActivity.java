@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.controllers.UserController;
 import com.cmput301f21t09.budgetprojectname.models.UserModel;
-import com.cmput301f21t09.budgetprojectname.views.lists.FollowRequestCustomList;
+import com.cmput301f21t09.budgetprojectname.views.lists.FollowCustomList;
 
 import java.util.ArrayList;
 
@@ -22,12 +22,12 @@ public class FollowRequestActivity extends AppCompatActivity {
     /**
      * User data list
      */
-    ArrayList<UserModel> followRequestDataList;
+    private ArrayList<UserModel> followRequestDataList;
 
     /**
      * Follow request adapter
      */
-    ArrayAdapter<UserModel> followRequestAdapter;
+    private ArrayAdapter<UserModel> followRequestAdapter;
 
     /**
      * Controller for fetching user details
@@ -49,7 +49,7 @@ public class FollowRequestActivity extends AppCompatActivity {
 
         // Set up the list and send an empty list to the view
         followRequestDataList = new ArrayList<>();
-        followRequestAdapter = new FollowRequestCustomList(this,
+        followRequestAdapter = new FollowCustomList(this,
                 followRequestDataList, true);
         followRequestList.setAdapter(followRequestAdapter);
         userController = new UserController();
@@ -63,8 +63,6 @@ public class FollowRequestActivity extends AppCompatActivity {
                     // update adapter that new users have been added to list
                     followRequestAdapter.notifyDataSetChanged();
                 });
-                // followRequestList.addAll(hbEvtLst);
-
             }
         });
 

@@ -19,7 +19,7 @@ import com.cmput301f21t09.budgetprojectname.controllers.UserController;
 import com.cmput301f21t09.budgetprojectname.models.UserModel;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.views.activities.FollowRequestActivity;
-import com.cmput301f21t09.budgetprojectname.views.lists.FollowRequestCustomList;
+import com.cmput301f21t09.budgetprojectname.views.lists.FollowCustomList;
 
 import java.util.ArrayList;
 
@@ -37,22 +37,22 @@ public class FollowingFragment extends Fragment {
     /**
      * String that stores current userID
      */
-    String currentUserId;
+    private String currentUserId;
 
     /**
      * List of users that the current user is following
      */
-    ArrayList<UserModel> followingDataList;
+    private ArrayList<UserModel> followingDataList;
 
     /**
      * Adapter used to make custom list work
      */
-    ArrayAdapter<UserModel> followingAdapter;
+    private ArrayAdapter<UserModel> followingAdapter;
 
     /**
      * Button
      */
-    Button requestsBtn;
+    private Button requestsBtn;
 
     /**
      * Check on the follow requests sent to you
@@ -106,7 +106,7 @@ public class FollowingFragment extends Fragment {
 
         // Set up the list and send an empty list to the view
         followingDataList = new ArrayList<>();
-        followingAdapter = new FollowRequestCustomList(getContext(),
+        followingAdapter = new FollowCustomList(getContext(),
                 followingDataList, false);
         followingList.setAdapter(followingAdapter);
 
@@ -136,7 +136,7 @@ public class FollowingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //Update view when get back to this fragment
+        // Update view when get back to this fragment
         updateRequests(currentUserId);
     }
 }

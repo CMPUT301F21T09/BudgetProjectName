@@ -487,7 +487,12 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
      */
     private void mapMarkCurrentLocation() {
         mapFragment.getMapAsync(googleMap -> {
-            googleMap.setMyLocationEnabled(true);
+            try {
+                googleMap.setMyLocationEnabled(true);
+            } catch (SecurityException ignored) {
+
+            }
+
 
             Location location = getCurrentLocation();
 
@@ -526,8 +531,13 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
 
         Location bestLocation = null;
         for (String provider : mLocationManager.getProviders(true)) {
-            mLocationManager.requestLocationUpdates(provider, 2000L, 0, mLocationListener);
-            Location l = mLocationManager.getLastKnownLocation(provider);
+            Location l = null;
+            try {
+                mLocationManager.requestLocationUpdates(provider, 2000L, 0, mLocationListener);
+                l = mLocationManager.getLastKnownLocation(provider);
+            } catch (SecurityException ignored) {
+
+            }
 
             if (l == null) {
                 continue;

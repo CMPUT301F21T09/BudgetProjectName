@@ -33,13 +33,20 @@ public class HabitScheduleModelFactory {
     List<String> getQueryForToday() {
         WeeklyHabitScheduleModel weeklyModel = new WeeklyHabitScheduleModel();
         Calendar today = Calendar.getInstance();
-        if (today.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) weeklyModel.setDay(IWeeklyHabitScheduleModel.MONDAY, true);
-        else if (today.get(Calendar.DAY_OF_WEEK) == Calendar.TUESDAY) weeklyModel.setDay(IWeeklyHabitScheduleModel.TUESDAY, true);
-        else if (today.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY) weeklyModel.setDay(IWeeklyHabitScheduleModel.WEDNESDAY, true);
-        else if (today.get(Calendar.DAY_OF_WEEK) == Calendar.THURSDAY) weeklyModel.setDay(IWeeklyHabitScheduleModel.THURSDAY, true);
-        else if (today.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) weeklyModel.setDay(IWeeklyHabitScheduleModel.FRIDAY, true);
-        else if (today.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) weeklyModel.setDay(IWeeklyHabitScheduleModel.SATURDAY, true);
-        else if (today.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) weeklyModel.setDay(IWeeklyHabitScheduleModel.SUNDAY, true);
+        if (today.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY)
+            weeklyModel.setDay(IWeeklyHabitScheduleModel.MONDAY, true);
+        else if (today.get(Calendar.DAY_OF_WEEK) == Calendar.TUESDAY)
+            weeklyModel.setDay(IWeeklyHabitScheduleModel.TUESDAY, true);
+        else if (today.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY)
+            weeklyModel.setDay(IWeeklyHabitScheduleModel.WEDNESDAY, true);
+        else if (today.get(Calendar.DAY_OF_WEEK) == Calendar.THURSDAY)
+            weeklyModel.setDay(IWeeklyHabitScheduleModel.THURSDAY, true);
+        else if (today.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY)
+            weeklyModel.setDay(IWeeklyHabitScheduleModel.FRIDAY, true);
+        else if (today.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)
+            weeklyModel.setDay(IWeeklyHabitScheduleModel.SATURDAY, true);
+        else if (today.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+            weeklyModel.setDay(IWeeklyHabitScheduleModel.SUNDAY, true);
         return weeklyModel.toList();
     }
 }

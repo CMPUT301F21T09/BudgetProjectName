@@ -11,6 +11,7 @@ public abstract class BaseController {
 
     /**
      * Attach a listener to run on model state change
+     *
      * @param r callback to run
      */
     public void attachListener(Runnable r) {

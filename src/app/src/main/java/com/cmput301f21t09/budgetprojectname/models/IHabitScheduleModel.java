@@ -2,7 +2,6 @@ package com.cmput301f21t09.budgetprojectname.models;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Model interface for a habit's schedule

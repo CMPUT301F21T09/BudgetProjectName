@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Window window;
 
-    private long backpressedTime;
+    private long backPressedTime;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -83,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         long currentTimeMillis = System.currentTimeMillis();
-        if (System.currentTimeMillis() > backpressedTime + 2000) {
-            backpressedTime = currentTimeMillis;
+        if (System.currentTimeMillis() > backPressedTime + 2000) {
+            backPressedTime = currentTimeMillis;
             Toast.makeText(this, "Back again to exit", Toast.LENGTH_SHORT).show();
         } else {
             moveTaskToBack(true);

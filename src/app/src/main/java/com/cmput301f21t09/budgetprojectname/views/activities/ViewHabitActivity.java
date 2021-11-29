@@ -113,7 +113,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         // Retrieve the specific views
         habitTitle = findViewById(R.id.habitTitle);
         habitDescription = findViewById(R.id.habitDescription);
-        habitDate = (TextView) findViewById(R.id.habitDate);
+        habitDate = findViewById(R.id.habitDate);
         habitTitleToolbar = findViewById(R.id.toolbar_title);
         editHabitBtn = findViewById(R.id.editHabitButton);
         removeHabitBtn = findViewById(R.id.view_habit_remove_button);

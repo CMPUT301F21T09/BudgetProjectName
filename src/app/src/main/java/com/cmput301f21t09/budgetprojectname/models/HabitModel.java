@@ -209,7 +209,6 @@ public class HabitModel implements IHabitModel {
                 List<HabitModel> models = new ArrayList<>();
                 HabitModelMapParser parser = new HabitModelMapParser();
                 for (DocumentSnapshot doc : docs) {
-                    Log.d("YEET", "DocumentSnapshot data: " + doc.getData());
                     Date last_completed;
                     Date today = new Date();
                     if (doc.getTimestamp("last_completed") == null) {

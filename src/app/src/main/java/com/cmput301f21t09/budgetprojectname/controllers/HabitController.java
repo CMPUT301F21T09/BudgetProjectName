@@ -24,7 +24,7 @@ public class HabitController extends ServiceTaskController<String> {
     /**
      * Key for getting information on the model save task
      */
-    public static final String HABIT_MODEL_DELETE= "HABIT_MODEL_DELETE";
+    public static final String HABIT_MODEL_DELETE = "HABIT_MODEL_DELETE";
 
     /**
      * The currently loaded model instance

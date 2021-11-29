@@ -83,8 +83,8 @@ public class FollowCustomList extends ArrayAdapter<UserModel> {
         // if using this for the following list then there is no option to accept or decline
         // just show their name and username
         if (!isFollowRequest) {
-            acceptBtn.setVisibility(view.INVISIBLE);
-            denyBtn.setVisibility(view.INVISIBLE);
+            acceptBtn.setVisibility(View.INVISIBLE);
+            denyBtn.setVisibility(View.INVISIBLE);
         }
 
         // Get the specific user being interacted with
@@ -248,6 +248,7 @@ public class FollowCustomList extends ArrayAdapter<UserModel> {
 
     /**
      * Replace ArrayList(UserModel Data) with updated data
+     *
      * @param updatedData Updated ArrayList of UserModel
      */
     private void updateData(ArrayList<UserModel> updatedData) {

@@ -26,12 +26,12 @@ public class UserCustomList extends ArrayAdapter<UserModel> {
     /**
      * List of users
      */
-    private ArrayList<UserModel> users;
+    private final ArrayList<UserModel> users;
 
     /**
      * Information about app environment
      */
-    private Context context;
+    private final Context context;
 
     /**
      * Constructor for UserHabitCustomList

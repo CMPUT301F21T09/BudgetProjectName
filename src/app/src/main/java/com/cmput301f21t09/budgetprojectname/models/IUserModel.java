@@ -5,9 +5,13 @@ import java.util.HashMap;
 public interface IUserModel {
 
     String getUID();
+
     String getUsername();
+
     String getFirstName();
+
     String getLastName();
+
     HashMap<String, Integer> getSocial();
-    
+
 }

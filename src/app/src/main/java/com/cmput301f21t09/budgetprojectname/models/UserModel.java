@@ -3,9 +3,6 @@ package com.cmput301f21t09.budgetprojectname.models;
 
 import com.cmput301f21t09.budgetprojectname.services.ServiceTask;
 import com.cmput301f21t09.budgetprojectname.services.ServiceTaskManager;
-import com.cmput301f21t09.budgetprojectname.services.database.CollectionSpecifier;
-import com.cmput301f21t09.budgetprojectname.services.database.DatabaseService;
-import com.cmput301f21t09.budgetprojectname.services.database.serializers.DocumentModelSerializer;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -65,6 +62,7 @@ public class UserModel implements IUserModel {
 
     /**
      * Get the Social HashMap
+     *
      * @return social HashMap
      */
     @Override
@@ -74,6 +72,7 @@ public class UserModel implements IUserModel {
 
     /**
      * Set the uid of the model
+     *
      * @param uid to set to
      */
     public void setUID(String uid) {
@@ -82,6 +81,7 @@ public class UserModel implements IUserModel {
 
     /**
      * Set the username of the model
+     *
      * @param username to set to
      */
     public void setUsername(String username) {
@@ -90,6 +90,7 @@ public class UserModel implements IUserModel {
 
     /**
      * Set the first name of the model
+     *
      * @param firstname to set to
      */
     public void setFirstName(String firstname) {
@@ -98,6 +99,7 @@ public class UserModel implements IUserModel {
 
     /**
      * Set the last name of the model
+     *
      * @param lastname to set to
      */
     public void setLastName(String lastname) {
@@ -106,6 +108,7 @@ public class UserModel implements IUserModel {
 
     /**
      * Set the social of the model
+     *
      * @param social to set to
      */
     public void setSocial(HashMap<String, Integer> social) {
@@ -121,11 +124,12 @@ public class UserModel implements IUserModel {
 
     /**
      * Constructor for UserModel
-     * @param uid to set to
-     * @param username to set to
+     *
+     * @param uid       to set to
+     * @param username  to set to
      * @param firstname to set to
-     * @param lastname to set to
-     * @param social to set to
+     * @param lastname  to set to
+     * @param social    to set to
      */
     public UserModel(String uid, String username, String firstname, String lastname, HashMap<String, Integer> social) {
         this.uid = uid;
@@ -155,10 +159,10 @@ public class UserModel implements IUserModel {
                 .document(this.uid)
                 .set(map)
                 .addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                tman.setSuccess(null);
-            } else tman.setFailure(task.getException());
-        });
+                    if (task.isSuccessful()) {
+                        tman.setSuccess(null);
+                    } else tman.setFailure(task.getException());
+                });
         return tman.getTask();
     }
 }

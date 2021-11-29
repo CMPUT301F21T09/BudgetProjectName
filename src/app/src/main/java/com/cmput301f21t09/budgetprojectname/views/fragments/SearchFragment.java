@@ -51,7 +51,7 @@ public class SearchFragment extends Fragment {
     /**
      * List of users
      */
-    private ArrayList<UserModel> users = new ArrayList<>();
+    private final ArrayList<UserModel> users = new ArrayList<>();
 
     /**
      * Request count

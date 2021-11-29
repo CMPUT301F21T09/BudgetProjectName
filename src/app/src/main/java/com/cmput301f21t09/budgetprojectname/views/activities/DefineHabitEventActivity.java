@@ -494,12 +494,18 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
             googleMap.setMyLocationEnabled(true);
 
             Location location = getCurrentLocation();
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-            googleMap.addMarker(markerOptions.position(latLng));
-            markerLocation.setLocation(latLng.latitude, latLng.longitude);
+            if (location != null) {
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                googleMap.addMarker(markerOptions.position(latLng));
+                markerLocation.setLocation(latLng.latitude, latLng.longitude);
+
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+            } else {
+                Toast.makeText(this, "Unable to get your current location.", Toast.LENGTH_SHORT).show();
+            }
+
         });
     }
 
@@ -510,12 +516,21 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
      */
     private Location getCurrentLocation() {
         LocationManager mLocationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-        LocationListener mLocationListener = location -> {
+        LocationListener mLocationListener = new LocationListener() {
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+                //Overriding to prevent NPE
+            }
+
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                //Overriding to prevent NPE
+            }
         };
 
         Location bestLocation = null;
         for (String provider : mLocationManager.getProviders(true)) {
-            mLocationManager.requestLocationUpdates(provider, 1000L, 0, mLocationListener);
+            mLocationManager.requestLocationUpdates(provider, 2000L, 0, mLocationListener);
             Location l = mLocationManager.getLastKnownLocation(provider);
 
             if (l == null) {
@@ -526,8 +541,11 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
             }
         }
 
+        mLocationManager.removeUpdates(mLocationListener);
+
         return bestLocation;
     }
+
 
     /**
      * Encode Image to base64 string

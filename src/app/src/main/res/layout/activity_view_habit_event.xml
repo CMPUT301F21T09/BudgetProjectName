@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F2F8FD">
@@ -43,18 +42,6 @@
             android:textSize="24sp" />
 
     </androidx.appcompat.widget.Toolbar>
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/view_habit_event_image"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="@id/image_placeholder"
-        app:layout_constraintEnd_toEndOf="@+id/image_placeholder"
-        app:layout_constraintStart_toStartOf="@id/image_placeholder"
-        app:layout_constraintTop_toTopOf="@id/image_placeholder"
-        app:shapeAppearanceOverlay="@style/roundedCorners" />
 
     <TextView
         android:id="@+id/view_habit_event_habit_title"
@@ -114,6 +101,18 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/view_habit_event_habit_title"
         app:layout_constraintTop_toBottomOf="@id/view_habit_event_habit_event_location"
+        app:shapeAppearanceOverlay="@style/roundedCorners" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/view_habit_event_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@id/image_placeholder"
+        app:layout_constraintEnd_toEndOf="@+id/image_placeholder"
+        app:layout_constraintStart_toStartOf="@id/image_placeholder"
+        app:layout_constraintTop_toTopOf="@id/image_placeholder"
         app:shapeAppearanceOverlay="@style/roundedCorners" />
 
     <TextView

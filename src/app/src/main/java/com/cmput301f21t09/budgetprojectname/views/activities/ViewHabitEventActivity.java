@@ -79,7 +79,7 @@ public class ViewHabitEventActivity extends AppCompatActivity {
 
             // Check there is location data or not
             // Set Address as City, Province, Country if address info exist
-            // "No Address" if address info not exist
+            // "No Address Found" if address info not exist
             // "No Location" when there is no location data
             if (retrievedHabitEvent.getLocation() != null) {
                 LatLngModel latLngModel = retrievedHabitEvent.getLocation();
@@ -91,18 +91,21 @@ public class ViewHabitEventActivity extends AppCompatActivity {
                         String locality = bestMatch.getLocality();
                         String adminArea = bestMatch.getAdminArea();
                         String countryCode = bestMatch.getCountryCode();
-                        String address;
 
-                        if (locality == null) {
-                            address = adminArea + ", " + countryCode;
+                        if (countryCode != null) {
+                            String address;
+
+                            address = (locality != null ? locality + ", " : "") + (adminArea != null ? adminArea + ", " : "") + countryCode;
+
+                            habitEventLocation.setText(address);
                         } else {
-                            address = locality + ", " + adminArea + ", " + countryCode;
+                            throw new IOException();
                         }
-
-                        habitEventLocation.setText(address);
+                    } else {
+                        throw new IOException();
                     }
                 } catch (IOException ex) {
-                    habitEventLocation.setText("No Address");
+                    habitEventLocation.setText("No Address Found");
                 }
             } else {
                 habitEventLocation.setText("No Location");

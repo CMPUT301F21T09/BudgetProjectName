@@ -50,6 +50,15 @@ public class UserController {
     }
 
     /**
+     * User update callback interface
+     */
+    public interface UserUpdateCallback {
+        void onSuccess();
+
+        void onFailure();
+    }
+
+    /**
      * Gets existing user from Firestore Db
      *
      * @param userID ID of habitEvent to be retrieved
@@ -65,7 +74,7 @@ public class UserController {
                     if (doc.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
                         UserModel retrievedUserModel = doc.toObject(UserModel.class);
-                        retrievedUserModel.setUID((String) doc.getId());
+                        retrievedUserModel.setUID(doc.getId());
                         userCallback.onCallback(retrievedUserModel);
                     } else {
                         Log.d(TAG, "No such document");
@@ -93,7 +102,7 @@ public class UserController {
                     for (DocumentSnapshot doc : docs) {
                         Log.d(TAG, "DocumentSnapshot data: " + doc.getData());
                         UserModel retrievedUserModel = doc.toObject(UserModel.class);
-                        retrievedUserModel.setUID((String) doc.getId());
+                        retrievedUserModel.setUID(doc.getId());
                         userCallback.onCallback(retrievedUserModel);
                     }
                 } else {
@@ -111,7 +120,7 @@ public class UserController {
      * @param userID ID of user to be updated
      * @param social Social hashmap whose value is to be updated
      */
-    public void updateUserSocialMap(String userID, HashMap<String, Integer> social) {
+    public void updateUserSocialMap(String userID, HashMap<String, Integer> social, UserController.UserUpdateCallback userUpdateCallback) {
         DocumentReference habitEventRef = dbStore.collection("users")
                 .document(userID);
         habitEventRef.update("social", social)
@@ -119,12 +128,18 @@ public class UserController {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "DocumentSnapshot successfully updated!");
+                        if (userUpdateCallback != null) {
+                            userUpdateCallback.onSuccess();
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error updating document", e);
+                        if (userUpdateCallback != null) {
+                            userUpdateCallback.onFailure();
+                        }
                     }
                 });
     }
@@ -132,12 +147,12 @@ public class UserController {
     /**
      * Gets follow requests or following users for existing user from Firestore Db
      *
-     * @param userID ID of user whose follow requests we are retrieving
+     * @param userID          ID of user whose follow requests we are retrieving
      * @param isFollowRequest checks if activity using this is a follow request or not,
-     * and bases the read logic from database on this
+     *                        and bases the read logic from database on this
      */
     public void readUserFollows(String userID, boolean isFollowRequest,
-                                       UserController.UsersCallback usersCallback) {
+                                UserController.UsersCallback usersCallback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(userID);
         // arrayList of userids of users who are requesting to follow us
@@ -152,16 +167,15 @@ public class UserController {
                         HashMap<String, Integer> social =
                                 (HashMap<String, Integer>) doc.getData().get("social");
 
-                        for(String userid : social.keySet()){
+                        for (String userid : social.keySet()) {
                             int value = Integer.parseInt(String.valueOf(social.get(userid)));
-                            if(isFollowRequest && (value == 0 || value == 2)){
+                            if (isFollowRequest && (value == 0 || value == 2)) {
                                 // retrieve all the users who want to follow you
                                 // userid:0 means they are requesting to follow us
                                 // userid:2 means they are requesting to follow us and
                                 // we are already following them
                                 followIDs.add(userid);
-                            }
-                            else if(!isFollowRequest && (value == 1 || value == 2)){
+                            } else if (!isFollowRequest && (value == 1 || value == 2)) {
                                 // retrieve all the users you, the current user, follows
                                 // userid:1 means we are following them
                                 // userid:2 means we are following them and they are requesting to

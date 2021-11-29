@@ -159,8 +159,6 @@ public class DefineHabitActivity extends AppCompatActivity {
             controller.updateModel(habitTitle.getText().toString(), habitReason.getText().toString(),
                     calendar.getTime(), privateSwitch.isChecked(),
                     model.getStreak(), hsv.getSchedule(), model.getLastCompleted());
-
-            finish();
         }
     }
 

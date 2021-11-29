@@ -223,7 +223,8 @@ public class ViewHabitActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateView();
+        controller = HabitController.getEditHabitController(habitID);
+        controller.attachListener(this::updateView);
         updateHabitEventsList();
     }
 

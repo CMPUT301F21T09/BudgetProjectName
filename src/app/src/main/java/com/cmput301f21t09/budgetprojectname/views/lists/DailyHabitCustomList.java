@@ -12,8 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.cmput301f21t09.budgetprojectname.R;
-import com.cmput301f21t09.budgetprojectname.views.activities.DefineHabitEventActivity;
 import com.cmput301f21t09.budgetprojectname.models.HabitModel;
+import com.cmput301f21t09.budgetprojectname.views.activities.DefineHabitEventActivity;
 import com.cmput301f21t09.budgetprojectname.views.activities.ViewHabitActivity;
 import com.google.android.material.imageview.ShapeableImageView;
 

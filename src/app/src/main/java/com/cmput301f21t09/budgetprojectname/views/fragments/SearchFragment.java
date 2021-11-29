@@ -93,30 +93,29 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                clearSearch.setVisibility(View.VISIBLE);
                 String keyword = s.toString().trim();
 
                 if (!keyword.equals("")) {
-                    hideViews();
+                    hideBackground();
                     users.clear();
                     userList.notifyDataSetChanged();
                     getUserById(keyword);
                 } else {
-                    showViews();
+                    showBackground();
                 }
             }
         });
 
         clearSearch.setOnClickListener(v -> {
             searchUser.getText().clear();
-            clearSearch.setVisibility(View.GONE);
-            showViews();
+            showBackground();
         });
 
     }
 
     /**
      * Get User by username
+     *
      * @param keyword to search user
      */
     private void getUserById(String keyword) {
@@ -132,17 +131,19 @@ public class SearchFragment extends Fragment {
     }
 
     /**
-     * Hide views
+     * Hide background view & Show clear edittext button
      */
-    private void hideViews() {
+    private void hideBackground() {
+        clearSearch.setVisibility(View.VISIBLE);
         background.setVisibility(View.GONE);
         userListView.setVisibility(View.VISIBLE);
     }
 
     /**
-     * Show Views
+     * Show background view & Hide clear edittext button
      */
-    private void showViews() {
+    private void showBackground() {
+        clearSearch.setVisibility(View.GONE);
         userListView.setVisibility(View.GONE);
         background.setVisibility(View.VISIBLE);
     }

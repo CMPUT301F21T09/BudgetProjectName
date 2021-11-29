@@ -13,15 +13,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.cmput301f21t09.budgetprojectname.MainActivity;
+import com.cmput301f21t09.budgetprojectname.R;
+import com.cmput301f21t09.budgetprojectname.controllers.HabitController;
+import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
+import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
+import com.cmput301f21t09.budgetprojectname.models.IHabitModel;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.views.fragments.HabitScheduleViewSelector;
 import com.cmput301f21t09.budgetprojectname.views.lists.HabitEventCustomList;
-import com.cmput301f21t09.budgetprojectname.R;
-import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
-import com.cmput301f21t09.budgetprojectname.controllers.HabitController;
-import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
-import com.cmput301f21t09.budgetprojectname.models.IHabitModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -91,6 +90,11 @@ public class ViewHabitActivity extends AppCompatActivity {
      */
     ArrayList<HabitEventModel> habitEventDataList;
 
+    /**
+     * Habit's ID
+     */
+    String habitID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,15 +105,15 @@ public class ViewHabitActivity extends AppCompatActivity {
 
         // Get the habitID and habitUID from the previous activity
         Intent intent = getIntent();
-        String habitID = intent.getStringExtra("HABIT_ID");
+        habitID = intent.getStringExtra("HABIT_ID");
         String habitUID = intent.getStringExtra("HABIT_USERID");
 
         /* Habit Details */
 
         // Retrieve the specific views
-        habitTitle = (TextView) findViewById(R.id.habitTitle);
-        habitDescription = (TextView) findViewById(R.id.habitDescription);
-        habitDate = (TextView) findViewById(R.id.habitDate);
+        habitTitle = findViewById(R.id.habitTitle);
+        habitDescription = findViewById(R.id.habitDescription);
+        habitDate = findViewById(R.id.habitDate);
         habitTitleToolbar = findViewById(R.id.toolbar_title);
         editHabitBtn = findViewById(R.id.editHabitButton);
         removeHabitBtn = findViewById(R.id.view_habit_remove_button);
@@ -129,19 +133,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         habitEventAdapter = new HabitEventCustomList(this, habitEventDataList);
         habitEventList.setAdapter(habitEventAdapter);
 
-        // Fetches the past habit events related to the current habit from Firestore using habitID
-        // and update the view
-        habitEventController.readHabitEvents(habitID, new HabitEventController.HabitEventListCallback() {
-            @Override
-            public void onCallback(ArrayList<HabitEventModel> hbEvtLst) {
-                habitEventDataList.clear();
-                for (HabitEventModel hEM : habitEventDataList) {
-                    System.out.println(hEM.getDate());
-                }
-                habitEventDataList.addAll(hbEvtLst);
-                habitEventAdapter.notifyDataSetChanged();
-            }
-        });
+        updateHabitEventsList();
 
 
         // selection of past habit event item start habit event detail screen
@@ -201,9 +193,7 @@ public class ViewHabitActivity extends AppCompatActivity {
                 Toast t = new Toast(this);
                 t.setText("Habit deleted");
                 t.show();
-                Intent deleteIntent = new Intent(getApplicationContext(), MainActivity.class);
-                deleteIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(deleteIntent);
+                finish();
             } else {
                 Toast t = new Toast(this);
                 t.setText("Unable to delete");
@@ -225,8 +215,31 @@ public class ViewHabitActivity extends AppCompatActivity {
                     .beginTransaction()
                     .add(
                             R.id.adh_scheduleFragment,
-                            HabitScheduleViewSelector.getFragmentForModel(model.getSchedule(), true)
+                            HabitScheduleViewSelector.getFragmentForModel(model.getSchedule(), false)
                     ).commit();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        controller = HabitController.getEditHabitController(habitID);
+        controller.attachListener(this::updateView);
+        updateHabitEventsList();
+    }
+
+    /**
+     * Fetches the past habit events related to the current habit from Firestore using habitID
+     * and update the view
+     */
+    private void updateHabitEventsList() {
+        habitEventController.readHabitEvents(habitID, hbEvtLst -> {
+            habitEventDataList.clear();
+            for (HabitEventModel hEM : hbEvtLst) {
+                System.out.println(hEM.getDate());
+            }
+            habitEventDataList.addAll(hbEvtLst);
+            habitEventAdapter.notifyDataSetChanged();
+        });
     }
 }

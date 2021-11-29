@@ -159,12 +159,6 @@ public class DefineHabitActivity extends AppCompatActivity {
             controller.updateModel(habitTitle.getText().toString(), habitReason.getText().toString(),
                     calendar.getTime(), privateSwitch.isChecked(),
                     model.getStreak(), hsv.getSchedule(), model.getLastCompleted());
-
-            // Head back to the daily habit fragment
-            Intent i = new Intent(this, MainActivity.class);
-            i.putExtra("frgToLoad", "daily_habits");
-            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(i);
         }
     }
 

@@ -27,6 +27,16 @@ import java.util.Date;
  */
 public class DailyHabitFragment extends Fragment {
 
+    /**
+     * Habit List
+     */
+    private ArrayList<HabitModel> habitDataList;
+
+    /**
+     * Habit Adapter
+     */
+    private ArrayAdapter<HabitModel> habitAdapter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,22 +57,34 @@ public class DailyHabitFragment extends Fragment {
         ListView habitList = view.findViewById(R.id.habit_listview);
 
         // Set up the list and send an empty list to the view
-        ArrayList<HabitModel> habitDataList = new ArrayList<>();
-        ArrayAdapter<HabitModel> habitAdapter = new DailyHabitCustomList(getContext(), habitDataList);
+        habitDataList = new ArrayList<>();
+        habitAdapter = new DailyHabitCustomList(getContext(), habitDataList);
         habitList.setAdapter(habitAdapter);
 
-        // Fetches the habits related to the current day from Firestore
+        updateDailyHabitList();
+
+        habitList.setOnItemClickListener((parent, view1, position, id) -> {
+            // TODO: Pass targeted Habit to ViewHabitActivity
+            Log.v("TAG", "CLICKED row number: ");
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateDailyHabitList();
+    }
+
+    /**
+     * Fetches the habits related to the current day from Firestore
+     */
+    private void updateDailyHabitList() {
         HabitModel.getTodoForCurrentUser().addTaskCompleteListener(task -> {
             habitDataList.clear();
             if (task.isSuccessful()) {
                 habitDataList.addAll(task.getResult());
             }
             habitAdapter.notifyDataSetChanged();
-        });
-
-        habitList.setOnItemClickListener((parent, view1, position, id) -> {
-            // TODO: Pass targeted Habit to ViewHabitActivity
-            Log.v("TAG", "CLICKED row number: ");
         });
     }
 }

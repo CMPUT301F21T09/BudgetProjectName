@@ -1,9 +1,5 @@
 package com.cmput301f21t09.budgetprojectname.services;
 
-import com.cmput301f21t09.budgetprojectname.models.HabitModel;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-
 import java.util.function.Function;
 
 /**

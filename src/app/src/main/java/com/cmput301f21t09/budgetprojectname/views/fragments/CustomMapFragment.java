@@ -13,12 +13,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 /**
  * This class allows us to ignore scrolling interactions when
  * dragging over the map fragment
- *
+ * <p>
  * Source: https://stackoverflow.com/questions/30525066/how-to-set-google-map-fragment-inside-scroll-view
  */
 public class CustomMapFragment extends SupportMapFragment {
     /**
-     * Listner for touch events
+     * Listener for touch events
      */
     private OnTouchListener mListener;
 
@@ -35,6 +35,7 @@ public class CustomMapFragment extends SupportMapFragment {
 
     /**
      * Set the listener
+     *
      * @param listener The listener
      */
     public void setListener(OnTouchListener listener) {
@@ -54,6 +55,7 @@ public class CustomMapFragment extends SupportMapFragment {
     public class TouchableWrapper extends FrameLayout {
         /**
          * Constructor
+         *
          * @param context The app environment
          */
         public TouchableWrapper(Context context) {

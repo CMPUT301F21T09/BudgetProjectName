@@ -404,11 +404,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
             } else {
                 habitEventController.updateHabitEvent(habitEventID, habitEvent);
                 // return back to habit detail page
-                Intent i = new Intent(getApplicationContext(), ViewHabitActivity.class);
-                i.putExtra("HABIT_ID", habitID);
-                i.putExtra("HABIT_USERID", habitUserID);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
+                finish();
             }
         }
     }

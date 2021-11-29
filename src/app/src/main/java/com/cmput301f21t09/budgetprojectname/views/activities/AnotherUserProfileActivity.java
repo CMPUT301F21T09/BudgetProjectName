@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.controllers.UserController;
@@ -221,7 +222,7 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
         // Set the views to Requested to Follow state
         followBtn.setVisibility(View.VISIBLE);
         followBtn.setText("Requested");
-        followBtn.setBackgroundTintList(getResources().getColorStateList(R.color.requested_button_background_tint));
+        followBtn.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.requested_button_background_tint));
         followingLabel.setVisibility(View.INVISIBLE);
         followThisAccountLabel.setVisibility(View.VISIBLE);
         allHabitsLabel.setVisibility(View.INVISIBLE);

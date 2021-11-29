@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.controllers.UserController;
 import com.cmput301f21t09.budgetprojectname.models.UserModel;
+import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.views.lists.UserCustomList;
 
 import java.util.ArrayList;
@@ -97,7 +98,7 @@ public class SearchFragment extends Fragment {
         final int currentRequest = ++this.request;
 
         new UserController().readUserByUserName(keyword, user -> {
-            if (currentRequest == this.request && user != null) {
+            if (currentRequest == this.request && user != null && !user.getUID().equals(AuthorizationService.getInstance().getCurrentUserId())) {
                 users.add(user);
                 users.sort(Comparator.comparing(UserModel::getFirstName));
                 userList.notifyDataSetChanged();

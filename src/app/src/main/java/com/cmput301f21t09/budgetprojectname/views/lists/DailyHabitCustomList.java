@@ -24,7 +24,14 @@ import java.util.ArrayList;
  * Show the habit's name, reason, and streak with button that create a habit event for the habit
  */
 public class DailyHabitCustomList extends ArrayAdapter<HabitModel> {
+    /**
+     * List of habits
+     */
     private final ArrayList<HabitModel> habits;
+
+    /**
+     * Information about app environment
+     */
     private final Context context;
 
     /**
@@ -39,6 +46,7 @@ public class DailyHabitCustomList extends ArrayAdapter<HabitModel> {
         this.context = context;
     }
 
+    @Override
     public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
         View view = convertView;
         if (view == null) {

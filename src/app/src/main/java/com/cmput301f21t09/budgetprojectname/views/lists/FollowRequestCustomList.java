@@ -17,7 +17,6 @@ import com.cmput301f21t09.budgetprojectname.models.UserModel;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.views.activities.AnotherUserProfileActivity;
 import com.cmput301f21t09.budgetprojectname.views.activities.FollowRequestActivity;
-import com.cmput301f21t09.budgetprojectname.views.activities.ViewHabitActivity;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
     private final ArrayList<UserModel> users;
 
     /**
-     * This custom list
+     * Information about app environment
      */
     private final Context context;
 
@@ -55,7 +54,7 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
      * @param users   a arrayList of users who wish to follow a given user
      */
     public FollowRequestCustomList(Context context, ArrayList<UserModel> users,
-                                   boolean isFollowRequest){
+                                   boolean isFollowRequest) {
         super(context, 0, users);
         this.users = users;
         this.context = context;
@@ -71,6 +70,7 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
      * @param parent      the parent that this view will eventually be attached to
      * @return view for user follow request
      */
+    @Override
     public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
         View view = convertView;
         if (view == null) {
@@ -83,7 +83,7 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
 
         // if using this for the following list then there is no option to accept or decline
         // just show their name and username
-        if(!isFollowRequest){
+        if (!isFollowRequest) {
             acceptBtn.setVisibility(view.INVISIBLE);
             denyBtn.setVisibility(view.INVISIBLE);
         }
@@ -218,6 +218,11 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
         });
     }
 
+    /**
+     * Refresh follow list
+     *
+     * @param currentUserID Current user's id
+     */
     private void getUpdatedFollowRequestList(String currentUserID) {
         // refresh list on page to account for newly removed entries
         // needs to be done in callback to ensure db has been updated

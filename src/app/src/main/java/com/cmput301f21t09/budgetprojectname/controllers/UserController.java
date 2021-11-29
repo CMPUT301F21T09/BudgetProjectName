@@ -22,16 +22,29 @@ import java.util.List;
  * Controller which handles the interaction with the users collection in firestore
  */
 public class UserController {
+    /**
+     * Databse instance
+     */
     private final FirebaseFirestore dbStore = FirebaseFirestore.getInstance();
+
+    /**
+     * Tag
+     */
     private static final String TAG = "UserController";
 
     public UserController() {
     }
 
+    /**
+     * User callback interface
+     */
     public interface UserCallback {
         void onCallback(UserModel user);
     }
 
+    /**
+     * Users callback interface
+     */
     public interface UsersCallback {
         void onCallback(ArrayList<String> userIDs);
     }
@@ -167,6 +180,4 @@ public class UserController {
             }
         });
     }
-
-
 }

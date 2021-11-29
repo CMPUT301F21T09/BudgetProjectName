@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.models.HabitModel;
-import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.views.activities.ViewHabitActivity;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -23,9 +22,15 @@ import java.util.ArrayList;
  * Show the habit's name, reason, and streak
  */
 public class UserHabitCustomList extends ArrayAdapter<HabitModel> {
+    /**
+     * List of habits
+     */
     private final ArrayList<HabitModel> habits;
-    private final Context context;
 
+    /**
+     * Information about app environment
+     */
+    private final Context context;
 
     /**
      * Constructor for UserHabitCustomList
@@ -39,6 +44,7 @@ public class UserHabitCustomList extends ArrayAdapter<HabitModel> {
         this.context = context;
     }
 
+    @Override
     public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
         View view = convertView;
         if (view == null) {

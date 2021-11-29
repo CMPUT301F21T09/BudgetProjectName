@@ -28,14 +28,39 @@ import java.util.Comparator;
  * Fragment that allows the user to search other user
  */
 public class SearchFragment extends Fragment {
-
+    /**
+     * Search fragment background
+     */
     private ConstraintLayout background;
+
+    /**
+     * User list view
+     */
     private ListView userListView;
+
+    /**
+     * Clear search image button
+     */
     private ImageButton clearSearch;
+
+    /**
+     * Search entry
+     */
     private EditText searchUser;
 
+    /**
+     * List of users
+     */
     private ArrayList<UserModel> users = new ArrayList<>();
+
+    /**
+     * Request count
+     */
     private int request = 0;
+
+    /**
+     * User list adapater
+     */
     private UserCustomList userList;
 
     @Nullable

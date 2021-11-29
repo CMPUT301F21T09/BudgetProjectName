@@ -1,5 +1,6 @@
 package com.cmput301f21t09.budgetprojectname.views.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,18 +22,54 @@ import com.cmput301f21t09.budgetprojectname.models.IWeeklyHabitScheduleModel;
  * create an instance of this fragment.
  */
 public class WeeklyHabitScheduleFragment extends HabitScheduleFragment {
-
+    /**
+     * Model argument
+     */
     private static final String MODEL_ARG = "MODEL_ARG";
+
+    /**
+     * Editable argument
+     */
     private static final String EDITABLE_ARG = "EDITABLE_ARG";
 
+    /**
+     * Weekly ahbit schedule controller
+     */
     private WeeklyHabitScheduleController controller;
 
+    /**
+     * Image view for Sunday
+     */
     private ImageView sundayView;
+
+    /**
+     * Image view for Monday
+     */
     private ImageView mondayView;
+
+    /**
+     * Image view for Tuesday
+     */
     private ImageView tuesdayView;
+
+    /**
+     * Image view for Wednesday
+     */
     private ImageView wednesdayView;
+
+    /**
+     * Image view for Thursday
+     */
     private ImageView thursdayView;
+
+    /**
+     * Image view for Friday
+     */
     private ImageView fridayView;
+
+    /**
+     * Image view for Saturday
+     */
     private ImageView saturdayView;
 
     /**
@@ -99,41 +136,42 @@ public class WeeklyHabitScheduleFragment extends HabitScheduleFragment {
      */
     private void updateView() {
         IWeeklyHabitScheduleModel model = controller.getModel();
+        Context context = getContext();
 
         if (model.getDay(IWeeklyHabitScheduleModel.SUNDAY))
-            sundayView.setImageDrawable(getContext().getDrawable(R.drawable.ic_sunday_positive));
+            sundayView.setImageDrawable(context.getDrawable(R.drawable.ic_sunday_positive));
         else
-            sundayView.setImageDrawable(getContext().getDrawable(R.drawable.ic_sunday_negative));
+            sundayView.setImageDrawable(context.getDrawable(R.drawable.ic_sunday_negative));
 
         if (model.getDay(IWeeklyHabitScheduleModel.MONDAY))
-            mondayView.setImageDrawable(getContext().getDrawable(R.drawable.ic_monday_positive));
+            mondayView.setImageDrawable(context.getDrawable(R.drawable.ic_monday_positive));
         else
-            mondayView.setImageDrawable(getContext().getDrawable(R.drawable.ic_monday_negative));
+            mondayView.setImageDrawable(context.getDrawable(R.drawable.ic_monday_negative));
 
         if (model.getDay(IWeeklyHabitScheduleModel.TUESDAY))
-            tuesdayView.setImageDrawable(getContext().getDrawable(R.drawable.ic_tuesday_positive));
+            tuesdayView.setImageDrawable(context.getDrawable(R.drawable.ic_tuesday_positive));
         else
-            tuesdayView.setImageDrawable(getContext().getDrawable(R.drawable.ic_tuesday_negative));
+            tuesdayView.setImageDrawable(context.getDrawable(R.drawable.ic_tuesday_negative));
 
         if (model.getDay(IWeeklyHabitScheduleModel.WEDNESDAY))
-            wednesdayView.setImageDrawable(getContext().getDrawable(R.drawable.ic_wednesday_positive));
+            wednesdayView.setImageDrawable(context.getDrawable(R.drawable.ic_wednesday_positive));
         else
-            wednesdayView.setImageDrawable(getContext().getDrawable(R.drawable.ic_wednesday_negative));
+            wednesdayView.setImageDrawable(context.getDrawable(R.drawable.ic_wednesday_negative));
 
         if (model.getDay(IWeeklyHabitScheduleModel.THURSDAY))
-            thursdayView.setImageDrawable(getContext().getDrawable(R.drawable.ic_thursday_positive));
+            thursdayView.setImageDrawable(context.getDrawable(R.drawable.ic_thursday_positive));
         else
-            thursdayView.setImageDrawable(getContext().getDrawable(R.drawable.ic_thursday_negative));
+            thursdayView.setImageDrawable(context.getDrawable(R.drawable.ic_thursday_negative));
 
         if (model.getDay(IWeeklyHabitScheduleModel.FRIDAY))
-            fridayView.setImageDrawable(getContext().getDrawable(R.drawable.ic_friday_positive));
+            fridayView.setImageDrawable(context.getDrawable(R.drawable.ic_friday_positive));
         else
-            fridayView.setImageDrawable(getContext().getDrawable(R.drawable.ic_friday_negative));
+            fridayView.setImageDrawable(context.getDrawable(R.drawable.ic_friday_negative));
 
         if (model.getDay(IWeeklyHabitScheduleModel.SATURDAY))
-            saturdayView.setImageDrawable(getContext().getDrawable(R.drawable.ic_saturday_positive));
+            saturdayView.setImageDrawable(context.getDrawable(R.drawable.ic_saturday_positive));
         else
-            saturdayView.setImageDrawable(getContext().getDrawable(R.drawable.ic_saturday_negative));
+            saturdayView.setImageDrawable(context.getDrawable(R.drawable.ic_saturday_negative));
     }
 
     @Override

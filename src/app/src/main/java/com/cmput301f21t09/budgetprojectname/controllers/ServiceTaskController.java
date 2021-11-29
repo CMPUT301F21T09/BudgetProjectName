@@ -121,6 +121,5 @@ public abstract class ServiceTaskController<U> extends BaseController {
             notifyListener();
         }
     }
-
 }
 

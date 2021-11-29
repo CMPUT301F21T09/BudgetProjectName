@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,7 +14,6 @@ import androidx.annotation.Nullable;
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.models.UserModel;
 import com.cmput301f21t09.budgetprojectname.views.activities.AnotherUserProfileActivity;
-import com.cmput301f21t09.budgetprojectname.views.activities.ViewHabitActivity;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
@@ -25,9 +23,15 @@ import java.util.ArrayList;
  * Show the user's name, username and profile photo
  */
 public class UserCustomList extends ArrayAdapter<UserModel> {
+    /**
+     * List of users
+     */
     private ArrayList<UserModel> users;
-    private Context context;
 
+    /**
+     * Information about app environment
+     */
+    private Context context;
 
     /**
      * Constructor for UserHabitCustomList
@@ -41,6 +45,7 @@ public class UserCustomList extends ArrayAdapter<UserModel> {
         this.context = context;
     }
 
+    @Override
     public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
         View view = convertView;
         if (view == null) {

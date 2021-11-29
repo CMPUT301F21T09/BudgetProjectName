@@ -69,31 +69,121 @@ import java.util.Date;
  */
 public class DefineHabitEventActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    /**
+     * Habit event name
+     */
     private TextView habitEventName;
+
+    /**
+     * Habit event comment
+     */
     private EditText comment;
+
+    /**
+     * Habit event image
+     */
     private ImageView imageView;
+
+    /**
+     * Database instance
+     */
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    /**
+     * Tag
+     */
     private static final String TAG = "DefineHabitEventActivity";
+
+    /**
+     * Boolean for whether this is an edit action
+     * True -> Creating new habit event
+     * False -> Editing the habit event
+     */
     private boolean isNewHabitEvent;
+
+    /**
+     * Habit controller
+     */
     private HabitController controller;
+
+    /**
+     * Habit event controller
+     */
     private final HabitEventController habitEventController = new HabitEventController();
+
+    /**
+     * Parent habit ID
+     */
     private String habitID;
+
+    /**
+     * Habit event ID
+     */
     private String habitEventID;
+
+    /**
+     * Parent habit name
+     */
     private String habitName;
+
+    /**
+     * Habit's user's id
+     */
     private String habitUserID;
 
+    /**
+     * Map fragment for getting location
+     */
     private SupportMapFragment mapFragment;
+
+    /**
+     * Location toggle
+     */
     private SwitchMaterial locationSwitch;
+
+    /**
+     * Container for map
+     */
     private ConstraintLayout locationContainer;
 
+    /**
+     * Google map instance
+     */
     private GoogleMap map;
+
+    /**
+     * Map marker location
+     */
     private LatLngModel markerLocation;
+
+    /**
+     * Options for map marker
+     */
     private MarkerOptions markerOptions;
 
+    /**
+     * Activity result launcher for gallery
+     */
     private ActivityResultLauncher<Intent> GalleryResultLauncher;
+
+    /**
+     * Activity result launcher for camera
+     */
     private ActivityResultLauncher<Intent> CameraResultLauncher;
+
+    /**
+     * Photo path
+     */
     private String mPhotoPath;
+
+    /**
+     * Image bitmap
+     */
     private Bitmap image;
+
+    /**
+     * Image data
+     */
     private String imageData;
 
     @Override

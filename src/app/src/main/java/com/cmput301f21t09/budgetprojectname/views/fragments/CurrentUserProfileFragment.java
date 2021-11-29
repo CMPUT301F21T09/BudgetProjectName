@@ -101,10 +101,6 @@ public class CurrentUserProfileFragment extends Fragment {
             habitAdapter.notifyDataSetChanged();
         });
 
-        habitList.setOnItemClickListener((parent, view1, position, id) -> {
-            // TODO: Pass targeted Habit to ViewHabitActivity
-        });
-
         // Sign out button pressed: sign out
         ImageButton signOut = view.findViewById(R.id.logout_button);
         signOut.setOnClickListener(v -> signOut());

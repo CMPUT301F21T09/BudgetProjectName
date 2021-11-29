@@ -43,7 +43,6 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         String currentUserId = AuthorizationService.getInstance().getCurrentUserId();
 
         Window window = getWindow();
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.secondary_super_light));
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         // data received from viewhabitactivity
@@ -60,6 +59,11 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         ImageView habitEventImage = findViewById(R.id.view_habit_event_image);
 
         habitTitle.setText(habitTitleStr);
+
+        ImageButton back = findViewById(R.id.view_habit_event_button);
+        back.setOnClickListener(v -> {
+            finish();
+        });
 
         // TODO: resolve null error
         /**

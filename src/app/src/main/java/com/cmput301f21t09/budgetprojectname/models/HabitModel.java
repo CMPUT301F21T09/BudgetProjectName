@@ -1,10 +1,13 @@
 package com.cmput301f21t09.budgetprojectname.models;
 
+import android.util.Log;
+
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.services.ServiceTask;
 import com.cmput301f21t09.budgetprojectname.services.ServiceTaskManager;
 import com.cmput301f21t09.budgetprojectname.services.database.serializers.DocumentModelSerializer;
 import com.cmput301f21t09.budgetprojectname.services.database.serializers.ModelMapParser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -202,10 +205,22 @@ public class HabitModel implements IHabitModel {
                 .whereArrayContainsAny("schedule", new HabitScheduleModelFactory().getQueryForToday())
                 .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+                List<DocumentSnapshot> docs = task.getResult().getDocuments();
                 List<HabitModel> models = new ArrayList<>();
                 HabitModelMapParser parser = new HabitModelMapParser();
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    models.add(parser.parseMap(document.getData(), document.getId()));
+                for (DocumentSnapshot doc : docs) {
+                    Date last_completed;
+                    Date today = new Date();
+                    if (doc.getTimestamp("last_completed") == null) {
+                        models.add(parser.parseMap(doc.getData(), doc.getId()));
+                    } else {
+                        last_completed = doc.getTimestamp("last_completed").toDate();
+                        if (last_completed.getDate() != today.getDate() &&
+                                last_completed.getMonth() != today.getMonth() &&
+                                today.getYear() != last_completed.getYear()) {
+                            models.add(parser.parseMap(doc.getData(), doc.getId()));
+                        }
+                    }
                 }
                 taskManager.setSuccess(models);
             } else {

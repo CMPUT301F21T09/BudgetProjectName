@@ -107,8 +107,8 @@ public class ViewHabitActivity extends AppCompatActivity {
         /* Habit Details */
 
         // Retrieve the specific views
-        habitTitle = (TextView) findViewById(R.id.habitTitle);
-        habitDescription = (TextView) findViewById(R.id.habitDescription);
+        habitTitle = findViewById(R.id.habitTitle);
+        habitDescription = findViewById(R.id.habitDescription);
         habitDate = (TextView) findViewById(R.id.habitDate);
         habitTitleToolbar = findViewById(R.id.toolbar_title);
         editHabitBtn = findViewById(R.id.editHabitButton);
@@ -201,9 +201,7 @@ public class ViewHabitActivity extends AppCompatActivity {
                 Toast t = new Toast(this);
                 t.setText("Habit deleted");
                 t.show();
-                Intent deleteIntent = new Intent(getApplicationContext(), MainActivity.class);
-                deleteIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(deleteIntent);
+                finish();
             } else {
                 Toast t = new Toast(this);
                 t.setText("Unable to delete");

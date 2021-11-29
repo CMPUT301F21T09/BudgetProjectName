@@ -16,12 +16,10 @@ import androidx.fragment.app.Fragment;
 
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.controllers.UserController;
-import com.cmput301f21t09.budgetprojectname.models.HabitModel;
 import com.cmput301f21t09.budgetprojectname.models.UserModel;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.views.activities.FollowRequestActivity;
 import com.cmput301f21t09.budgetprojectname.views.lists.FollowRequestCustomList;
-import com.cmput301f21t09.budgetprojectname.views.lists.UserHabitCustomList;
 
 import java.util.ArrayList;
 
@@ -37,6 +35,11 @@ public class FollowingFragment extends Fragment {
     private UserController userController;
 
     /**
+     * String that stores current userID
+     */
+    String currentUserId;
+
+    /**
      * List of users that the current user is following
      */
     ArrayList<UserModel> followingDataList;
@@ -47,8 +50,14 @@ public class FollowingFragment extends Fragment {
     ArrayAdapter<UserModel> followingAdapter;
 
     /**
+     * Button
+     */
+    Button requestsBtn;
+
+    /**
      * Check on the follow requests sent to you
      * by transitioning to the follow request screen
+     *
      * @param userID current user ID
      */
     private void seeRequests(String userID) {
@@ -57,6 +66,19 @@ public class FollowingFragment extends Fragment {
         intent.putExtra("uid", userID);
         startActivity(intent);
     }
+
+    /**
+     * Get number of following requests of the user
+     * and set updated number to the button
+     *
+     * @param userID current user ID
+     */
+    private void updateRequests(String userID) {
+        userController.readUserFollows(userID, true, followRequests -> {
+            requestsBtn.setText("Requests " + "(" + followRequests.size() + ")");
+        });
+    }
+
 
     @Nullable
     @Override
@@ -71,12 +93,13 @@ public class FollowingFragment extends Fragment {
         // set up controller
         userController = new UserController();
 
-        String currentUserId = AuthorizationService.getInstance().getCurrentUserId();
+        currentUserId = AuthorizationService.getInstance().getCurrentUserId();
 
-        Button requestsBtn = (Button) view.findViewById(R.id.requests_button);
+        requestsBtn = view.findViewById(R.id.requests_button);
+        updateRequests(currentUserId);
         requestsBtn.setOnClickListener(v -> seeRequests(currentUserId));
 
-        TextView numFollowing = (TextView) view.findViewById(R.id.following_label);
+        TextView numFollowing = view.findViewById(R.id.following_label);
 
         // ListView setup
         ListView followingList = view.findViewById(R.id.following_list);
@@ -88,26 +111,32 @@ public class FollowingFragment extends Fragment {
         followingList.setAdapter(followingAdapter);
 
         // load all users we are following
-        userController.readUserFollows(currentUserId, false ,
+        userController.readUserFollows(currentUserId, false,
                 following -> {
-            for(String userID: following){
-                // get back the model using userID
-                userController.readUser(userID, followingUser -> {
-                    System.out.println("user you are following " +
-                            followingUser.getFirstName() + " " + followingUser.getUID());
-                    followingDataList.add(followingUser);
+                    for (String userID : following) {
+                        // get back the model using userID
+                        userController.readUser(userID, followingUser -> {
+                            System.out.println("user you are following " +
+                                    followingUser.getFirstName() + " " + followingUser.getUID());
+                            followingDataList.add(followingUser);
 
-                    // update adapter that new users have been added to list
-                    followingAdapter.notifyDataSetChanged();
+                            // update adapter that new users have been added to list
+                            followingAdapter.notifyDataSetChanged();
 
-                    // update number of users following
-                    // must be done in callback function so it is dynamic
-                    // ie. changes when data is fetched
-                    numFollowing.setText("You are following " +
-                            followingDataList.size() + " users");
+                            // update number of users following
+                            // must be done in callback function so it is dynamic
+                            // ie. changes when data is fetched
+                            numFollowing.setText("You are following " +
+                                    followingDataList.size() + " users");
+                        });
+                    }
                 });
-            }
-        });
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        //Update view when get back to this fragment
+        updateRequests(currentUserId);
     }
 }

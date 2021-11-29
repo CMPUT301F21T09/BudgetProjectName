@@ -16,7 +16,6 @@ import com.cmput301f21t09.budgetprojectname.controllers.UserController;
 import com.cmput301f21t09.budgetprojectname.models.UserModel;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.views.activities.AnotherUserProfileActivity;
-import com.cmput301f21t09.budgetprojectname.views.activities.FollowRequestActivity;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
     /**
      * List of users who have requested to follow current user
      */
-    private final ArrayList<UserModel> users;
+    private ArrayList<UserModel> users;
 
     /**
      * Information about app environment
@@ -154,31 +153,49 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
         } else {
             updatedOtherSocialMap.put(currentUserID, 1); // current user is followed by anotherUser
         }
+
         // update db with new relationships
-        userController.updateUserSocialMap(anotherUserID, updatedOtherSocialMap);
+        userController.updateUserSocialMap(anotherUserID, updatedOtherSocialMap, new UserController.UserUpdateCallback() {
+            @Override
+            public void onSuccess() {
+                // modify other user's status inside current user's social map
+                userController.readUser(currentUserID, currentUser -> {
+                    HashMap<String, Integer> updatedCurrentSocialMap = currentUser.getSocial();
+                    int anotherUserInCurrentSocialMap =
+                            updatedCurrentSocialMap.get(anotherUserID);
 
-        // modify other user's status inside current user's social map
-        userController.readUser(currentUserID, currentUser -> {
-            HashMap<String, Integer> updatedCurrentSocialMap = currentUser.getSocial();
-            int anotherUserInCurrentSocialMap =
-                    Integer.parseInt(String.valueOf(updatedCurrentSocialMap.get(anotherUserID)));
+                    if (anotherUserInCurrentSocialMap == 0) {
+                        // 0 means they have sent us a request which we have accepted now we must
+                        // remove the request from current user's social map
+                        updatedCurrentSocialMap.remove(anotherUserID);
+                    } else if (anotherUserInCurrentSocialMap == 2) {
+                        // 2 means we are already following this friend and they've sent a request to us
+                        // we want to change value to 1 to show that we are still following them
+                        updatedCurrentSocialMap.put(anotherUserID, 1);
+                    }
+                    // update db with new relationships
+                    userController.updateUserSocialMap(currentUserID, updatedCurrentSocialMap, new UserController.UserUpdateCallback() {
+                        @Override
+                        public void onSuccess() {
+                            users.remove(anotherUser);
+                            ArrayList<UserModel> updatedUsers = new ArrayList<>();
+                            updateData(updatedUsers);
+                        }
 
-            if (anotherUserInCurrentSocialMap == 0) {
-                // 0 means they have sent us a request which we have accepted now we must
-                // remove the request from current user's social map
-                updatedCurrentSocialMap.remove(anotherUserID);
-            } else if (anotherUserInCurrentSocialMap == 2) {
-                // 2 means we are already following this friend and they've sent a request to us
-                // we want to change value to 1 to show that we are still following them
-                updatedCurrentSocialMap.put(anotherUserID, 1);
+                        @Override
+                        public void onFailure() {
+
+                        }
+                    });
+                });
             }
-            // update db with new relationships
-            userController.updateUserSocialMap(currentUserID, updatedCurrentSocialMap);
 
-            getUpdatedFollowRequestList(currentUserID);
+            @Override
+            public void onFailure() {
 
+
+            }
         });
-
     }
 
     /**
@@ -213,27 +230,29 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
                 updatedCurrentSocialMap.put(anotherUserID, 1);
             }
             // update db with new relationships
-            userController.updateUserSocialMap(currentUserID, updatedCurrentSocialMap);
-            getUpdatedFollowRequestList(currentUserID);
+            userController.updateUserSocialMap(currentUserID, updatedCurrentSocialMap, new UserController.UserUpdateCallback() {
+                @Override
+                public void onSuccess() {
+                    users.remove(anotherUser);
+                    ArrayList<UserModel> updatedUsers = new ArrayList<>();
+                    updateData(updatedUsers);
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+            });
         });
     }
 
     /**
-     * Refresh follow list
-     *
-     * @param currentUserID Current user's id
+     * Replace ArrayList(UserModel Data) with updated data
+     * @param updatedData Updated ArrayList of UserModel
      */
-    private void getUpdatedFollowRequestList(String currentUserID) {
-        // refresh list on page to account for newly removed entries
-        // needs to be done in callback to ensure db has been updated
-        Intent intent = new Intent(context, FollowRequestActivity.class);
-        intent.putExtra("uid", currentUserID);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-        // TODO: figure out a way of "freezing screen" or waiting for this reload to finish
-        // A request may already have been deleted from the database + list but the screen hasn't
-        // finished rendering. So a user may click on a button that should not even be there
-        // and this crashes the app because it's getting a null value onclick
+    private void updateData(ArrayList<UserModel> updatedData) {
+        users = updatedData;
+        this.notifyDataSetChanged();
     }
+
 }

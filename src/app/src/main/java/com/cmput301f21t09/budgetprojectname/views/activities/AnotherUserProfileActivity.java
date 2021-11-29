@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.controllers.UserController;
 import com.cmput301f21t09.budgetprojectname.models.HabitModel;
-import com.cmput301f21t09.budgetprojectname.models.UserModel;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.views.lists.UserHabitCustomList;
 
@@ -91,13 +90,13 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
         String anotherUserID = intent.getStringExtra("USER_ID");
 
         // Retrieve the specific views
-        name = (TextView) findViewById(R.id.name);
-        username = (TextView) findViewById(R.id.username);
-        followBtn = (Button) findViewById(R.id.follow_button);
-        followingLabel = (TextView) findViewById(R.id.following_label);
-        followThisAccountLabel = (TextView) findViewById(R.id.follow_this_account_label);
-        allHabitsLabel = (TextView) findViewById(R.id.all_habits_label);
-        habitList = (ListView) findViewById(R.id.current_user_habit_listview);
+        name = findViewById(R.id.name);
+        username = findViewById(R.id.username);
+        followBtn = findViewById(R.id.follow_button);
+        followingLabel = findViewById(R.id.following_label);
+        followThisAccountLabel = findViewById(R.id.follow_this_account_label);
+        allHabitsLabel = findViewById(R.id.all_habits_label);
+        habitList = findViewById(R.id.current_user_habit_listview);
 
 
         // Set up the controller
@@ -199,10 +198,18 @@ public class AnotherUserProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Update the value of the currentUserId in anotherUserID's document
                 socialMap.put(currentUserId, newValue);
-                userController.updateUserSocialMap(anotherUserID, socialMap);
+                userController.updateUserSocialMap(anotherUserID, socialMap, new UserController.UserUpdateCallback() {
+                    @Override
+                    public void onSuccess() {
+                        // Change the display to Requested State
+                        changeDisplayToRequestedState();
+                    }
 
-                // Change the display to Requested State
-                changeDisplayToRequestedState();
+                    @Override
+                    public void onFailure() {
+
+                    }
+                });
             }
         });
     }

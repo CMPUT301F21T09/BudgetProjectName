@@ -54,7 +54,17 @@ public class AnotherUserProfileTest {
                 pendingFollowRequests.remove(currentUserID);
             }
             // Update another user's social map
-            userController.updateUserSocialMap(anotherUserID, pendingFollowRequests);
+            userController.updateUserSocialMap(anotherUserID, pendingFollowRequests, new UserController.UserUpdateCallback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+            });
         });
     }
 
@@ -73,7 +83,17 @@ public class AnotherUserProfileTest {
                 pendingFollowRequests.remove(currentUserID);
             }
             // Update another user's social map
-            userController.updateUserSocialMap(anotherUserID, pendingFollowRequests);
+            userController.updateUserSocialMap(anotherUserID, pendingFollowRequests, new UserController.UserUpdateCallback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+            });
         });
         solo.finishOpenedActivities();
     }

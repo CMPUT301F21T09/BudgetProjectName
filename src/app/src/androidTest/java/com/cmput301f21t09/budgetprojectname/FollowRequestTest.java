@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import android.app.Activity;
-import android.util.Log;
 import android.widget.ListView;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -13,7 +12,6 @@ import androidx.test.rule.ActivityTestRule;
 import com.cmput301f21t09.budgetprojectname.controllers.UserController;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.views.activities.FollowRequestActivity;
-import com.cmput301f21t09.budgetprojectname.views.activities.ViewHabitActivity;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -52,12 +50,19 @@ public class FollowRequestTest {
 
             // add a follow request into current user's social map
             incomingFollowRequests.put(anotherUserID, 0);
-            userController.updateUserSocialMap(currentUserId, incomingFollowRequests);
+            userController.updateUserSocialMap(currentUserId, incomingFollowRequests, new UserController.UserUpdateCallback() {
+                @Override
+                public void onSuccess() {
+                    // click accept on this request
+                    solo.waitForText("Test", 1, 3000);
+                    // solo.clickOnView(solo.getView(R.id.accept_button));
+                }
 
-            // click accept on this request
-            solo.waitForText("Test", 1, 3000);
-            // solo.clickOnView(solo.getView(R.id.accept_button));
+                @Override
+                public void onFailure() {
 
+                }
+            });
         });
 
     }
@@ -107,7 +112,7 @@ public class FollowRequestTest {
      * Test for accepting a follow request
      */
     @Test
-    public void testAcceptRequest(){
+    public void testAcceptRequest() {
         // go to follow request page
         navigateToFollowFragment();
 
@@ -129,14 +134,14 @@ public class FollowRequestTest {
 
         // check that request is removed
         listView = (ListView) solo.getView(R.id.follow_request_listview);
-        assertEquals(originalNumRequests-1, listView.getCount());
+        assertEquals(originalNumRequests - 1, listView.getCount());
     }
 
     /**
      * Test for denying a follow request
      */
     @Test
-    public void testDenyRequest(){
+    public void testDenyRequest() {
         // go to follow request page
         navigateToFollowFragment();
 
@@ -159,7 +164,7 @@ public class FollowRequestTest {
 
         // check that request is removed
         listView = (ListView) solo.getView(R.id.follow_request_listview);
-        assertEquals(originalNumRequests-1, listView.getCount());
+        assertEquals(originalNumRequests - 1, listView.getCount());
     }
 
 }

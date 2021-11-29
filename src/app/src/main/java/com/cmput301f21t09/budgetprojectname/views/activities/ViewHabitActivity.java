@@ -91,6 +91,9 @@ public class ViewHabitActivity extends AppCompatActivity {
      */
     ArrayList<HabitEventModel> habitEventDataList;
 
+    /**
+     * Habit's ID
+     */
     String habitID;
 
     @Override

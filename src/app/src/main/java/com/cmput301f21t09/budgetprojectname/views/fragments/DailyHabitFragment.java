@@ -27,8 +27,15 @@ import java.util.Date;
  */
 public class DailyHabitFragment extends Fragment {
 
-    ArrayList<HabitModel> habitDataList;
-    ArrayAdapter<HabitModel> habitAdapter;
+    /**
+     * Habit List
+     */
+    private ArrayList<HabitModel> habitDataList;
+
+    /**
+     * Habit Adapter
+     */
+    private ArrayAdapter<HabitModel> habitAdapter;
 
     @Nullable
     @Override

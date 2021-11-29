@@ -5,7 +5,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
@@ -65,17 +64,17 @@ public class AuthorizationService {
                                      String firstname, String lastname) {
         return firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                // Publish user info to Database
-                UserModel user = new UserModel();
-                user.setUsername(username);
-                user.setUID(task.getResult().getUser().getUid());
-                user.setFirstName(firstname);
-                user.setLastName(lastname);
-                user.setSocial(new HashMap<String, Integer>());
-                user.commit();
-            }
-        });
+                    if (task.isSuccessful()) {
+                        // Publish user info to Database
+                        UserModel user = new UserModel();
+                        user.setUsername(username);
+                        user.setUID(task.getResult().getUser().getUid());
+                        user.setFirstName(firstname);
+                        user.setLastName(lastname);
+                        user.setSocial(new HashMap<String, Integer>());
+                        user.commit();
+                    }
+                });
     }
 
     /**

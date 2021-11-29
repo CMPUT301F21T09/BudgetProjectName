@@ -215,7 +215,7 @@ public class ViewHabitActivity extends AppCompatActivity {
                     .beginTransaction()
                     .add(
                             R.id.adh_scheduleFragment,
-                            HabitScheduleViewSelector.getFragmentForModel(model.getSchedule(), true)
+                            HabitScheduleViewSelector.getFragmentForModel(model.getSchedule(), false)
                     ).commit();
         }
     }

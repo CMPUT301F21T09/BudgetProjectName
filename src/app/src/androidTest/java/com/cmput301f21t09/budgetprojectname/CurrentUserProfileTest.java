@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.cmput301f21t09.budgetprojectname.models.HabitModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -90,19 +91,13 @@ public class CurrentUserProfileTest {
     public void testAllHabitList() {
         navigateToPersonalProfile();
         ListView listView = (ListView)solo.getView(R.id.current_user_habit_listview);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference collectionReference = db.collection("habits");
-        collectionReference
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        int listViewCount = listView.getCount();
-                        if (task.isSuccessful()) {
-                            assertEquals(task.getResult().size(), listViewCount);
-                        }
-                    }
-                });
+
+        HabitModel.getAllForCurrentUser().addTaskCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                int listViewCount = listView.getCount();
+                assertEquals(task.getResult().size(), listViewCount);
+            }
+        });
     }
 
     //TODO: Add intent tests for user name being pulled correctly

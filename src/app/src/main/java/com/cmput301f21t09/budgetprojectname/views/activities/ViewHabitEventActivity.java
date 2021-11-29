@@ -14,13 +14,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.cmput301f21t09.budgetprojectname.R;
 import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
 import com.cmput301f21t09.budgetprojectname.models.LatLngModel;
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -30,9 +28,6 @@ import java.util.List;
  * Activity that shows the detail of the habit event
  */
 public class ViewHabitEventActivity extends AppCompatActivity {
-    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private static final String TAG = "ViewHabitEventActivity";
-    HabitEventController habitEventController = new HabitEventController();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +157,4 @@ public class ViewHabitEventActivity extends AppCompatActivity {
             deleteHabitEventBtn.setVisibility(View.INVISIBLE);
         }
     }
-
-
 }

@@ -25,7 +25,14 @@ import java.util.ArrayList;
  * Show the habit event's date and whether or not the user has added a location, comment, and/or photograph
  */
 public class HabitEventCustomList extends ArrayAdapter<HabitEventModel> {
+    /**
+     * List of habit events
+     */
     private final ArrayList<HabitEventModel> habitEvents;
+
+    /**
+     * Information about app environment
+     */
     private final Context context;
 
     /**
@@ -40,6 +47,7 @@ public class HabitEventCustomList extends ArrayAdapter<HabitEventModel> {
         this.context = context;
     }
 
+    @Override
     public View getView(int position, @Nullable View convertView, @Nullable ViewGroup parent) {
         View view = convertView;
         if (view == null) {

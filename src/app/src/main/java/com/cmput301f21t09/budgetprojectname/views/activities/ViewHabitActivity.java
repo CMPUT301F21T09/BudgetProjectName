@@ -81,9 +81,15 @@ public class ViewHabitActivity extends AppCompatActivity {
      */
     private ListView habitEventList;
 
+    /**
+     * Habit event adapter
+     */
     ArrayAdapter<HabitEventModel> habitEventAdapter;
+
+    /**
+     * Habit event list
+     */
     ArrayList<HabitEventModel> habitEventDataList;
-    private static final String TAG = "ViewHabitActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

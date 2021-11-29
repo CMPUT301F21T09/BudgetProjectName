@@ -1,26 +1,17 @@
 package com.cmput301f21t09.budgetprojectname.views.activities;
 
-import static java.security.AccessController.getContext;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.cmput301f21t09.budgetprojectname.R;
-import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
 import com.cmput301f21t09.budgetprojectname.controllers.UserController;
-import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
-import com.cmput301f21t09.budgetprojectname.models.HabitModel;
 import com.cmput301f21t09.budgetprojectname.models.UserModel;
 import com.cmput301f21t09.budgetprojectname.views.lists.FollowRequestCustomList;
-import com.cmput301f21t09.budgetprojectname.views.lists.HabitEventCustomList;
-import com.cmput301f21t09.budgetprojectname.views.lists.UserHabitCustomList;
 
 import java.util.ArrayList;
 
@@ -28,16 +19,20 @@ import java.util.ArrayList;
  * Class which handles accepting or declining an incoming follow request from another user
  */
 public class FollowRequestActivity extends AppCompatActivity {
-
-    // TODO: comment
+    /**
+     * User data list
+     */
     ArrayList<UserModel> followRequestDataList;
+
+    /**
+     * Follow request adapter
+     */
     ArrayAdapter<UserModel> followRequestAdapter;
 
     /**
      * Controller for fetching user details
      */
     private UserController userController;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +54,7 @@ public class FollowRequestActivity extends AppCompatActivity {
         followRequestList.setAdapter(followRequestAdapter);
         userController = new UserController();
         userController.readUserFollows(currentUserId, true, followRequests -> {
-            for(String userID: followRequests){
+            for (String userID : followRequests) {
                 // get back the model using userID
                 userController.readUser(userID, followRequestUser -> {
 //                    System.out.println("user who wants to follow you " +
@@ -78,5 +73,5 @@ public class FollowRequestActivity extends AppCompatActivity {
         back.setOnClickListener(v -> {
             finish();
         });
-      }
+    }
 }

@@ -23,7 +23,14 @@ import java.util.ArrayList;
  * create, read, update, and delete HabitEvents.
  */
 public class HabitEventController {
+    /**
+     * Database instance
+     */
     private final FirebaseFirestore dbStore = FirebaseFirestore.getInstance();
+
+    /**
+     * Tag
+     */
     private static final String TAG = "HabitEventController";
 //    // Apply Singleton Design Pattern
 //    private static HabitEventController habitEventStore = new HabitEventController();
@@ -32,17 +39,25 @@ public class HabitEventController {
 //        return habitEventStore;
 //    }
 
+    /**
+     * Empty constructor
+     */
     public HabitEventController() {
     }
 
+    /**
+     * Habit event callback interface
+     */
     public interface HabitEventCallback {
         void onCallback(HabitEventModel habitEvent);
     }
 
+    /**
+     * Habit event id callback interface
+     */
     public interface HabitEventIDCallback {
         void onCallback(String habitEventID);
     }
-
 
     /**
      * HabitEventListCallback interface
@@ -185,7 +200,6 @@ public class HabitEventController {
                     }
                 });
     }
-
 }
 
 

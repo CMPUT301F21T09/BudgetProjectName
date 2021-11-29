@@ -77,87 +77,93 @@ public class ViewHabitEventTest {
     @Test
     public void testDeleteHabitEvent(){
         solo.waitForText("Today", 1, 3000);
-        // click on a habit
-        solo.clickOnText("Test"); // OUR TEST HABIT
+        ListView list = (ListView) solo.getView(R.id.habit_listview);
+        // click on a habit if exists
+        if(list.getCount() > 0) {
+            View v = list.getChildAt(0);
+            // click on first element in list
+            solo.clickOnView(v);
+            // check that list contains newly created habitevent
+            solo.waitForActivity("ViewHabitActivity");
+            solo.waitForText("Details", 1, 3000);
+            ListView list2 = (ListView) solo.getView(R.id.past_habit_event_list);
 
-        // check that list contains newly created habitevent
-        solo.waitForActivity("ViewHabitActivity");
-        solo.waitForText("February", 1, 3000);
-        ListView list = (ListView) solo.getView(R.id.past_habit_event_list);
+            // save current number of elements in list
+            int oldCount = list2.getCount();
+            if (oldCount > 0) { // there are past habit events
+                View v2 = list2.getChildAt(0);
+                // click on first element in list
+                solo.clickOnView(v2);
 
-        // save current number of elements in list
-        int oldCount =  list.getCount();
-        View v = list.getChildAt(0);
-        // click on first element in list
-        solo.clickOnView(v);
+                // wait for habit event to load
+                solo.waitForActivity("ViewHabitEventActivity");
+                solo.waitForText("Habit Event", 1, 3000);
 
-        // wait for habit event to load
-        solo.waitForActivity("ViewHabitEventActivity");
-        solo.waitForText("February", 1, 3000);
+                // delete the habit event
+                solo.clickOnView(solo.getView(R.id.view_habit_event_habit_event_delete_button));
 
-        // delete the habit event
-        solo.clickOnView(solo.getView(R.id.view_habit_event_habit_event_delete_button));
+                // check that we go back to the viewhabitactivity
+                solo.waitForText("Details", 1, 3000);
+                solo.assertCurrentActivity("Wrong Activity", ViewHabitActivity.class);
+                ListView modList = (ListView) solo.getView(R.id.past_habit_event_list);
+                int newCount = modList.getCount();
 
-        // check that we go back to the viewhabitactivity
-        solo.waitForText("Past", 1, 3000);
-        solo.assertCurrentActivity("Wrong Activity", ViewHabitActivity.class);
-        ListView modList = (ListView) solo.getView(R.id.past_habit_event_list);
-        int newCount =  modList.getCount();
+                // check that the list has one less element
+                assertEquals(oldCount - 1, newCount);
+            }
+        }
 
-        // check that the list has one less element
-        assertEquals(oldCount-1, newCount);
     }
 
     /**
-     * Tests the update of a habit event
+     * Test for updating a habit event
      */
     @Test
     public void testUpdateHabitEvent(){
         solo.waitForText("Today", 1, 3000);
-        // click on a habit
-        solo.clickOnText("Test"); // OUR TEST HABIT
+        ListView list = (ListView) solo.getView(R.id.habit_listview);
+        // click on a habit if exists
+        if(list.getCount() > 0) {
+            View v = list.getChildAt(0);
+            // click on first element in list
+            solo.clickOnView(v);
+            // check that list contains newly created habitevent
+            solo.waitForActivity("ViewHabitActivity");
+            solo.waitForText("Details", 1, 3000);
+            ListView list2 = (ListView) solo.getView(R.id.past_habit_event_list);
 
-        // check that list contains newly created habitevent
-        solo.waitForActivity("ViewHabitActivity");
-        solo.waitForText("February", 1, 3000);
-        ListView list = (ListView) solo.getView(R.id.past_habit_event_list);
+            int oldCount = list2.getCount();
+            if (oldCount > 0) { // there are past habit events
+                View v2 = list2.getChildAt(0);
+                // click on first element in list
+                solo.clickOnView(v2);
 
-        View v = list.getChildAt(0);
-        // click on first element in list
-        solo.clickOnView(v);
+                // wait for habit event to load
+                solo.waitForActivity("ViewHabitEventActivity");
+                solo.waitForText("Habit Event", 1, 3000);
 
-        // wait for habit event to load
-        solo.waitForActivity("ViewHabitEventActivity");
-        solo.waitForText("February", 1, 3000);
+                // edit the habit event
+                solo.clickOnView(solo.getView(R.id.view_habit_event_habit_event_edit_button));
 
-        // edit the habit event
-        solo.clickOnView(solo.getView(R.id.view_habit_event_habit_event_edit_button));
+                // check that we go back to the definehabiteventactivity
+                solo.waitForText("comment", 1, 3000);
+                solo.assertCurrentActivity("Wrong Activity", DefineHabitEventActivity.class);
 
-        // check that we go back to the definehabiteventactivity
-        solo.waitForText("comment", 1, 3000);
-        solo.assertCurrentActivity("Wrong Activity", DefineHabitEventActivity.class);
+                solo.clearEditText((EditText) solo.getView(R.id.comment)); // Clear edittext
+                solo.enterText((EditText) solo.getView(R.id.comment), "updated comment");
 
-        // update fields
-//        solo.clearEditText((EditText) solo.getView(R.id.location)); // Clear edittext
-        solo.clearEditText((EditText) solo.getView(R.id.comment)); // Clear edittext
-//        solo.enterText((EditText)solo.getView(R.id.location), "Edmonton");
-        solo.enterText((EditText)solo.getView(R.id.comment), "updated comment");
+                // click checkmark to confirm changes
+                solo.clickOnView(solo.getView(R.id.view_habit_event_habit_event_edit_button));
 
-        // click checkmark to confirm changes
-        solo.clickOnView(solo.getView(R.id.view_habit_event_habit_event_edit_button));
+                // wait for habit event to load
+                solo.waitForActivity("ViewHabitEventActivity");
+                solo.waitForText("Habit Event", 1, 3000);
 
-        // wait for habit event to load
-        solo.waitForActivity("ViewHabitEventActivity");
-        solo.waitForText("February", 1, 3000);
-
-        // check that location is updated
-//        String modLocation = ((EditText) solo.getView(R.id.location)).getText().toString();
-//        assertEquals("Edmonton", modLocation);
-
-        // check that comment is updated
-        String modComment = ((EditText) solo.getView(R.id.comment)).getText().toString();
-        assertEquals("updated comment", modComment);
-
+                // check that comment is updated
+                String modComment = ((EditText) solo.getView(R.id.comment)).getText().toString();
+                assertEquals("updated comment", modComment);
+            }
+        }
 
     }
 }

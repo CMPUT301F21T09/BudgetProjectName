@@ -79,7 +79,7 @@ public class ViewHabitEventActivity extends AppCompatActivity {
 
             // Check there is location data or not
             // Set Address as City, Province, Country if address info exist
-            // "No Address" if address info not exist
+            // "No Address Found" if address info not exist
             // "No Location" when there is no location data
             if (retrievedHabitEvent.getLocation() != null) {
                 LatLngModel latLngModel = retrievedHabitEvent.getLocation();

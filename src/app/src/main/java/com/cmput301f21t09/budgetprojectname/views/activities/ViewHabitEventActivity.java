@@ -110,7 +110,7 @@ public class ViewHabitEventActivity extends AppCompatActivity {
 
             habitEventDescription.setText(retrievedHabitEvent.getComment());
 
-            SimpleDateFormat format = new SimpleDateFormat("MMMM dd,yyyy");
+            SimpleDateFormat format = new SimpleDateFormat("MMMM dd, yyyy");
             String strDate = format.format(retrievedHabitEvent.getDate());
             habitEventDate.setText(strDate);
 

@@ -16,12 +16,12 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,10 +42,10 @@ import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
 import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
 import com.cmput301f21t09.budgetprojectname.models.IHabitModel;
 import com.cmput301f21t09.budgetprojectname.models.LatLngModel;
+import com.cmput301f21t09.budgetprojectname.views.fragments.CustomMapFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -134,7 +134,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     /**
      * Map fragment for getting location
      */
-    private SupportMapFragment mapFragment;
+    private CustomMapFragment mapFragment;
 
     /**
      * Location toggle
@@ -223,7 +223,6 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         comment = findViewById(R.id.comment);
         imageView = findViewById(R.id.habit_event_image);
 
-
         habitEventName.setText(habitName);
 
         // Back button pressed
@@ -236,7 +235,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
 
         controller = HabitController.getEditHabitController(habitID);
 
-        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment = (CustomMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         markerLocation = new LatLngModel();
         markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(205.0f));
@@ -475,12 +474,16 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
         googleMap.getUiSettings().setMapToolbarEnabled(false);
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
 
         googleMap.setOnMapClickListener(latLng -> {
             googleMap.clear();
             googleMap.addMarker(markerOptions.position(latLng));
             markerLocation.setLocation(latLng.latitude, latLng.longitude);
         });
+
+        ScrollView scrollView = findViewById(R.id.add_habit_event_scrollview);
+        mapFragment.setListener(() -> scrollView.requestDisallowInterceptTouchEvent(true));
     }
 
     /**

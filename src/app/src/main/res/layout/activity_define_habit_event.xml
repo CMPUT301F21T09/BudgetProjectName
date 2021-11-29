@@ -51,6 +51,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
+        android:id="@+id/add_habit_event_scrollview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
@@ -118,7 +119,7 @@
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/map"
-                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:name="com.cmput301f21t09.budgetprojectname.views.fragments.CustomMapFragment"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_margin="9dp"

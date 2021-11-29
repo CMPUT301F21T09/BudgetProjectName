@@ -430,7 +430,11 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
                 mapMarkCurrentLocation();
             } else {
                 mapFragment.getMapAsync(googleMap -> {
-                    googleMap.setMyLocationEnabled(false);
+                    try {
+                        googleMap.setMyLocationEnabled(false);
+                    } catch (SecurityException ignored) {
+
+                    }
                 });
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     Snackbar.make(getWindow().getDecorView().getRootView(), "Grant location permission to show current location", Snackbar.LENGTH_INDEFINITE)

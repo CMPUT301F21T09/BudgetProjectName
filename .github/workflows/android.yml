@@ -19,8 +19,9 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
         cache: gradle
-
+    - name: Change into Android SRC directory
+      run: cd src
     - name: Grant execute permission for gradlew
-      run: chmod +x src/gradlew
+      run: chmod +x gradlew
     - name: Build with Gradle
-      run: src/gradlew build
+      run: gradlew build

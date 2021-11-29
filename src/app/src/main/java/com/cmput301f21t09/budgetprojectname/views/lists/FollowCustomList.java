@@ -24,7 +24,7 @@ import java.util.HashMap;
 /**
  * Helper class to create a custom list for user follow request
  */
-public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
+public class FollowCustomList extends ArrayAdapter<UserModel> {
     /**
      * List of users who have requested to follow current user
      */
@@ -47,13 +47,13 @@ public class FollowRequestCustomList extends ArrayAdapter<UserModel> {
     private final String currentUserID = AuthorizationService.getInstance().getCurrentUserId();
 
     /**
-     * Constructor for FollowRequestCustomList
+     * Constructor for FollowCustomList
      *
      * @param context a current context of application
      * @param users   a arrayList of users who wish to follow a given user
      */
-    public FollowRequestCustomList(Context context, ArrayList<UserModel> users,
-                                   boolean isFollowRequest) {
+    public FollowCustomList(Context context, ArrayList<UserModel> users,
+                            boolean isFollowRequest) {
         super(context, 0, users);
         this.users = users;
         this.context = context;

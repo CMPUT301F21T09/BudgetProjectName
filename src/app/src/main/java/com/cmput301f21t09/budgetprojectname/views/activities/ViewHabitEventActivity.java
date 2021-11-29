@@ -91,18 +91,25 @@ public class ViewHabitEventActivity extends AppCompatActivity {
                         String locality = bestMatch.getLocality();
                         String adminArea = bestMatch.getAdminArea();
                         String countryCode = bestMatch.getCountryCode();
-                        String address;
 
-                        if (locality == null) {
-                            address = adminArea + ", " + countryCode;
+                        if (countryCode != null) {
+                            String address;
+
+                            if (locality == null) {
+                                address = adminArea + ", " + countryCode;
+                            } else {
+                                address = locality + ", " + adminArea + ", " + countryCode;
+                            }
+
+                            habitEventLocation.setText(address);
                         } else {
-                            address = locality + ", " + adminArea + ", " + countryCode;
+                            throw new IOException();
                         }
-
-                        habitEventLocation.setText(address);
+                    } else {
+                        throw new IOException();
                     }
                 } catch (IOException ex) {
-                    habitEventLocation.setText("No Address");
+                    habitEventLocation.setText("No Address Found");
                 }
             } else {
                 habitEventLocation.setText("No Location");

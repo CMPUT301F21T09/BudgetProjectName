@@ -95,11 +95,7 @@ public class ViewHabitEventActivity extends AppCompatActivity {
                         if (countryCode != null) {
                             String address;
 
-                            if (locality == null) {
-                                address = adminArea + ", " + countryCode;
-                            } else {
-                                address = locality + ", " + adminArea + ", " + countryCode;
-                            }
+                            address = (locality != null ? locality + ", " : "") + (adminArea != null ? adminArea + ", " : "") + countryCode;
 
                             habitEventLocation.setText(address);
                         } else {

@@ -71,13 +71,14 @@ public class HabitEventControllerTest {
     @Test
     public void testReadHabitEvent() {
         ArrayList<HabitEventModel> habitEventList = new ArrayList<>();
+        LatLngModel latLngModel = new LatLngModel(0.0, 0.0);
 
         HabitEventModel habitEvent =
-                new HabitEventModel(null, new LatLngModel(0.0, 0.0), new Date(),
+                new HabitEventModel(null, latLngModel, new Date(),
                         "yeg test comment", null, "");
         habitEventList.add(habitEvent);
         HabitEventModel readHE = habitEventList.get(0);
-        assertEquals(new LatLngModel(0.0, 0.0), readHE.getLocation());
+        assertEquals(latLngModel, readHE.getLocation());
         assertEquals("yeg test comment", readHE.getComment());
     }
 

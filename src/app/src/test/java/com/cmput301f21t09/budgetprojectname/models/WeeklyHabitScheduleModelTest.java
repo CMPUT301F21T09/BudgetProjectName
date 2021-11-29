@@ -1,14 +1,10 @@
 package com.cmput301f21t09.budgetprojectname.models;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Map;
 
 /**
  * Unit tests for HabitScheduleModel
@@ -60,6 +56,4 @@ public class WeeklyHabitScheduleModelTest {
         assertNotNull(innerMap);
          **/
     }
-    //TODO: Test isToBeCompletedOn and wasSkippedIfLastCompletedOn once implemented
-
 }

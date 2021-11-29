@@ -1,7 +1,5 @@
 package com.cmput301f21t09.budgetprojectname.models;
 
-import android.util.Log;
-
 import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.services.ServiceTask;
 import com.cmput301f21t09.budgetprojectname.services.ServiceTaskManager;
@@ -215,9 +213,7 @@ public class HabitModel implements IHabitModel {
                         models.add(parser.parseMap(doc.getData(), doc.getId()));
                     } else {
                         last_completed = doc.getTimestamp("last_completed").toDate();
-                        if (last_completed.getDate() != today.getDate() &&
-                                last_completed.getMonth() != today.getMonth() &&
-                                today.getYear() != last_completed.getYear()) {
+                        if (today.getDate() != last_completed.getDate()) {
                             models.add(parser.parseMap(doc.getData(), doc.getId()));
                         }
                     }

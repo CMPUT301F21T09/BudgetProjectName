@@ -54,7 +54,7 @@ public class FollowRequestTest {
                 @Override
                 public void onSuccess() {
                     // click accept on this request
-                    solo.waitForText("Test", 1, 3000);
+                    // solo.waitForText("Test", 1, 3000);
                     // solo.clickOnView(solo.getView(R.id.accept_button));
                 }
 

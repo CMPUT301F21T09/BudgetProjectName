@@ -12,11 +12,11 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -491,12 +491,18 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
             googleMap.setMyLocationEnabled(true);
 
             Location location = getCurrentLocation();
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-            googleMap.addMarker(markerOptions.position(latLng));
-            markerLocation.setLocation(latLng.latitude, latLng.longitude);
+            if (location != null) {
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                googleMap.addMarker(markerOptions.position(latLng));
+                markerLocation.setLocation(latLng.latitude, latLng.longitude);
+
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+            } else {
+                Toast.makeText(this, "Not able to get your current location. Try it later.", Toast.LENGTH_LONG).show();
+            }
+
         });
     }
 
@@ -507,24 +513,31 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
      */
     private Location getCurrentLocation() {
         LocationManager mLocationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-        LocationListener mLocationListener = location -> {
-        };
 
-        Location bestLocation = null;
+        final Location[] bestLocation = {null};
         for (String provider : mLocationManager.getProviders(true)) {
-            mLocationManager.requestLocationUpdates(provider, 1000L, 0, mLocationListener);
-            Location l = mLocationManager.getLastKnownLocation(provider);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                //This function never called when user denied location permission
+                return null;
+            }
+            mLocationManager.requestSingleUpdate(provider, new LocationListener() {
+                @Override
+                public void onLocationChanged(@NonNull Location location) {
+                    if (bestLocation[0] == null || location.getAccuracy() < bestLocation[0].getAccuracy()) {
+                        bestLocation[0] = location;
+                    }
+                }
 
-            if (l == null) {
-                continue;
-            }
-            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
-                bestLocation = l;
-            }
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+            }, Looper.myLooper());
         }
 
-        return bestLocation;
+        return bestLocation[0];
     }
+
 
     /**
      * Encode Image to base64 string

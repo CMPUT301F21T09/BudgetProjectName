@@ -131,7 +131,7 @@ public class SearchFragment extends Fragment {
     }
 
     /**
-     * Hide views
+     * Hide background view & Show clear edittext button
      */
     private void hideBackground() {
         clearSearch.setVisibility(View.VISIBLE);
@@ -140,7 +140,7 @@ public class SearchFragment extends Fragment {
     }
 
     /**
-     * Show Views
+     * Show background view & Hide clear edittext button
      */
     private void showBackground() {
         clearSearch.setVisibility(View.GONE);

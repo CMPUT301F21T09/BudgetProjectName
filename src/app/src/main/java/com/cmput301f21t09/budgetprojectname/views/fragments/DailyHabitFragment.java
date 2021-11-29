@@ -54,7 +54,7 @@ public class DailyHabitFragment extends Fragment {
         habitAdapter = new DailyHabitCustomList(getContext(), habitDataList);
         habitList.setAdapter(habitAdapter);
 
-        updateDailyList();
+        updateDailyHabitList();
 
         habitList.setOnItemClickListener((parent, view1, position, id) -> {
             // TODO: Pass targeted Habit to ViewHabitActivity
@@ -65,13 +65,13 @@ public class DailyHabitFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateDailyList();
+        updateDailyHabitList();
     }
 
     /**
      * Fetches the habits related to the current day from Firestore
      */
-    private void updateDailyList() {
+    private void updateDailyHabitList() {
         HabitModel.getTodoForCurrentUser().addTaskCompleteListener(task -> {
             habitDataList.clear();
             if (task.isSuccessful()) {

@@ -91,6 +91,8 @@ public class ViewHabitActivity extends AppCompatActivity {
      */
     ArrayList<HabitEventModel> habitEventDataList;
 
+    String habitID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +103,7 @@ public class ViewHabitActivity extends AppCompatActivity {
 
         // Get the habitID and habitUID from the previous activity
         Intent intent = getIntent();
-        String habitID = intent.getStringExtra("HABIT_ID");
+        habitID = intent.getStringExtra("HABIT_ID");
         String habitUID = intent.getStringExtra("HABIT_USERID");
 
         /* Habit Details */
@@ -129,19 +131,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         habitEventAdapter = new HabitEventCustomList(this, habitEventDataList);
         habitEventList.setAdapter(habitEventAdapter);
 
-        // Fetches the past habit events related to the current habit from Firestore using habitID
-        // and update the view
-        habitEventController.readHabitEvents(habitID, new HabitEventController.HabitEventListCallback() {
-            @Override
-            public void onCallback(ArrayList<HabitEventModel> hbEvtLst) {
-                habitEventDataList.clear();
-                for (HabitEventModel hEM : habitEventDataList) {
-                    System.out.println(hEM.getDate());
-                }
-                habitEventDataList.addAll(hbEvtLst);
-                habitEventAdapter.notifyDataSetChanged();
-            }
-        });
+        updateHabitEventsList();
 
 
         // selection of past habit event item start habit event detail screen
@@ -226,5 +216,26 @@ public class ViewHabitActivity extends AppCompatActivity {
                             HabitScheduleViewSelector.getFragmentForModel(model.getSchedule(), true)
                     ).commit();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateHabitEventsList();
+    }
+
+    /**
+     * Fetches the past habit events related to the current habit from Firestore using habitID
+     * and update the view
+     */
+    private void updateHabitEventsList() {
+        habitEventController.readHabitEvents(habitID, hbEvtLst -> {
+            habitEventDataList.clear();
+            for (HabitEventModel hEM : hbEvtLst) {
+                System.out.println(hEM.getDate());
+            }
+            habitEventDataList.addAll(hbEvtLst);
+            habitEventAdapter.notifyDataSetChanged();
+        });
     }
 }

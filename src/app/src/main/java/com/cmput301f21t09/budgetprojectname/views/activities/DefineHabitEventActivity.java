@@ -12,7 +12,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Looper;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Base64;
@@ -22,6 +21,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,10 +42,10 @@ import com.cmput301f21t09.budgetprojectname.controllers.HabitEventController;
 import com.cmput301f21t09.budgetprojectname.models.HabitEventModel;
 import com.cmput301f21t09.budgetprojectname.models.IHabitModel;
 import com.cmput301f21t09.budgetprojectname.models.LatLngModel;
+import com.cmput301f21t09.budgetprojectname.views.fragments.CustomMapFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -134,7 +134,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     /**
      * Map fragment for getting location
      */
-    private SupportMapFragment mapFragment;
+    private CustomMapFragment mapFragment;
 
     /**
      * Location toggle
@@ -223,7 +223,6 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
         comment = findViewById(R.id.comment);
         imageView = findViewById(R.id.habit_event_image);
 
-
         habitEventName.setText(habitName);
 
         // Back button pressed
@@ -236,7 +235,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
 
         controller = HabitController.getEditHabitController(habitID);
 
-        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment = (CustomMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         markerLocation = new LatLngModel();
         markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(205.0f));
@@ -475,12 +474,16 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
         googleMap.getUiSettings().setMapToolbarEnabled(false);
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
 
         googleMap.setOnMapClickListener(latLng -> {
             googleMap.clear();
             googleMap.addMarker(markerOptions.position(latLng));
             markerLocation.setLocation(latLng.latitude, latLng.longitude);
         });
+
+        ScrollView scrollView = findViewById(R.id.add_habit_event_scrollview);
+        mapFragment.setListener(() -> scrollView.requestDisallowInterceptTouchEvent(true));
     }
 
     /**
@@ -500,7 +503,7 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
 
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
             } else {
-                Toast.makeText(this, "Not able to get your current location. Try it later.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Unable to get your current location.", Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -513,29 +516,34 @@ public class DefineHabitEventActivity extends AppCompatActivity implements OnMap
      */
     private Location getCurrentLocation() {
         LocationManager mLocationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-
-        final Location[] bestLocation = {null};
-        for (String provider : mLocationManager.getProviders(true)) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                //This function never called when user denied location permission
-                return null;
+        LocationListener mLocationListener = new LocationListener() {
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+                //Overriding to prevent NPE
             }
-            mLocationManager.requestSingleUpdate(provider, new LocationListener() {
-                @Override
-                public void onLocationChanged(@NonNull Location location) {
-                    if (bestLocation[0] == null || location.getAccuracy() < bestLocation[0].getAccuracy()) {
-                        bestLocation[0] = location;
-                    }
-                }
 
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                //Overriding to prevent NPE
+            }
+        };
 
-                }
-            }, Looper.myLooper());
+        Location bestLocation = null;
+        for (String provider : mLocationManager.getProviders(true)) {
+            mLocationManager.requestLocationUpdates(provider, 2000L, 0, mLocationListener);
+            Location l = mLocationManager.getLastKnownLocation(provider);
+
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                bestLocation = l;
+            }
         }
 
-        return bestLocation[0];
+        mLocationManager.removeUpdates(mLocationListener);
+
+        return bestLocation;
     }
 
 

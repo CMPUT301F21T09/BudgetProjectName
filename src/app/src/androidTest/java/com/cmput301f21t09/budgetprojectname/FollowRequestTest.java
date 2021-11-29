@@ -11,6 +11,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.cmput301f21t09.budgetprojectname.controllers.UserController;
+import com.cmput301f21t09.budgetprojectname.services.AuthorizationService;
 import com.cmput301f21t09.budgetprojectname.views.activities.FollowRequestActivity;
 import com.cmput301f21t09.budgetprojectname.views.activities.ViewHabitActivity;
 import com.robotium.solo.Solo;
@@ -41,7 +42,8 @@ public class FollowRequestTest {
     public void setUp() throws Exception {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
         UserController userController = new UserController();
-        String currentUserId = "XPG70micV5XLyvhytqghBOLnK8U2";
+        // use currently logged in user to test
+        String currentUserId = AuthorizationService.getInstance().getCurrentUserId();
         String anotherUserID = "BtVfJ5exBBgpYXchbR4wsN8f0cp1";
 
         // get current user model (test user)
@@ -113,8 +115,11 @@ public class FollowRequestTest {
         solo.waitForText("Follow Requests", 1, 3000);
         ListView listView = (ListView) solo.getView(R.id.follow_request_listview);
 
-        // check that request shows up
-        assertEquals(1, listView.getCount());
+        // wait for test follow request to show up
+        solo.waitForText("Test", 1, 3000);
+
+        // record number of original requests
+        int originalNumRequests = listView.getCount();
 
         // click accept on request
         solo.clickOnView(solo.getView(R.id.accept_button));
@@ -124,7 +129,7 @@ public class FollowRequestTest {
 
         // check that request is removed
         listView = (ListView) solo.getView(R.id.follow_request_listview);
-        assertEquals(0, listView.getCount());
+        assertEquals(originalNumRequests-1, listView.getCount());
     }
 
     /**
@@ -139,8 +144,12 @@ public class FollowRequestTest {
         solo.waitForText("Follow Requests", 1, 3000);
         ListView listView = (ListView) solo.getView(R.id.follow_request_listview);
 
-        // check that request shows up
-        assertEquals(1, listView.getCount());
+
+        // wait for test follow request to show up
+        solo.waitForText("Test", 1, 3000);
+
+        // record number of original requests
+        int originalNumRequests = listView.getCount();
 
         // click deny on request
         solo.clickOnView(solo.getView(R.id.decline_button));
@@ -150,7 +159,7 @@ public class FollowRequestTest {
 
         // check that request is removed
         listView = (ListView) solo.getView(R.id.follow_request_listview);
-        assertEquals(0, listView.getCount());
+        assertEquals(originalNumRequests-1, listView.getCount());
     }
 
 }

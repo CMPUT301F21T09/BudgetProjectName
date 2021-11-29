@@ -83,17 +83,17 @@ public class ViewHabitActivity extends AppCompatActivity {
     /**
      * Habit event adapter
      */
-    ArrayAdapter<HabitEventModel> habitEventAdapter;
+    private ArrayAdapter<HabitEventModel> habitEventAdapter;
 
     /**
      * Habit event list
      */
-    ArrayList<HabitEventModel> habitEventDataList;
+    private ArrayList<HabitEventModel> habitEventDataList;
 
     /**
      * Habit's ID
      */
-    String habitID;
+    private String habitID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

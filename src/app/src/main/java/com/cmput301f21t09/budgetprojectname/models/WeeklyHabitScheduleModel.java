@@ -2,9 +2,8 @@ package com.cmput301f21t09.budgetprojectname.models;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Model implementation for the per day of week representation of a habit schedule
@@ -72,36 +71,34 @@ public class WeeklyHabitScheduleModel implements IWeeklyHabitScheduleModel {
 
     @Override
     public boolean wasSkippedIfLastCompletedOn(Date date) {
-        int lastCompletedDateOfWeek = date.getDay();
-        int lastCompletedDay = date.getDate();
-        int i;
-        int current = lastCompletedDay + 1;
-        Date today = new Date();
-        int todayDayOfWeek = today.getDay();
+        Date now = new Date();
 
-        if (lastCompletedDateOfWeek == 6) {
-            i = 0;
-        } else {
-            i = lastCompletedDateOfWeek + 1;
-        }
-        if (lastCompletedDay == today.getDate()) {
-            return false;
-        }
-        while (true) {
-            if (days[i]) {
-                if (todayDayOfWeek == current) {
-                    return false;
-                } else {
-                    return true;
-                }
+        // Get the maximum number of days that can pass before the streak
+        // is expired
+        int todayDayOfWeek = now.getDay();
+        int maximumDaysPassedForStreakToBeValid = 1;
+
+        // Iterate backwards until we find the previous day the habit was supposed to be completed
+        int previousDayOfWeek = todayDayOfWeek - 1;
+        while (!days[previousDayOfWeek]) {
+            previousDayOfWeek--;
+
+            if (previousDayOfWeek < 0) {
+                previousDayOfWeek = 6;
             }
-            if (i == 6) {
-                i = 0;
-            } else {
-                i++;
-            }
-            current++;
+
+            maximumDaysPassedForStreakToBeValid++;
         }
+
+        // Get the number of days that have passed since the habit was
+        // last completed
+        long daysPassedSinceLastCompleted = TimeUnit.DAYS.convert(
+                now.getTime() - date.getTime(), TimeUnit.MILLISECONDS);
+
+        // If the number of days passed since the habit was completed exceeds the maximum
+        // number of days that can pass before the streak ends, return true because it was
+        // skipped
+        return daysPassedSinceLastCompleted > maximumDaysPassedForStreakToBeValid;
     }
 
     @Override

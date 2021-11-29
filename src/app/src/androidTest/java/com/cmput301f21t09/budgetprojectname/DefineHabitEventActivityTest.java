@@ -1,4 +1,5 @@
 package com.cmput301f21t09.budgetprojectname;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -24,26 +25,29 @@ public class DefineHabitEventActivityTest {
     @Rule
     public ActivityTestRule<MainActivity> rule =
             new ActivityTestRule<>(MainActivity.class, true, true);
+
     /**
      * Runs before all tests and creates solo instance.
+     *
      * @throws Exception
      */
     @Before
-    public void setUp() throws Exception{
-        solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
+    public void setUp() throws Exception {
+        solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
     }
 
     /**
      * Gets the Activity
+     *
      * @throws Exception
      */
     @Test
-    public void start() throws Exception{
+    public void start() throws Exception {
         Activity activity = rule.getActivity();
     }
 
     @Test
-    public void checkInvalidComment(){
+    public void checkInvalidComment() {
         solo.waitForText("Today", 1, 3000);
         solo.clickOnView(solo.getView(R.id.done_button));
         solo.assertCurrentActivity("Wrong Activity", DefineHabitEventActivity.class);
@@ -58,7 +62,7 @@ public class DefineHabitEventActivityTest {
     }
 
     @Test
-    public void checkValidComment(){
+    public void checkValidComment() {
         solo.waitForText("Today", 1, 3000);
         solo.clickOnView(solo.getView(R.id.done_button));
         solo.assertCurrentActivity("Wrong Activity", DefineHabitEventActivity.class);

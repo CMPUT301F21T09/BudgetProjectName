@@ -28,6 +28,67 @@ import java.util.List;
  * Activity that shows the detail of the habit event
  */
 public class ViewHabitEventActivity extends AppCompatActivity {
+    /* Controllers */
+
+    /**
+     * Controller for fetching habit details
+     */
+    private HabitEventController habitEventController;
+
+
+    /* Views */
+
+    /**
+     * TextView for displaying the habit title
+     */
+    private TextView habitTitle;
+
+    /**
+     * TextView for displaying the habit event location
+     */
+    private TextView habitEventLocation;
+
+    /**
+     * TextView for displaying the habit event description
+     */
+    private TextView habitEventDescription;
+
+    /**
+     * TextView for displaying the habit event date
+     */
+    private TextView habitEventDate;
+
+    /**
+     * ImageView for displaying the habit event image
+     */
+    private ImageView habitEventImage;
+
+    /* Information about this habit event */
+
+    /**
+     * Current user's UserID
+     */
+    private String currentUserId;
+
+    /**
+     * Habit Event ID
+     */
+    private String habitEventID;
+
+    /**
+     * Habit ID associated with this habit event
+     */
+    private String habitID;
+
+    /**
+     * Habit Title
+     */
+    private String habitTitleStr;
+
+    /**
+     * UserID associated with this habit event
+     */
+    private String habitEventUID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,23 +96,23 @@ public class ViewHabitEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_habit_event);
 
         // Retrieve the logged in user's userid
-        String currentUserId = AuthorizationService.getInstance().getCurrentUserId();
+        currentUserId = AuthorizationService.getInstance().getCurrentUserId();
 
         Window window = getWindow();
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         // data received from viewhabitactivity
         Intent intent = getIntent();
-        String habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
-        String habitID = intent.getStringExtra("HABIT_ID");
-        String habitTitleStr = intent.getStringExtra("HABIT_TITLE");
-        String habitEventUID = intent.getStringExtra("HABIT_EVENT_USERID");
+        habitEventID = intent.getStringExtra("HABIT_EVENT_ID");
+        habitID = intent.getStringExtra("HABIT_ID");
+        habitTitleStr = intent.getStringExtra("HABIT_TITLE");
+        habitEventUID = intent.getStringExtra("HABIT_EVENT_USERID");
 
-        TextView habitTitle = findViewById(R.id.view_habit_event_habit_title);
-        TextView habitEventLocation = findViewById(R.id.view_habit_event_habit_event_location);
-        TextView habitEventDescription = findViewById(R.id.view_habit_event_habit_event_description);
-        TextView habitEventDate = findViewById(R.id.view_habit_event_habit_event_date);
-        ImageView habitEventImage = findViewById(R.id.view_habit_event_image);
+        habitTitle = findViewById(R.id.view_habit_event_habit_title);
+        habitEventLocation = findViewById(R.id.view_habit_event_habit_event_location);
+        habitEventDescription = findViewById(R.id.view_habit_event_habit_event_description);
+        habitEventDate = findViewById(R.id.view_habit_event_habit_event_date);
+        habitEventImage = findViewById(R.id.view_habit_event_image);
 
         habitTitle.setText(habitTitleStr);
 
@@ -60,20 +121,21 @@ public class ViewHabitEventActivity extends AppCompatActivity {
             finish();
         });
 
-        // TODO: resolve null error
-        /**
-         HabitController controller = HabitController.getEditHabitController(habitID);
-         if(controller.isTaskComplete(HabitController.HABIT_MODEL_LOAD)){
-         IHabitModel model = controller.getModel();
-         habitTitle.setText(model.getTitle());
-         System.out.println("habit title " + model.getTitle());
-         }
-         **/
-        System.out.println("in viewhabiteventactivity");
-
         // Set the Habit Event fields
-        // TODO: move to a helper function
-        HabitEventController habitEventController = new HabitEventController();
+        updateHabitEventDetails();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateHabitEventDetails();
+    }
+
+    /**
+     * Update the habit event details
+     */
+    private void updateHabitEventDetails() {
+        habitEventController = new HabitEventController();
         habitEventController.readHabitEvent(habitEventID, retrievedHabitEvent -> {
             System.out.println("habitevent id " + retrievedHabitEvent.getID());
 
